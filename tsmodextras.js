@@ -1,3 +1,3 @@
-const tags = {
+window.tags = {
 	'[SCR]':['DepressionOwU']
 }
