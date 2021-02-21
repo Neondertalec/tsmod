@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.1
+// @version     1.1.2
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -14,7 +14,7 @@
 
 window.tags = {
 	'[SCR]':['DepressionOwU'],
-	'[TS]': ['ylzaac😎', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
+	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
 	'[TO]': ['Darklight', 'Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc']
 }
 
