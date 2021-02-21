@@ -1,3 +1,3 @@
-modules.exports.tags = {
+const tags = {
 	'[SCR]':['DepressionOwU']
 }
