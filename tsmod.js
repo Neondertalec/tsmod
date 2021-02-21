@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.0
+// @version     1.1.1
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -80,7 +80,7 @@ window.client = {
 	showLog:function(name = "", y = 0, deleted){
 		let u = null;
 		if(Object.keys(window.client.userlog2)?.length > 0){
-			u = window.client.userlog2[name];
+			u = window.client.userlog2[name] ?? window.client.userlog[name];
 		}else{
 			u = window.client.userlog[name];
 		}
@@ -1041,6 +1041,36 @@ window.addEventListener('DOMContentLoaded', e=>{
 		content: "[SCR]";
 		margin-right: 4px;
 		color: #009eff;
+		font-weight: bold;
+	}`
+	if(window.tags){
+		if(window.tags["[TO]"]){
+			let newarr = [];
+			for(var i in window.tags["[TO]"]){
+				newarr.push('span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
+			}
+			newihtml += newarr.join(",");
+		}
+	}
+	newihtml += `{
+		content: "[TO]";
+		margin-right: 4px;
+		color: #4e6fb3;
+		font-weight: bold;
+	}`
+	if(window.tags){
+		if(window.tags["[TS]"]){
+			let newarr = [];
+			for(var i in window.tags["[TS]"]){
+				newarr.push('span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
+			}
+			newihtml += newarr.join(",");
+		}
+	}
+	newihtml += `{
+		content: "[TS]";
+		margin-right: 4px;
+		color: #ad86d8;
 		font-weight: bold;
 	}
 
