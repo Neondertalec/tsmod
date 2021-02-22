@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.2
+// @version     1.1.3
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -14,8 +14,8 @@
 
 window.tags = {
 	'[SCR]':['DepressionOwU'],
-	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
-	'[TO]': ['Darklight', 'Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc']
+	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
+	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc']
 }
 
 window.secondsFormat = (time, m=true) =>{
@@ -1041,7 +1041,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 		content: "[SCR]";
 		margin-right: 4px;
 		color: #009eff;
-		font-weight: bold;
 	}`
 	if(window.tags){
 		if(window.tags["[TO]"]){
@@ -1056,7 +1055,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 		content: "[TO]";
 		margin-right: 4px;
 		color: #4e6fb3;
-		font-weight: bold;
 	}`
 	if(window.tags){
 		if(window.tags["[TS]"]){
@@ -1071,7 +1069,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 		content: "[TS]";
 		margin-right: 4px;
 		color: #ad86d8;
-		font-weight: bold;
 	}
 
 	span[arialabel^="Guest"]::before{
