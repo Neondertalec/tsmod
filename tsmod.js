@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.3
+// @version     1.1.4
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -556,6 +556,11 @@ window.replaces = {
 						checked: client.showClasses,
 						onChange: function (e) {
 							client.showClasses = !client.showClasses;
+							if(client.showClasses){
+								document.getElementById("leaderboard").ariaLabel = "fat"
+							}else{
+								document.getElementById("leaderboard").ariaLabel = ""
+							}
 							setTimeout(window.createNewLeaderboard, 1);
 						}
 					}
@@ -949,11 +954,12 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 
 	/*leaderboard*/
-
 	#leaderboard{
 		transform-origin: 100% 0%!important;
 		left: unset!important;
 		right: 10px!important;
+	}
+	#leaderboard[aria-label="fat"]{
 		width:230px;
 	}
 
