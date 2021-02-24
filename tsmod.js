@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.5
+// @version     1.1.6
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -67,7 +67,7 @@ window.client = {
 	chat:null,
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
-		showTag: getLocal("ts-showTag", "true") == "true",
+		showTag: getLocal("ts-showTag", "false") == "true",
 	},
 
 	checkMsg: function(value){
