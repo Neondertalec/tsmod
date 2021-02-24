@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.4
+// @version     1.1.5
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -15,7 +15,28 @@
 window.tags = {
 	'[SCR]':['DepressionOwU'],
 	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
-	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc']
+	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
+	'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram'],
+	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', /*'akane🦋',*/ 'Phoenixe', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
+	'[Sr. Mod]': ['Jackal'],
+	'[H. Mod]': ['Exoriz', 'extirpater'],
+	'[Dev]': ['Stovoy', 'MiceLee', 'TTTruck', 'DDBus']
+}
+window.tagData = {
+	'[SCR]': {presudo:"[Scripter]", color:"#009eff"},
+	'[TS]': {presudo:"[TS]", color:"#ad86d8"},
+	'[TO]': {presudo:"[TO]", color:"#4e6fb3"},
+	'[guest]': {presudo:"[guest]", color:"#91b800"},
+	'[Jr. Mod]': {presudo:"[Junior Mod]", color:"#f1c40f"},
+	'[Mod]': {presudo:"[Moderator]", color:"#e67e22"},
+	'[Sr. Mod]': {presudo:"[Senior Mod]", color:"#e74c3c"},
+	'[H. Mod]': {presudo:"[Head Mod]", color:"#c00000"},
+	'[Dev]': {presudo:"[Developer]", color:"#3498db"}
+}
+
+window.getLocal = (key, def)=>{
+	let res = localStorage.getItem(key)
+	return res !== null? res : def;
 }
 
 window.secondsFormat = (time, m=true) =>{
@@ -43,6 +64,54 @@ window.client = {
     opos:[null,null],
 	userlog:{},
 	userlog2:{},
+	chat:null,
+	textCommandConsts:{
+		prefix: getLocal("ts-prefix", "#"),
+		showTag: getLocal("ts-showTag", "true") == "true",
+	},
+
+	checkMsg: function(value){
+		let p = window.client.textCommandConsts.prefix;
+		if(value.startsWith("#") || value.startsWith(p)){
+			const messageS = value.split(" ");
+
+			if(["#", p, p+"help"].includes(messageS[0])){
+				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF `);
+			}else
+			if([p+"prefix"].includes(messageS[0])){
+				if(messageS[1]?.length > 0){
+					localStorage.setItem("ts-prefix", window.client.textCommandConsts.prefix = messageS[1]);
+					window.client.sendSystemMessage(`The prefix is changed from ${p} is to ${messageS[1]}`);
+				}else{
+					window.client.sendSystemMessage(`${messageS[1]+" " ?? ""}can not be a prefix`);
+				}
+			}else
+			if([p+"toggletag"].includes(messageS[0])){
+				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
+				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}
+			return false;
+		}
+		return true;
+	},
+
+	sendSystemMessage: function(message = ""){
+		let chat = window.client.chat ?? (window.client.chat = document.getElementById("chat-window"));
+		if(chat){
+			if(message != ""){
+				chat.innerHTML = chat.innerHTML+
+				`<div class="chat-message">`+
+					`<span class="server-warning">`+
+						`<span class="chat-message-sender" arialabel="[SCRIPT]">`+
+							`[SCRIPT]`+
+						`</span>`+
+						`: ${message}.`+
+					`</span>`+
+				`</div>`
+			}
+			chat.scrollTop = chat.scrollHeight;
+		}
+	},
 
 	editLogType:function(input){
 		if(input){
@@ -1046,7 +1115,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	newihtml += `{
 		content: "[SCR]";
 		margin-right: 4px;
-		color: #009eff;
+		color: ${window.tagData["[SCR]"].color};
 	}`
 	if(window.tags){
 		if(window.tags["[TO]"]){
@@ -1060,7 +1129,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	newihtml += `{
 		content: "[TO]";
 		margin-right: 4px;
-		color: #4e6fb3;
+		color: ${window.tagData["[TO]"].color};
 	}`
 	if(window.tags){
 		if(window.tags["[TS]"]){
@@ -1074,13 +1143,13 @@ window.addEventListener('DOMContentLoaded', e=>{
 	newihtml += `{
 		content: "[TS]";
 		margin-right: 4px;
-		color: #ad86d8;
+		color: ${window.tagData["[TS]"].color};
 	}
 
 	span[arialabel^="Guest"]::before{
 		content: "[guest]";
 		margin-right: 4px;
-		color: #91b800;
+		color: ${window.tagData["[guest]"].color};
 	}
 
 	`;
@@ -1277,6 +1346,24 @@ window.WebSocket.prototype.send = function (data) {
 window.sendDecodeData = msg => window.kek._send(protobuf.ClientPayload.encode(msg).finish());
 window.sendData = msg => window.kek._send(new Uint8Array(msg));
 
+window.genPrefix = (name)=>{
+	if(window.client.textCommandConsts.showTag){
+		for(var tagKey in window.tags){
+			let tag = window.tags[tagKey];
+			if(tag.includes(name)){
+				window.lastPrefix.name = window.tagData[tagKey].presudo;
+				window.lastPrefix.color = window.tagData[tagKey].color;
+				return;
+			}
+		}
+	}
+	window.lastPrefix.name="";
+}
+window.lastPrefix = {
+	color:"red",
+	name:""
+}
+
 new MutationObserver(function(mutations) {
 	if (document.getElementsByTagName('script')[0]) {
 		var elem = Array.from(document.querySelectorAll('script')).find(a=>a.src.match(/app\.[0-9a-f]{8}\.js/));
@@ -1332,6 +1419,21 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('null!==this.gameState&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))', 'null!==this.gameState&& !(document.activeElement.getAttributeNames().includes("c-lock"))&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))');
 
 				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:s')
+
+				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
+				'window.genPrefix(this.name),e.textAlign="center",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a,r-this.radius-11 - (window.sss??12)),'+
+				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),');
+
+				/*//left
+				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
+				'window.genPrefix(this.name),e.textAlign="left",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a - e.measureText(window.lastPrefix.name+this.name).width/1.8,r-this.radius-11),'+
+				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a + e.measureText(window.lastPrefix.name).width/3,r-this.radius-11)),');
+				*/
+
+				tmp = tmp.replace('(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0)',
+				'((this.gameState.heroInfoCard.hidden && ((u.width == 48 && u.height == 48) || (u.width == 14 && u.height == 14) || (u.width == 82 && u.height == 40)))?false:(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0))')
+
+				tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
