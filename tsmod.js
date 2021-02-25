@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.6
+// @version     1.1.7
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -17,7 +17,7 @@ window.tags = {
 	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram'],
-	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', /*'akane🦋',*/ 'Phoenixe', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
+	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', 'Phoenixe', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
 	'[Sr. Mod]': ['Jackal'],
 	'[H. Mod]': ['Exoriz', 'extirpater'],
 	'[Dev]': ['Stovoy', 'MiceLee', 'TTTruck', 'DDBus']
@@ -25,12 +25,12 @@ window.tags = {
 window.tagData = {
 	'[SCR]': {presudo:"[Scripter]", color:"#009eff"},
 	'[TS]': {presudo:"[TS]", color:"#ad86d8"},
-	'[TO]': {presudo:"[TO]", color:"#4e6fb3"},
+	'[TO]': {presudo:"[TO]", color:"#6f8fd5"/*"#4e6fb3"*/},
 	'[guest]': {presudo:"[guest]", color:"#91b800"},
 	'[Jr. Mod]': {presudo:"[Junior Mod]", color:"#f1c40f"},
 	'[Mod]': {presudo:"[Moderator]", color:"#e67e22"},
 	'[Sr. Mod]': {presudo:"[Senior Mod]", color:"#e74c3c"},
-	'[H. Mod]': {presudo:"[Head Mod]", color:"#c00000"},
+	'[H. Mod]': {presudo:"[Head Mod]", color:"#f03333"/*"#c00000"*/},
 	'[Dev]': {presudo:"[Developer]", color:"#3498db"}
 }
 
@@ -1421,7 +1421,9 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:s')
 
 				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
-				'window.genPrefix(this.name),e.textAlign="center",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a,r-this.radius-11 - (window.sss??12)),'+
+				'e.font2=e.font,e.font=(window.ssss2??14)+"px Tahoma, Verdana, Segoe, sans-serif",'+
+				'window.genPrefix(this.name),e.lineWidth2=e.lineWidth,e.lineWidth=(window.ssss??2.5),e.strokeStyle ="black",e.strokeText(window.lastPrefix.name,a,r-this.radius-11 - (window.consts?.tagY??14)),e.textAlign="center",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a,r-this.radius-11 - (window.consts?.tagY??14)),'+
+				'e.font=e.font2,e.lineWidth=e.lineWidth2,'+
 				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),');
 
 				/*//left
