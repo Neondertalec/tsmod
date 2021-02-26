@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.8
+// @version     1.1.9
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -115,13 +115,14 @@ window.client = {
 
 	editLogType:function(input){
 		if(input){
-			const nr = window.nrByStyle(input.className);
+			const cname = input.className.split(" ").splice(1,1).join(" ");
+			const nr = window.nrByStyle(cname);
 			const key = window.client.logTypesToShow.findIndex((k) => {return k == nr})
 
 			const f = (act)=>{
 				document.querySelector(".log-popup").childNodes.forEach((el)=>{
 
-					if(el.className == "ele " + input.className){
+					if(el.className == "ele " + cname){
 						el.style.display = act ? "" : "none";
 					}
 				});
