@@ -90,3 +90,7 @@ Ingame tags
 Hero card fix
 ------------
 When the hero card is hidden you no longer hover on invisible buttons.
+
+Other
+-----
+[The 1.0.0 video](https://www.youtube.com/watch?v=MA9A8OmK0Xo)
