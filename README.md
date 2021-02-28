@@ -9,7 +9,7 @@
     ```js
     // ==UserScript==
     // @name        TS-Mod
-    // @version     1.1.11
+    // @version     1.0.0
     // @description	Evades.io TS script.
     // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
     // @match       https://evades.io/*
