@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.9
+// @version     1.1.10
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -14,7 +14,7 @@
 
 window.tags = {
 	'[SCR]':['DepressionOwU'],
-	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘'],
+	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', 'Phoenixe', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
@@ -23,7 +23,7 @@ window.tags = {
 	'[Dev]': ['Stovoy', 'MiceLee', 'TTTruck', 'DDBus']
 }
 window.tagData = {
-	'[SCR]': {presudo:"[Scripter]", color:"#009eff"},
+	'[SCR]': {presudo:"[TS&Scripter]", color:"#009eff"},
 	'[TS]': {presudo:"[TS]", color:"#ad86d8"},
 	'[TO]': {presudo:"[TO]", color:"#6f8fd5"/*"#4e6fb3"*/},
 	'[guest]': {presudo:"[guest]", color:"#91b800"},
