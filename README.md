@@ -1,5 +1,5 @@
 # How to install
-1) Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) or any other UserScript runnig extension.
+1) Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) or any other UserScript running extension.
 
 2) Click on the + button.  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815553184793755668/unknown.png)
@@ -54,7 +54,7 @@ Export / Import runs
 ---------------
 ![Image](https://cdn.discordapp.com/attachments/617049086452957189/815536942837530644/unknown.png)  
 * **Export**:  
-    By clicking the butt you get the runs that are sellected are pasted into your **clipboard**.  
+    By clicking the button you get the runs that are selected are pasted into your **clipboard**.  
 
 * **Import**:  
     By pasting the text that got exported in to the import input and pressing enter, the list will show the exported players runs.  
