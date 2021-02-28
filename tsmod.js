@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.10
+// @version     1.1.11
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -79,11 +79,11 @@ window.client = {
 				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF `);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
-				if(messageS[1]?.length > 0){
+				if(messageS[1]?.length > 0 && messageS[1] != "/"){
 					localStorage.setItem("ts-prefix", window.client.textCommandConsts.prefix = messageS[1]);
 					window.client.sendSystemMessage(`The prefix is changed from ${p} is to ${messageS[1]}`);
 				}else{
-					window.client.sendSystemMessage(`${messageS[1]+" " ?? ""}can not be a prefix`);
+					window.client.sendSystemMessage(`Prefix should contain atleast 1 character and cannot be a /`);
 				}
 			}else
 			if([p+"toggletag"].includes(messageS[0])){
