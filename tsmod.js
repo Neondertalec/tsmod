@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.11
+// @version     1.1.12
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -1168,7 +1168,31 @@ window.addEventListener('DOMContentLoaded', e=>{
 		}
 	});
 });
+			   
+window.checkGlobalError = ()=>{
+	if(globalThis._babelPolyfill){
+		/*const err = window.document.createElement("div");
 
+		err.style.whiteSpace = "nowrap";
+		err.style.left = "50%";
+		err.style.position = "absolute";
+		err.style.top = "50%";
+		err.style.transform = "translate(-50%, -50%)";
+		err.style.width = "40%";
+		err.style.backgroundColor = "crimson";
+		err.style.color = "white";
+		err.style.fontSize = "3vw";
+		err.style.textAlign = "center";
+		err.style.maxHeight = "fit-content";
+
+		err.innerHTML = `ERROR ON LOADING<br>THE SCRIPT!`
+
+		window.document.body.appendChild(err)*/
+		return false;
+	}else{
+		return true;
+	}
+}
 
 window.fireB = () => {
 	let event = document.createEvent("Event");
@@ -1437,6 +1461,8 @@ new MutationObserver(function(mutations) {
 				'((this.gameState.heroInfoCard.hidden && ((u.width == 48 && u.height == 48) || (u.width == 14 && u.height == 14) || (u.width == 82 && u.height == 40)))?false:(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0))')
 
 				tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
+				
+				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
 
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
