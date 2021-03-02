@@ -1,5 +1,6 @@
 # How to install
-1) Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) or any other UserScript running extension.
+1) Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) or any other UserScript running extension.  
+if you can't install any extensions, go [here](https://github.com/Neondertalec/tsmod/blob/main/README.md#use-with-console)
 
 2) Click on the + button.  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815553184793755668/unknown.png)
@@ -9,7 +10,7 @@
     ```js
     // ==UserScript==
     // @name        TS-Mod
-    // @version     1.0.0
+    // @version     1.1.11
     // @description	Evades.io TS script.
     // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
     // @match       https://evades.io/*
@@ -37,6 +38,17 @@ Then clcik on the '`check for updates`' (<aa style="color:cyan"> **cyan line** <
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815555840148766730/unknown.png)
 
 8) Refresh your browser (if it doesnt help, reopen ir).
+
+# Use with console
+
+if you cant install any extensions...  
+pass this code into the console:
+```js
+var xm=new XMLHttpRequest();
+xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/console-tsmod.js",false);
+xm.send();
+eval(xm.response)
+```
 
 Update 1.1.11
 =============
