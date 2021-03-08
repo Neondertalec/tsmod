@@ -1,6 +1,6 @@
 window.tags = {
 	'[SCR]':['DepressionOwU'],
-	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'Goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY'],
+	'[TS]': ['ylzaac😎','Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy', 'Priox', 'Aries', 'goldy', 'drippyk', 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', 'Phoenixe', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
@@ -1154,24 +1154,6 @@ window.getHeroColor = function(Hero){
 	});
 window.checkGlobalError = ()=>{
 	if(globalThis._babelPolyfill){
-		/*const err = window.document.createElement("div");
-
-		err.style.whiteSpace = "nowrap";
-		err.style.left = "50%";
-		err.style.position = "absolute";
-		err.style.top = "50%";
-		err.style.transform = "translate(-50%, -50%)";
-		err.style.width = "40%";
-		err.style.backgroundColor = "crimson";
-		err.style.color = "white";
-		err.style.fontSize = "3vw";
-		err.style.textAlign = "center";
-		err.style.maxHeight = "fit-content";
-
-		
-		err.innerHTML = `ERROR ON LOADING<br>THE SCRIPT!`
-
-		window.document.body.appendChild(err)*/
 		return false;
 	}else{
 		return true;
