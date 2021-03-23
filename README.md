@@ -50,6 +50,26 @@ xm.send();
 eval(xm.response)
 ```
 
+Update 1.1.19
+=============
+Victroy points
+---------------
+Now user cards display victory points  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/824002506643603476/unknown.png)  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/824002565397938266/unknown.png)  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/824003026695618570/unknown.png)  
+
+Banned users
+---------------
+Banned users now have *"**BANNED**"* text on their user card. There are currently two types of the text.  
+
+1\)  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/824003925077393448/unknown.png)  
+2\)  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/824004007935737896/unknown.png)
+
+To change between them there is a new command **`#banned`** which accepts 1 argument: **`1`** or **`2`**.  
+
 Update 1.1.11
 =============
 
