@@ -723,11 +723,11 @@ window.normalizeArea = (area)=>{
 }
 
 window.getVpColor = (vp)=>{
-	if(vp)
+	if(typeof vp == "number")
 	return vp < 75 ? "#ff0000" :
 			//vp == 75? "#ffff00" :
 			"#00ff00"
-	else "#aaa";
+	else return "#aaa";
 }
 
 window.getHeroColor = function(Hero){
