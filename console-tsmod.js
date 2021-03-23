@@ -1291,7 +1291,7 @@ window.updateLeaderboard = () => {
 				`<li style="display: table-cell;">`+
 					`<a href="/profile/${name}" target="_blank">Profile</a>`+
 					`<p>Hero: <b style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
-					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "not in same area" }</b></p>`+
+					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "###" }</b></p>`+
 					`<p id="c1">Level: ${Level}</p>`+
 					`<p id="c2">ss: ${0}</p>`+
 					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
