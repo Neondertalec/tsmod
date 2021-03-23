@@ -1,3 +1,5 @@
+window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
+
 window.tags = {
 	'[SCR]':['DepressionOwU'],
 	'[TS]': ['ylzaac😎',
@@ -5,7 +7,7 @@ window.tags = {
 		'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
-	'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram'],
+	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', '1Phoenix1', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
 	'[Sr. Mod]': ['Jackal'],
 	'[H. Mod]': ['Exoriz', 'extirpater'],
@@ -57,6 +59,7 @@ window.client = {
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
+		bannedType: +getLocal("ts-bannedType", "0"),
 	},
 
 	checkMsg: function(value){
@@ -65,7 +68,7 @@ window.client = {
 			const messageS = value.split(" ");
 
 			if(["#", p, p+"help"].includes(messageS[0])){
-				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF `);
+				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF<br>${p}banned - change the way users banned from tournaments are shown`);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
@@ -78,6 +81,16 @@ window.client = {
 			if([p+"toggletag"].includes(messageS[0])){
 				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
 				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}else
+			if([p+"banned"].includes(messageS[0])){
+				if(messageS.length > 1){
+					if(!isNaN(parseInt(messageS[1]))){
+						localStorage.setItem("ts-bannedType", ""+(window.client.textCommandConsts.bannedType = +messageS[1]));
+						window.client.sendSystemMessage(`Banned user show type is now ${window.client.textCommandConsts.bannedType}`);
+						return false;
+					}
+				}
+				window.client.sendSystemMessage(`Invalid input. Use a number from 0 to 1`);
 			}
 			return false;
 		}
@@ -695,6 +708,14 @@ window.normalizeArea = (area)=>{
 	.replace("Chamber",		"Cha.")
 }
 
+window.getVpColor = (vp)=>{
+	if(vp)
+	return vp < 75 ? "#ff0000" :
+			//vp == 75? "#ffff00" :
+			"#00ff00"
+	else "#aaa";
+}
+
 window.getHeroColor = function(Hero){
 	switch(Hero){
 		case "Magmax":
@@ -737,424 +758,444 @@ window.getHeroColor = function(Hero){
 	return "white";
 }
 
-	document.body.oncontextmenu = e => false;
-
-
-	let styles = document.createElement('style');
-	let newihtml = `.settings {
-		position: absolute;
-		top: 30%;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 250px;
-		height: 380px;
-		background-color: #000E;
-		border-radius: 5px;
-		color: #fff;
-		padding: 10px;
-	}
-	#leaderboard +
-	.player-contextmenu{
-		display:none!important;
-	}
-
-	.chat-message-contextmenu.fake{
-		width:200px;
-		height: 280px;
-		position: absolute;
-		right: 20px;
-		padding:10px;
-		background-color: #000000aa;
-		border: solid 2px #222;
-		border-radius: 10px;
-		color:white;
-	}
-
-	.chat-message-contextmenu.fake button.bbtn{
-		position:absolute;
-		border-radius: 4px;
-		width: 30px;
-		height: 20px;
-		border: none;
-		font-weight: bold;
-	}
-
-	.chat-message-contextmenu.fake button.bbtn{
-		color: #2a2a2a;
-    	background-color: #9b9b9b;
-	}
-
-	.chat-message-contextmenu.fake button#close.bbtn{
-		right: 10px;
-	}
-
-	.chat-message-contextmenu.fake button#log.bbtn{
-		left: 10px;
-	}
-
-	.chat-message-contextmenu.fake button#add.bbtn{
-		left: 50px;
-	}
-
-	.chat-message-contextmenu.fake button#reset.bbtn{
-		left: 90px;
-	}
-
-	.chat-message-contextmenu.fake > ul{
-		display: inline-block;
-		width:200px;
-		padding-inline-start: 0;
-	}
-
-	.chat-message-contextmenu.fake > ul > li{
-		text-align:center;
-		width:200px;
-	}
-
-	.chat-message-contextmenu.fake > ul > li > #timecounter > input{
-		width: 40px;
-		float: left;
-	}
-
-	.chat-message-contextmenu.fake > ul > li > #timecounter > #tc-result{
-		width: 100px;
-		float: right;
-		text-align: right;
-		margin: 0;
-	}
-	/*------------*/
-	.log-popup{
-		width:250px;
-		min-height: 0;
-    	max-height: 270px;
-		/*height:270px;*/
-		background-color:#c8c8c8;
-		z-index:1001;
-		position:absolute;
-		border: solid 2px #222;
-		border-radius: 10px;
-		overflow-y: auto;
-	}
-
-	.log-popup > .ele{
-		color:white;
-		width:100%;
-		height:25px;
-		background-color:#000;
-		margin-bottom:2px;
-		font-size: 8pt;
-		line-height: 22px;
-		text-align: center;
-	}
-
-	.log-popup > .ele.dead{
-		background-color:#7c5d5a;
-	}
-
-	.log-popup > .ele.alive{
-		background-color:#576a4d;
-	}
-
-	.log-popup > .ele.custom{
-		background-color: #807f45/*#949494*/;
-	}
-
-	.log-popup > .ele.arexit{
-		background-color: #949494;
-	}
-	.log-popup > .ele.victory{
-		background-color: #aa6600;
-	}
-
-	.log-popup > .ele > div{
-		float:left;
-	}
-
-	.log-popup > .ele > div#logid{
-		width:16%;
-	}
-	.log-popup > .ele > div#time{
-		width:25%;
-	}
-	.log-popup > .ele > div#map{
-		width:35%;
-	}
-	.log-popup > .ele > div#area{
-		width:24%;
-	}
-
-	.log-popup > .ele > div#map,
-	.log-popup > .ele > div#area{
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-	}
-
-	.logger-users::-webkit-scrollbar-track-piece,
-	.log-popup::-webkit-scrollbar-track-piece{ /*scrollbar back*/
-		/*background: #000000 !important;*/
-		background: rgba(0, 0, 0, 0)!important;
-		border: solid 5px rgba(0, 0, 0, 0)!important;
-	}
-
-	.logger-users::-webkit-scrollbar-thumb,
-	.log-popup::-webkit-scrollbar-thumb{ /*scrollbar thingie*/
-		/*background: #000000 !important;*/
-		background: rgb(82, 82, 82)!important;
-		border: solid 5px rgba(0, 0, 0, 0)!important;
-		border-radius: 5px!important;
-	}
-
-	.logger-users::-webkit-scrollbar,
-	.log-popup::-webkit-scrollbar{
-		width: 7px!important;
-	}
-
-	.log-popup-extra{
-		position: absolute;
-		background-color: #808080;
-		right: 520px;
-		width: 20px;
-		border-radius: 10px;
-	}
-
-	.log-popup-extra > input{
-		margin-top: 5px;
-		margin-bottom: 5px;
-		margin-left: 4px;
-		margin-right: 4px;
-	}
-
-	/*chechbox ------------------------------------*/
-	.custombox[type="checkbox"]:before {
-		position: relative;
-		display: block;
-		width: 11px;
-		height: 11px;
-		border: 1px solid #000;
-		content: "";
-	}
-
-	.custombox[type="checkbox"]:after {
-		position: relative;
-		display: block;
-		left: 2px;
-		top: -11px;
-		width: 7px;
-		height: 7px;
-		border-width: 1px;
-		border-style: solid;
-		border-color: transparent;
-		content: "";
-		background-color: darkder;
-		background-repeat: no-repeat;
-		background-position: center;
-	}
-
-	.custombox[type="checkbox"]:checked:after,
-	.custombox[type="checkbox"]:not(:disabled):checked:hover:after{
-		filter: brightness(100);
-		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAQAAABuW59YAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAB2SURBVHjaAGkAlv8A3QDyAP0A/QD+Dam3W+kCAAD8APYAAgTVZaZCGwwA5wr0AvcA+Dh+7UX/x24AqK3Wg/8nt6w4/5q71wAAVP9g/7rTXf9n/+9N+AAAtpJa/zf/S//DhP8H/wAA4gzWj2P4lsf0JP0A/wADAHB0Ngka6UmKAAAAAElFTkSuQmCC);
-	}
-
-	.custombox[type="checkbox"]:disabled:after {
-		-webkit-filter: opacity(0.4);
-	}
-
-	.custombox[type="checkbox"]:not(:disabled):hover:before {
-		border-color: white;
-	}
-
-	/*normal----------------------------------------------------------------*/
-	.custombox[type="checkbox"]:before{
-		background: #000;
-	}
-
-	/*dead----------------------------------------------------------------*/
-	.custombox.dead[type="checkbox"]:before{
-		background: #7c5d5a;
-	}
-
-	/*alive--------------------------------------------------------------*/
-	.custombox.alive[type="checkbox"]:before{
-		background: #576a4d;
-	}
-
-	/*custom-------------------------------------------------------------*/
-
-	.custombox.custom[type="checkbox"]:before{
-		background: #807f45;
-	}
-	/*arexit-------------------------------------------------------------*/
-
-	.custombox.arexit[type="checkbox"]:before{
-		background: #949494;
-	}
-
-	/*victory-------------------------------------------------------------*/
-
-	.custombox.victory[type="checkbox"]:before{
-		background: #aa6600;
-	}
-
-	/*toggle show users-------------------------------------------------------------*/
-
-	.custombox.lp[type="checkbox"]:before{
-		background: #890000;
-	}
-
-
-
-
-
-
-
-
-
-	/*leaderboard*/
-	#leaderboard{
-		transform-origin: 100% 0%!important;
-		left: unset!important;
-		right: 10px!important;
-	}
-	#leaderboard[aria-label="fat"]{
-		width:230px;
-	}
-
-
-
-
-
-	/*logger-users*/
-
-	.logger-users{
-		position:absolute;
-		width:300px;
-		max-height:40%;
-		left:50%;
-		top:50%;
-		transform: translate(-50%, -50%);
-		background-color: #000000aa;
-		color: white;
-		overflow-y: auto;
-		border-radius: 10px;
-	}
-
-	.logger-users > #extras > button, .logger-users > #extras > input#pastesel{
-		background-color: #1e1e1e;
-		border: solid 2px #272727;
-		margin-left: 10px;
-		margin-top: 5px;
-		margin-bottom: 5px;
-		width: 110px;
-		font-size: 12pt;
-	}
-
-	.logger-users > #extras > button{
-		color: #b04300;
-    	font-weight: bold;
-	}
-
-	.logger-users > #extras > input#pastesel{
-		width: 120px;
-		color: #a3b000;
-    	font-weight: bold;
-	}
-
-	.logger-users > #extras > input#pastesel::placeholder{
-		color: #b04300;
-    	font-weight: bold;
-		font-size: 12pt;
-	}
-
-	.logger-users > #extras > input.custombox.lp{
-		margin-left: 8px;
-	}
-
-	.logger-users > #holder > div{
-		text-align: center;
-		height: 30px;
-		line-height: 30px;
-		background-color: transparent;
-		border-bottom: solid 1px white;
-	}
-
-	.logger-users > #holder > div > input{
-		float: left;
-		margin-top: 8px;
-		margin-left: 8px;
-	}
-	.logger-users > #holder > div > p{
-		margin: 0;
-		margin-right: 25px;
-	}
-
-	.logger-users > #holder::-webkit-scrollbar-thumb{
-		background: rgb(183 183 183)!important;
-	}`
-	if(window.tags){
-		if(window.tags["[SCR]"]){
-			let newarr = [];
-			for(var i in window.tags["[SCR]"]){
-				newarr.push('span[arialabel="'+ window.tags["[SCR]"][i] +'"]::before')
-			}
-			newihtml += newarr.join(",");
+document.body.oncontextmenu = e => false;
+
+
+let styles = document.createElement('style');
+let newihtml = `.settings {
+	position: absolute;
+	top: 30%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 250px;
+	height: 380px;
+	background-color: #000E;
+	border-radius: 5px;
+	color: #fff;
+	padding: 10px;
+}
+#leaderboard +
+.player-contextmenu{
+	display:none!important;
+}
+
+.chat-message-contextmenu.fake{
+	width:200px;
+	height: 306px;
+	position: absolute;
+	right: 20px;
+	padding:10px;
+	background-color: #000000aa;
+	border: solid 2px #222;
+	border-radius: 10px;
+	color:white;
+	z-index: 10;
+}
+
+.chat-message-contextmenu.fake > aa.banned-text0{
+	position: absolute;
+	color: #ff000045;
+	top: 120px;
+	left: -10px;
+	font-size: 3.6em;
+	z-index: -1;
+	transform: rotate(316deg);
+}
+
+.chat-message-contextmenu.fake > aa.banned-text1{
+	position: absolute;
+	color: #ff0000;
+	bottom: 0;
+	right: 2px;
+	font-size: 1.6em;
+	z-index: -1;
+}
+
+.chat-message-contextmenu.fake button.bbtn{
+	position:absolute;
+	border-radius: 4px;
+	width: 30px;
+	height: 20px;
+	border: none;
+	font-weight: bold;
+}
+
+.chat-message-contextmenu.fake button.bbtn{
+	color: #2a2a2a;
+	background-color: #9b9b9b;
+}
+
+.chat-message-contextmenu.fake button#close.bbtn{
+	right: 10px;
+}
+
+.chat-message-contextmenu.fake button#log.bbtn{
+	left: 10px;
+}
+
+.chat-message-contextmenu.fake button#add.bbtn{
+	left: 50px;
+}
+
+.chat-message-contextmenu.fake button#reset.bbtn{
+	left: 90px;
+}
+
+.chat-message-contextmenu.fake > ul{
+	display: inline-block;
+	width:200px;
+	padding-inline-start: 0;
+}
+
+.chat-message-contextmenu.fake > ul > li{
+	text-align:center;
+	width:200px;
+}
+
+.chat-message-contextmenu.fake > ul > li > #timecounter > input{
+	width: 40px;
+	float: left;
+}
+
+.chat-message-contextmenu.fake > ul > li > #timecounter > #tc-result{
+	width: 100px;
+	float: right;
+	text-align: right;
+	margin: 0;
+}
+/*------------*/
+.log-popup{
+	width:250px;
+	min-height: 0;
+	max-height: 270px;
+	/*height:270px;*/
+	background-color:#c8c8c8;
+	z-index:1001;
+	position:absolute;
+	border: solid 2px #222;
+	border-radius: 10px;
+	overflow-y: auto;
+}
+
+.log-popup > .ele{
+	color:white;
+	width:100%;
+	height:25px;
+	background-color:#000;
+	margin-bottom:2px;
+	font-size: 8pt;
+	line-height: 22px;
+	text-align: center;
+}
+
+.log-popup > .ele.dead{
+	background-color:#7c5d5a;
+}
+
+.log-popup > .ele.alive{
+	background-color:#576a4d;
+}
+
+.log-popup > .ele.custom{
+	background-color: #807f45/*#949494*/;
+}
+
+.log-popup > .ele.arexit{
+	background-color: #949494;
+}
+.log-popup > .ele.victory{
+	background-color: #aa6600;
+}
+
+.log-popup > .ele > div{
+	float:left;
+}
+
+.log-popup > .ele > div#logid{
+	width:16%;
+}
+.log-popup > .ele > div#time{
+	width:25%;
+}
+.log-popup > .ele > div#map{
+	width:35%;
+}
+.log-popup > .ele > div#area{
+	width:24%;
+}
+
+.log-popup > .ele > div#map,
+.log-popup > .ele > div#area{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.logger-users::-webkit-scrollbar-track-piece,
+.log-popup::-webkit-scrollbar-track-piece{ /*scrollbar back*/
+	/*background: #000000 !important;*/
+	background: rgba(0, 0, 0, 0)!important;
+	border: solid 5px rgba(0, 0, 0, 0)!important;
+}
+
+.logger-users::-webkit-scrollbar-thumb,
+.log-popup::-webkit-scrollbar-thumb{ /*scrollbar thingie*/
+	/*background: #000000 !important;*/
+	background: rgb(82, 82, 82)!important;
+	border: solid 5px rgba(0, 0, 0, 0)!important;
+	border-radius: 5px!important;
+}
+
+.logger-users::-webkit-scrollbar,
+.log-popup::-webkit-scrollbar{
+	width: 7px!important;
+}
+
+.log-popup-extra{
+	position: absolute;
+	background-color: #808080;
+	right: 520px;
+	width: 20px;
+	border-radius: 10px;
+}
+
+.log-popup-extra > input{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+/*chechbox ------------------------------------*/
+.custombox[type="checkbox"]:before {
+	position: relative;
+	display: block;
+	width: 11px;
+	height: 11px;
+	border: 1px solid #000;
+	content: "";
+}
+
+.custombox[type="checkbox"]:after {
+	position: relative;
+	display: block;
+	left: 2px;
+	top: -11px;
+	width: 7px;
+	height: 7px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent;
+	content: "";
+	background-color: darkder;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.custombox[type="checkbox"]:checked:after,
+.custombox[type="checkbox"]:not(:disabled):checked:hover:after{
+	filter: brightness(100);
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAQAAABuW59YAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAB2SURBVHjaAGkAlv8A3QDyAP0A/QD+Dam3W+kCAAD8APYAAgTVZaZCGwwA5wr0AvcA+Dh+7UX/x24AqK3Wg/8nt6w4/5q71wAAVP9g/7rTXf9n/+9N+AAAtpJa/zf/S//DhP8H/wAA4gzWj2P4lsf0JP0A/wADAHB0Ngka6UmKAAAAAElFTkSuQmCC);
+}
+
+.custombox[type="checkbox"]:disabled:after {
+	-webkit-filter: opacity(0.4);
+}
+
+.custombox[type="checkbox"]:not(:disabled):hover:before {
+	border-color: white;
+}
+
+/*normal----------------------------------------------------------------*/
+.custombox[type="checkbox"]:before{
+	background: #000;
+}
+
+/*dead----------------------------------------------------------------*/
+.custombox.dead[type="checkbox"]:before{
+	background: #7c5d5a;
+}
+
+/*alive--------------------------------------------------------------*/
+.custombox.alive[type="checkbox"]:before{
+	background: #576a4d;
+}
+
+/*custom-------------------------------------------------------------*/
+
+.custombox.custom[type="checkbox"]:before{
+	background: #807f45;
+}
+/*arexit-------------------------------------------------------------*/
+
+.custombox.arexit[type="checkbox"]:before{
+	background: #949494;
+}
+
+/*victory-------------------------------------------------------------*/
+
+.custombox.victory[type="checkbox"]:before{
+	background: #aa6600;
+}
+
+/*toggle show users-------------------------------------------------------------*/
+
+.custombox.lp[type="checkbox"]:before{
+	background: #890000;
+}
+
+
+
+
+
+
+
+
+
+/*leaderboard*/
+#leaderboard{
+	transform-origin: 100% 0%!important;
+	left: unset!important;
+	right: 10px!important;
+}
+#leaderboard[aria-label="fat"]{
+	width:230px;
+}
+
+
+
+
+
+/*logger-users*/
+
+.logger-users{
+	position:absolute;
+	width:300px;
+	max-height:40%;
+	left:50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+	background-color: #000000aa;
+	color: white;
+	overflow-y: auto;
+	border-radius: 10px;
+}
+
+.logger-users > #extras > button, .logger-users > #extras > input#pastesel{
+	background-color: #1e1e1e;
+	border: solid 2px #272727;
+	margin-left: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 110px;
+	font-size: 12pt;
+}
+
+.logger-users > #extras > button{
+	color: #b04300;
+	font-weight: bold;
+}
+
+.logger-users > #extras > input#pastesel{
+	width: 120px;
+	color: #a3b000;
+	font-weight: bold;
+}
+
+.logger-users > #extras > input#pastesel::placeholder{
+	color: #b04300;
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+.logger-users > #extras > input.custombox.lp{
+	margin-left: 8px;
+}
+
+.logger-users > #holder > div{
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	background-color: transparent;
+	border-bottom: solid 1px white;
+}
+
+.logger-users > #holder > div > input{
+	float: left;
+	margin-top: 8px;
+	margin-left: 8px;
+}
+.logger-users > #holder > div > p{
+	margin: 0;
+	margin-right: 25px;
+}
+
+.logger-users > #holder::-webkit-scrollbar-thumb{
+	background: rgb(183 183 183)!important;
+}`
+if(window.tags){
+	if(window.tags["[SCR]"]){
+		let newarr = [];
+		for(var i in window.tags["[SCR]"]){
+			newarr.push('span[arialabel="'+ window.tags["[SCR]"][i] +'"]::before')
 		}
+		newihtml += newarr.join(",");
 	}
-	newihtml += `{
-		content: "[SCR]";
-		margin-right: 4px;
-		color: ${window.tagData["[SCR]"].color};
-	}`
-	if(window.tags){
-		if(window.tags["[TO]"]){
-			let newarr = [];
-			for(var i in window.tags["[TO]"]){
-				newarr.push('span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
-			}
-			newihtml += newarr.join(",");
+}
+newihtml += `{
+	content: "[SCR]";
+	margin-right: 4px;
+	color: ${window.tagData["[SCR]"].color};
+}`
+if(window.tags){
+	if(window.tags["[TO]"]){
+		let newarr = [];
+		for(var i in window.tags["[TO]"]){
+			newarr.push('span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
 		}
+		newihtml += newarr.join(",");
 	}
-	newihtml += `{
-		content: "[TO]";
-		margin-right: 4px;
-		color: ${window.tagData["[TO]"].color};
-	}`
-	if(window.tags){
-		if(window.tags["[TS]"]){
-			let newarr = [];
-			for(var i in window.tags["[TS]"]){
-				newarr.push('span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
-			}
-			newihtml += newarr.join(",");
+}
+newihtml += `{
+	content: "[TO]";
+	margin-right: 4px;
+	color: ${window.tagData["[TO]"].color};
+}`
+if(window.tags){
+	if(window.tags["[TS]"]){
+		let newarr = [];
+		for(var i in window.tags["[TS]"]){
+			newarr.push('span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
 		}
+		newihtml += newarr.join(",");
 	}
-	newihtml += `{
-		content: "[TS]";
-		margin-right: 4px;
-		color: ${window.tagData["[TS]"].color};
+}
+newihtml += `{
+	content: "[TS]";
+	margin-right: 4px;
+	color: ${window.tagData["[TS]"].color};
+}
+
+span[arialabel^="Guest"]::before{
+	content: "[guest]";
+	margin-right: 4px;
+	color: ${window.tagData["[guest]"].color};
+}
+`;
+
+styles.innerHTML = newihtml;
+
+document.head.appendChild(styles);
+
+document.addEventListener("keydown", (e)=>{
+	if(document.activeElement.localName === "input"){
+		if(document.activeElement?.getAttribute("type") != "checkbox") return;
 	}
-
-	span[arialabel^="Guest"]::before{
-		content: "[guest]";
-		margin-right: 4px;
-		color: ${window.tagData["[guest]"].color};
+	if(e.code == "KeyR"){
+		window.client.openLogger();
 	}
+});
 
-	`;
-
-	styles.innerHTML = newihtml;
-
-	document.head.appendChild(styles);
-
-	document.addEventListener("keydown", (e)=>{
-		if(document.activeElement.localName === "input"){
-			if(document.activeElement?.getAttribute("type") != "checkbox") return;
-		}
-		if(e.code == "KeyR"){
-			window.client.openLogger();
-		}
-	});
 window.checkGlobalError = ()=>{
 	if(globalThis._babelPolyfill){
 		return false;
@@ -1237,9 +1278,10 @@ window.updateLeaderboard = () => {
 			window.removeFakes();
 			const elem = document.createElement("div");
 			elem.className = "chat-message-contextmenu fake";
-			elem.style = `top: ${event.y}px;`;
+			elem.style = `top: ${event.y}px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
 			elem.id = "elem-"+name
 			elem.innerHTML =
+			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
 			`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
 			`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
 			`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
@@ -1248,7 +1290,8 @@ window.updateLeaderboard = () => {
 			`<ul style="display: table-cell;">`+
 				`<li style="display: table-cell;">`+
 					`<a href="/profile/${name}" target="_blank">Profile</a>`+
-					`<p>Hero: <b style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger;">${Hero}</b></p>`+
+					`<p>Hero: <b style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
+					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "not in same area" }</b></p>`+
 					`<p id="c1">Level: ${Level}</p>`+
 					`<p id="c2">ss: ${0}</p>`+
 					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
