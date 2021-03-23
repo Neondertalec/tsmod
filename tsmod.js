@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.17
+// @version     1.1.18
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -12,6 +12,8 @@
 // @grant       none
 // ==/UserScript==
 
+window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
+
 window.tags = {
 	'[SCR]':['DepressionOwU'],
 	'[TS]': ['ylzaac😎',
@@ -19,7 +21,7 @@ window.tags = {
 		'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
-	'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram'],
+	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', '1Phoenix1', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
 	'[Sr. Mod]': ['Jackal'],
 	'[H. Mod]': ['Exoriz', 'extirpater'],
@@ -71,6 +73,7 @@ window.client = {
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
+		bannedType: +getLocal("ts-bannedType", "0"),
 	},
 
 	checkMsg: function(value){
@@ -79,7 +82,7 @@ window.client = {
 			const messageS = value.split(" ");
 
 			if(["#", p, p+"help"].includes(messageS[0])){
-				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF `);
+				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF<br>${p}banned - change the way users banned from tournaments are shown`);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
@@ -92,6 +95,16 @@ window.client = {
 			if([p+"toggletag"].includes(messageS[0])){
 				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
 				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}else
+			if([p+"banned"].includes(messageS[0])){
+				if(messageS.length > 1){
+					if(!isNaN(parseInt(messageS[1]))){
+						localStorage.setItem("ts-bannedType", ""+(window.client.textCommandConsts.bannedType = +messageS[1]));
+						window.client.sendSystemMessage(`Banned user show type is now ${window.client.textCommandConsts.bannedType}`);
+						return false;
+					}
+				}
+				window.client.sendSystemMessage(`Invalid input. Use a number from 0 to 1`);
 			}
 			return false;
 		}
@@ -709,6 +722,14 @@ window.normalizeArea = (area)=>{
 	.replace("Chamber",		"Cha.")
 }
 
+window.getVpColor = (vp)=>{
+	if(vp)
+	return vp < 75 ? "#ff0000" :
+			//vp == 75? "#ffff00" :
+			"#00ff00"
+	else "#aaa";
+}
+
 window.getHeroColor = function(Hero){
 	switch(Hero){
 		case "Magmax":
@@ -775,7 +796,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 	.chat-message-contextmenu.fake{
 		width:200px;
-		height: 280px;
+		height: 306px;
 		position: absolute;
 		right: 20px;
 		padding:10px;
@@ -783,6 +804,26 @@ window.addEventListener('DOMContentLoaded', e=>{
 		border: solid 2px #222;
 		border-radius: 10px;
 		color:white;
+		z-index: 10;
+	}
+
+	.chat-message-contextmenu.fake > aa.banned-text0{
+		position: absolute;
+		color: #ff000045;
+		top: 120px;
+		left: -10px;
+		font-size: 3.6em;
+		z-index: -1;
+		transform: rotate(316deg);
+	}
+
+	.chat-message-contextmenu.fake > aa.banned-text1{
+		position: absolute;
+		color: #ff0000;
+		bottom: 0;
+		right: 2px;
+		font-size: 1.6em;
+		z-index: -1;
 	}
 
 	.chat-message-contextmenu.fake button.bbtn{
@@ -1155,7 +1196,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 		margin-right: 4px;
 		color: ${window.tagData["[guest]"].color};
 	}
-
 	`;
 
 	styles.innerHTML = newihtml;
@@ -1254,9 +1294,10 @@ window.updateLeaderboard = () => {
 			window.removeFakes();
 			const elem = document.createElement("div");
 			elem.className = "chat-message-contextmenu fake";
-			elem.style = `top: ${event.y}px;`;
+			elem.style = `top: ${event.y}px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
 			elem.id = "elem-"+name
 			elem.innerHTML =
+			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
 			`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
 			`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
 			`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
@@ -1265,7 +1306,8 @@ window.updateLeaderboard = () => {
 			`<ul style="display: table-cell;">`+
 				`<li style="display: table-cell;">`+
 					`<a href="/profile/${name}" target="_blank">Profile</a>`+
-					`<p>Hero: <b style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger;">${Hero}</b></p>`+
+					`<p>Hero: <b style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
+					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "not in same area" }</b></p>`+
 					`<p id="c1">Level: ${Level}</p>`+
 					`<p id="c2">ss: ${0}</p>`+
 					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
