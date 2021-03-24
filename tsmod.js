@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.19
+// @version     1.1.20
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -172,37 +172,43 @@ window.client = {
 		}
 		if(u){
 			if(!document.getElementById("log-" + name) && !deleted){
+				elpos = document.querySelector(".chat-message-contextmenu.fake");
+				elposy = parseInt(elpos.style.top.substring(0, elpos.style.top.length-2));
+				elposx = parseInt(elpos.style.right.substring(0, elpos.style.right.length-2));
 				const elem = document.createElement("div");
 				elem.id = "log-" + name;
-				elem.style.top = `${y}px`;
-				elem.style.right = `260px`;
+				elem.style.top = `${elposy}px`;
+				elem.style.right = `${elposx + 230}px`;
 				elem.className = "log-popup";
 				//ele
-
+				
+				
 				let list = [...u.travel, ...u.deaths].sort((a1,a2)=>{return a1[0]-a2[0]});
-
+				
 				for(var i = 0; i < list.length; i++){
 					const line = document.createElement("div");
 					line.style.display = window.client.logTypesToShow.includes(list[i][4]) ? "": "none";
 					line.className = `ele ${window.styleByNr(list[i][4])}`;
-
+					
 					line.innerHTML = `<div id="logid">${list[i][5]}|</div><div id="time">${list[i][1]}</div><div id="map">${window.getShortName(list[i][2])}</div><div id="area">${window.normalizeArea(list[i][3])}</div>`
-
+					
 					elem.appendChild(line);
 				}
-
+				
 				document.body.appendChild(elem);
-
+				
 				const elem2 = document.createElement("div");
 				elem2.id = "log-h-" + name;
-				elem2.style.top = `${y}px`;
+				elem2.style.top = `${elposy}px`;
+				elem2.style.right = `${elposx + 490}px`;
 				elem2.className = "log-popup-extra";
-
+				
 				for(var i = 0; i < 6; i++){
 					elem2.innerHTML += `<input type="checkbox" onclick="window.client.editLogType(this)" ${window.client.logTypesToShow.includes(i) ? "checked": ""} class="custombox ${window.styleByNr(i)}"></input>`;
 				}
-
+				
 				document.body.appendChild(elem2);
+				window.makeDragable(elem, [elem, elem2])
 				return [elem, elem2];
 			}else
 			if(!deleted){
@@ -777,7 +783,10 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 
 	let styles = document.createElement('style');
-	let newihtml = `.settings {
+	let newihtml = `
+	body{overflow:hidden;}
+	
+	.settings {
 		position: absolute;
 		top: 30%;
 		left: 50%;
@@ -1294,7 +1303,7 @@ window.updateLeaderboard = () => {
 			window.removeFakes();
 			const elem = document.createElement("div");
 			elem.className = "chat-message-contextmenu fake";
-			elem.style = `top: ${event.y}px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
+			elem.style = `top: ${event.y}px; right: 20px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
 			elem.id = "elem-"+name
 			elem.innerHTML =
 			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
@@ -1326,6 +1335,7 @@ window.updateLeaderboard = () => {
 			elem.onClick = function(e) {
 				return e.stopPropagation()
 			}
+			window.makeDragable(elem, [elem]);
 
 			const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
 			const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
@@ -1348,6 +1358,34 @@ window.updateLeaderboard = () => {
 	}
 }
 
+window.makeDragable = (elem, elems2drag)=>{
+	elem.addEventListener("mousedown", (e)=>{
+		if(window.firstPos == null || window.firstPos[2] == null){
+			window.firstPos = [e.screenX,e.screenY, elems2drag];
+			console.log(e);
+		}
+	});
+}
+document.addEventListener("mousemove", (e)=>{
+	if(window.firstPos != null && [e.screenX, e.screenY].join("") != "00"){
+		if(window.firstPos[2] != null){
+			if(e.stopPropagation) e.stopPropagation();
+    		if(e.preventDefault) e.preventDefault();
+			for(var i = 0; i < window.firstPos[2].length; i++){
+				let el = window.firstPos[2][i];
+				el.style.top = (parseInt(el.style.top.substring(0, el.style.top.length-2)) + e.screenY - window.firstPos[1]) + "px";
+				el.style.right = (parseInt(el.style.right.substring(0, el.style.right.length-2)) + (window.firstPos[0] - e.screenX) ) + "px";
+				//e.screenX,e.screenY
+			}
+			window.firstPos = [e.screenX,e.screenY, window.firstPos[2]];
+			console.log(e);
+		}
+	}
+});
+document.addEventListener("mouseup", (e)=>{
+	window.firstPos = null;
+	console.log(e);
+});
 let settings = document.createElement('label');
 settings.innerHTML = "showClasses";
 
