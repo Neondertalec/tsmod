@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.20
+// @version     1.1.21
 // @description	Evades.io TS script.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -172,9 +172,11 @@ window.client = {
 		}
 		if(u){
 			if(!document.getElementById("log-" + name) && !deleted){
-				elpos = document.querySelector(".chat-message-contextmenu.fake");
-				elposy = parseInt(elpos.style.top.substring(0, elpos.style.top.length-2));
-				elposx = parseInt(elpos.style.right.substring(0, elpos.style.right.length-2));
+				const elpos = document.querySelector(".chat-message-contextmenu.fake");
+				let elposy = parseInt(elpos?.style?.top?.substring(0, elpos?.style?.top?.length-2));
+				let elposx = parseInt(elpos?.style?.right?.substring(0, elpos?.style?.right?.length-2));
+				elposy = isNaN(elposy) ? 0 : elposy;
+				elposx = isNaN(elposx) ? 0 : elposx;
 				const elem = document.createElement("div");
 				elem.id = "log-" + name;
 				elem.style.top = `${elposy}px`;
