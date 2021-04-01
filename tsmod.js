@@ -1,8 +1,8 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.23
+// @version     1.1.24
 // @description	Evades.io TS script.
-// @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
+// @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
 // @match       https://evades.online/*
 // @match       https://eu.evades.io/*
