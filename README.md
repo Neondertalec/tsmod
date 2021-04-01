@@ -50,10 +50,31 @@ xm.send();
 eval(xm.response)
 ```
 
+Update 1.1.23
+=============
+
+Not allowed heroes
+------------------
+By clicking on the hero ( <text style="color:#ff80bd">**Candy**</text> in this example ):  
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/827224134147637258/unknown.png)  
+
+A window will appear:  
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/827224181455978516/unknown.png)  
+  
+By clicking on any of the heroes it will toggle *(**black** <--> **dark red**)*:  
+  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/827224248090099760/unknown.png)  
+  
+If the hero is **dark red**, the hero on the user card will be crossed:  
+  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/827224308840792165/unknown.png)    
+
 Update 1.1.19
 =============
 Victroy points
----------------
+--------------
 Now user cards display victory points  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/824002506643603476/unknown.png)  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/824002565397938266/unknown.png)  
