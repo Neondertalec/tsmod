@@ -47,6 +47,7 @@ window.client = {
 		level:null,
 		speed:null,
 		xp:null,
+		hero:null,
 	},
 
 	logTypesToShow:[0,1,2,3,4,5],
@@ -56,10 +57,88 @@ window.client = {
 	userlog:{},
 	userlog2:{},
 	chat:null,
+	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]")),
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
 		bannedType: +getLocal("ts-bannedType", "0"),
+	},
+
+	toggleAllowedHeroe: function(nr){
+		
+		let f = (t)=>{
+			if(window.client.elem.hero != null){
+				if(window.client.elem.hero.innerText == id2name(nr)){
+					if(t) window.client.elem.hero.className = "";
+					else window.client.elem.hero.className = "blacklisted";
+				}
+			}
+		}
+
+		if(window.client.allowedHeroes.includes(nr)){
+			window.client.allowedHeroes.splice(window.client.allowedHeroes.indexOf(nr), 1);
+			f(false);
+		}else{
+			window.client.allowedHeroes.push(nr);
+			f(true);
+		}
+		
+		localStorage.setItem("ts-allowedHeroes", JSON.stringify(window.client.allowedHeroes));
+	},
+
+	toggleHeroList: function(hideOnly = false){
+		const THELEM = document.querySelector(".herolist");
+		console.log(THELEM);
+		if(THELEM){
+			console.log("remove");
+			THELEM.parentNode.remove();
+		}
+		if(hideOnly){
+			return;
+		}
+		const backpan = document.createElement("div");
+		backpan.style.position = "absolute";
+		backpan.style.width = "100%";
+		backpan.style.height = "100%";
+
+		backpan.addEventListener("click", ()=>{
+			console.log("click")
+			window.client.toggleHeroList(true);
+		});
+
+		document.body.appendChild(backpan);
+
+		const popup = document.createElement("div");
+		popup.className = "herolist";
+		
+		popup.addEventListener("click", (e)=>{
+			console.log("click2")
+			e.stopPropagation();
+		});
+
+		for(let i = 0; i < 18; i++){
+			let hero = id2name(i);
+			let color = window.getHeroRealColor(hero);
+			const block = document.createElement("div");
+			block.className = `block asnr${i}`;
+
+			block.innerHTML +=
+			`<div class="hero" style="background-color: ${color}"></div>`+
+			`<div class="text" style="color: ${color}">${hero}</div>`
+			;
+
+			if(window.client.allowedHeroes.includes(i)) block.style.backgroundColor = "#000";
+			else block.style.backgroundColor = "#330000";
+			block.addEventListener("click", ()=>{
+				console.log("clicked on " + i)
+				window.client.toggleAllowedHeroe(i);
+				if(window.client.allowedHeroes.includes(i)) block.style.backgroundColor = "#000";
+				else block.style.backgroundColor = "#330000";
+			});
+			popup.appendChild(block);
+		}
+
+		backpan.appendChild(popup);
 	},
 
 	checkMsg: function(value){
@@ -724,6 +803,16 @@ window.getVpColor = (vp)=>{
 	else return "#aaa";
 }
 
+window.getHeroRealColor = function(Hero){
+	switch(Hero){
+		case "Rime":
+			return "#3333ff";//"#3333ff";
+		case "Reaper":
+			return "#424a59";//"#424a59";
+	}
+	return window.getHeroColor(Hero);
+}
+
 window.getHeroColor = function(Hero){
 	switch(Hero){
 		case "Magmax":
@@ -873,6 +962,23 @@ window.getHeroColor = function(Hero){
 		float: right;
 		text-align: right;
 		margin: 0;
+	}
+
+	.blacklisted{
+		position:relative;
+	}
+
+	.blacklisted::after{
+		content: " ";
+		background-color: red;
+		width: 110%;
+		height: 2px;
+		position: absolute;
+		left: -5%;
+		top: 50%;
+		border-radius: 50%;
+		border: solid 1px #2f0000;
+		transform: translateY(-10%);
 	}
 	/*------------*/
 	.log-popup{
@@ -1075,7 +1181,61 @@ window.getHeroColor = function(Hero){
 
 
 
+	/*herolist*/
 
+	.herolist::-webkit-scrollbar-track-piece{ /*scrollbar back*/
+		/*background: #000000 !important;*/
+		background: #ffffff40!important;
+		border: solid 5px rgba(0, 0, 0, 0)!important;
+	}
+
+	.herolist::-webkit-scrollbar-thumb{ /*scrollbar thingie*/
+		/*background: #000000 !important;*/
+		background: #c1c1c1!important;
+		border: solid 5px rgba(0, 0, 0, 0)!important;
+		border-radius: 5px!important;
+	}
+
+	.herolist::-webkit-scrollbar{
+		width: 7px!important;
+	}
+
+	.herolist{
+		width:500px;
+		height:400px;
+		max-height: 50%;
+		position:absolute;
+		left:50%;
+		top:50%;
+		transform: translate(-50%, -50%);
+		background-color: #000000aa;
+		z-index: 10;
+		overflow-y: scroll;
+	}
+
+	.herolist > .block{
+		width: 100px;
+		height: 100px;
+		background-color: #000;
+		margin: 11px 11px 11px 12px;
+		float:left;
+	}
+
+	.herolist > .block > .hero{
+		width: 50%;
+		height: 50%;
+		background-color: red;
+		margin-left: 25%;
+		margin-top: 10px;
+		border-radius: 100%;
+	}
+
+	.herolist > .block > .text{
+		color: red;
+		text-align: center;
+		width: 100%;
+		margin-top: 10px;
+	}
 
 	/*logger-users*/
 
@@ -1204,6 +1364,9 @@ window.getHeroColor = function(Hero){
 		}
 		if(e.code == "KeyR"){
 			window.client.openLogger();
+		}else
+		if(e.code == "Escape"){
+			window.client.toggleHeroList(true);
 		}
 	});
 
@@ -1239,7 +1402,7 @@ window.updateLeaderboard = () => {
 
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
-			let Hero, Level, Name;
+			let HeroT, Hero, Level, Name;
 			if (client.state) {
 				for (let i in client.state.globalEntities) {
 					const element = client.state.globalEntities[i];
@@ -1262,7 +1425,8 @@ window.updateLeaderboard = () => {
 					if (element.name == event.toElement.innerHTML) {
                         window.z = element.name;
 
-						Hero = id2name(element.heroType);
+						HeroT = element.heroType;
+						Hero = id2name(HeroT);
 						Level = element.level;
 						Name = event.toElement.innerHTML;
 					}
@@ -1301,7 +1465,7 @@ window.updateLeaderboard = () => {
 			`<ul style="display: table-cell;">`+
 				`<li style="display: table-cell;">`+
 					`<a href="/profile/${name}" target="_blank">Profile</a>`+
-					`<p>Hero: <b style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
+					`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
 					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "###" }</b></p>`+
 					`<p id="c1">Level: ${Level}</p>`+
 					`<p id="c2">ss: ${0}</p>`+
@@ -1317,11 +1481,32 @@ window.updateLeaderboard = () => {
             window.client.elem.level = elem.querySelector("ul>li>p#c1");
             window.client.elem.speed = elem.querySelector("ul>li>p#c2");
             window.client.elem.xp = elem.querySelector("ul>li>p#c3");
+            window.client.elem.hero = elem.querySelector("ul>li>p>b#c4");
             window.r = elem;
 			elem.onClick = function(e) {
 				return e.stopPropagation()
 			}
 			window.makeDragable(elem, [elem]);
+
+			window.client.elem.hero.addEventListener("click", ()=>{
+				window.client.toggleHeroList();
+			});
+
+			const removcl = (el)=>{
+				el.addEventListener("click", (e)=>{
+					e.stopPropagation();
+				});
+				el.addEventListener("mousedown", (e)=>{
+					e.stopPropagation();
+				});
+			}
+			
+			removcl(window.client.elem.hero);
+			let btns = elem.querySelectorAll("button");
+			btns.forEach((btn)=>{
+				removcl(btn);
+			});
+
 
 			const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
 			const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
