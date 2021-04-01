@@ -63,6 +63,7 @@ A window will appear:
 
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/827224181455978516/unknown.png)  
   
+To close this window, click anywhere on the screen.  
 By clicking on any of the heroes it will toggle *(**black** <--> **dark red**)*:  
   
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/827224248090099760/unknown.png)  
