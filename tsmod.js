@@ -1452,7 +1452,7 @@ window.updateLeaderboard = () => {
 				Name = "undefined"
 			}
 
-			if (client.count > 0) document.getElementsByClassName('fake')[0].remove();
+			//if (client.count > 0) document.getElementsByClassName('fake')[0].remove();
 			client.count = 1;
 
 			const name = client.showClasses ? Name : event.toElement.innerHTML;
