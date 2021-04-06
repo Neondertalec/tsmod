@@ -50,6 +50,19 @@ xm.send();
 eval(xm.response)
 ```
 
+Update 1.1.27
+=============
+
+GRB (Go Right Bot)
+------------------
+
+Toggle grb by **`#grb`** command  
+if grb is **`on`**:
+1) when you press **`D`** or **`RIGHT ARROW`**, you will start moving right.
+2) You can not move with keys.
+
+when grb is turned **`off`**, you will stop and be able to play as always.
+
 Update 1.1.23
 =============
 
