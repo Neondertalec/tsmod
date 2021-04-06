@@ -63,6 +63,15 @@ window.client = {
 		showTag: getLocal("ts-showTag", "false") == "true",
 		bannedType: +getLocal("ts-bannedType", "0"),
 	},
+	grb:{
+		on: false,
+		grbKey: 3,
+		toggle: function(){
+			if(!(window.client.grb.on = !window.client.grb.on)){
+				window.client.state.keys.keyUp(window.client.grb.grbKey);
+			}
+		}
+	},
 
 	toggleAllowedHeroe: function(nr){
 		
@@ -147,7 +156,12 @@ window.client = {
 			const messageS = value.split(" ");
 
 			if(["#", p, p+"help"].includes(messageS[0])){
-				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF<br>${p}banned - change the way users banned from tournaments are shown`);
+				window.client.sendSystemMessage(
+					`${p} is the prefix<br>`+
+					`${p}prefix - set prefix<br>`+
+					`${p}toggletag - switches ON/OFF<br>`+
+					`${p}banned - change the way users banned from tournaments are shown<br>`+
+					`${p}grb - toggle grb mode (if on - onlu d and arrow right works. type again to stop)`);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
@@ -170,6 +184,10 @@ window.client = {
 					}
 				}
 				window.client.sendSystemMessage(`Invalid input. Use a number from 0 to 1`);
+			}else
+			if([p+"grb"].includes(messageS[0])){
+				window.client.grb.toggle();
+				window.client.sendSystemMessage(`GRB is now turned ${["off","on"][window.client.grb.on ? 1 : 0]}`);
 			}
 			return false;
 		}
@@ -854,6 +872,7 @@ window.getHeroColor = function(Hero){
 	}
 	return "white";
 }
+
 
 	document.body.oncontextmenu = e => false;
 
@@ -1698,7 +1717,20 @@ window.lastPrefix = {
 
 				tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
+				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
+				'if(!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
+
+				tmp = tmp.replace('null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))',
+				'if(!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
+
+				tmp = tmp.replace('this.downKeys=[]',
+				'if(!window.client.grb.on)this.downKeys=[]')
+
+				/*tmp = tmp.replace('&&this.gameState.keys.keyUp(t.GameKeyMap[e.keyCode])',
+				'&&((window.client.grb.on && t.GameKeyMap[e.keyCode] !== window.client.grb.grbKey) &&(this.gameState.keys.keyUp(t.GameKeyMap[e.keyCode])))')*/
+
 				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
+
 
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
