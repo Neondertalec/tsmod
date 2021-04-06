@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.26
+// @version     1.1.27
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -76,6 +76,15 @@ window.client = {
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
 		bannedType: +getLocal("ts-bannedType", "0"),
+	},
+	grb:{
+		on: false,
+		grbKey: 3,
+		toggle: function(){
+			if(!(window.client.grb.on = !window.client.grb.on)){
+				window.client.state.keys.keyUp(window.client.grb.grbKey);
+			}
+		}
 	},
 
 	toggleAllowedHeroe: function(nr){
@@ -161,7 +170,12 @@ window.client = {
 			const messageS = value.split(" ");
 
 			if(["#", p, p+"help"].includes(messageS[0])){
-				window.client.sendSystemMessage(`${p} is the prefix<br>${p}prefix - set prefix<br>${p}toggletag - switches ON/OFF<br>${p}banned - change the way users banned from tournaments are shown`);
+				window.client.sendSystemMessage(
+					`${p} is the prefix<br>`+
+					`${p}prefix - set prefix<br>`+
+					`${p}toggletag - switches ON/OFF<br>`+
+					`${p}banned - change the way users banned from tournaments are shown<br>`+
+					`${p}grb - toggle grb mode (if on - onlu d and arrow right works. type again to stop)`);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
@@ -184,6 +198,10 @@ window.client = {
 					}
 				}
 				window.client.sendSystemMessage(`Invalid input. Use a number from 0 to 1`);
+			}else
+			if([p+"grb"].includes(messageS[0])){
+				window.client.grb.toggle();
+				window.client.sendSystemMessage(`GRB is now turned ${["off","on"][window.client.grb.on ? 1 : 0]}`);
 			}
 			return false;
 		}
@@ -1715,7 +1733,17 @@ new MutationObserver(function(mutations) {
 
 				tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
+				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
+				'if(!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
+
+				tmp = tmp.replace('null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))',
+				'if(!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
+
+				tmp = tmp.replace('this.downKeys=[]',
+				'if(!window.client.grb.on)this.downKeys=[]')
+
 				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
+
 
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
