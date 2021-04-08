@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.29
+// @version     1.1.30
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -11,6 +11,42 @@
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @grant       none
 // ==/UserScript==
+
+window.vers = {
+	v: "1.1.30",
+	getm: function(){
+		var xm=new XMLHttpRequest();
+		xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
+		xm.send();
+		return JSON.parse(xm.response);
+	},
+	
+	checkVer: function(v1, v2){
+		[v1, v2] = [v1.split(".").map((v)=>parseInt(v)), v2.split(".").map((v)=>parseInt(v))]
+		for(var i = 0; i < v1.length; i++){    
+			if(v1[i] < v2[i]){
+				return true;
+			}
+		}
+		return false;
+	},
+
+	check: function(){
+		const d = this.getm();
+
+		if(this.checkVer(this.v,d.v)){
+			console.log("e");
+			const ver = document.createElement("div");
+			ver.id = "version-warning";
+			
+			ver.innerHTML = `<div class="v-title">TS mod</div><br><div class="v-cv">Current version: </div><div>${this.v}</div><br><div class="v-nv">Latest version: </div><div>${d.v}</div>`;
+
+			document.body.appendChild(ver);
+		}else{
+			console.log("ee");
+		}
+	}
+}
 
 window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
 
@@ -891,6 +927,7 @@ window.getHeroColor = function(Hero){
 }
 
 window.addEventListener('DOMContentLoaded', e=>{
+	window.vers.check();
 	document.body.oncontextmenu = e => false;
 
 
@@ -898,6 +935,36 @@ window.addEventListener('DOMContentLoaded', e=>{
 	let newihtml = `
 	body{overflow:hidden;}
 	
+	#version-warning{
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	#version-warning > div{
+		float:left;
+		margin-left: 10px;
+	}
+
+	#version-warning > .v-title{
+		text-align: center;
+    	width: 100%;
+		color: darksalmon;
+	}
+
+	#version-warning > .v-cv, #version-warning > .v-cv + div{
+		color: goldenrod;
+	}
+
+	#version-warning > .v-nv{
+		margin-right: 12px;
+		color: forestgreen;
+	}
+
+	#version-warning > .v-nv + div{
+		color: forestgreen;
+	}
+
+	/*otherrrrrrr*/
 	.settings {
 		position: absolute;
 		top: 30%;
