@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.31
+// @version     1.1.32
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -13,7 +13,7 @@
 // ==/UserScript==
 
 window.vers = {
-	v: "1.1.30",
+	v: "1.1.32",
 	getm: function(){
 		var xm=new XMLHttpRequest();
 		xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
