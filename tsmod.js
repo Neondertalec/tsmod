@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.30
+// @version     1.1.31
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -88,7 +88,11 @@ window.secondsFormat = (time, m=true) =>{
 };
 window.timeZero = 0;
 window.getTime = ()=>{
-	if(window.timeZero == 0)window.timeZero = Date.now();
+	if(window.timeZero == 0){
+		window.timeZero = Date.now();
+		const vc = document.getElementById("version-warning");
+		if(vc) vc.remove();
+	}
 
 	return Math.floor((Date.now() - window.timeZero)/1000);//client.state.self.entity.survivalTime;
 };
