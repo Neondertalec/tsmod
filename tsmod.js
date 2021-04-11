@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.32
+// @version     1.1.33
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -13,7 +13,70 @@
 // ==/UserScript==
 
 window.vers = {
-	v: "1.1.32",
+	chlogMut: null,
+	v: "1.1.33",
+	changeLog: [
+		{
+			version:`1.1.33`,
+			news:[`Changelog!`, `Fixed a bug when you could get a gray screen at a random moment.`]
+		},
+		{
+			version:`1.1.32`,
+			news:[`Display current and new version if an update is available.`]
+		},
+		{
+			version:`1.1.29`,
+			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `DEFA`]]
+		},
+		{
+			version:`1.1.28`,
+			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `,DSG,`,`piger`]]
+		},
+		{
+			version:`1.1.27`,
+			news:[`GRB (Go Right Bot)<br>Added new command: #grb.`]
+		},
+		{
+			version:`1.1.26`,
+			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `prod1gy`, `Zade`]]
+		},
+		{
+			version:`1.1.23`,
+			news:[`Allowed heroes.<br>On hero click a popup will appear.<br>In the popup you can sellect heroes you want to see crossed in the user card.`]
+		},
+		{
+			version:`1.1.22`,
+			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from Priox.`]
+		},
+		{
+			version:`1.1.21`,
+			news:[`Made user cards and user logs dragable.`]
+		},
+		{
+			version:`1.1.19`,
+			news:[`Added 'BANNED' to user who are banned from tournaments.`]
+		},
+		{
+			version:`1.1.15`,
+			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from drippyk.`]
+		},
+		{
+			version:`1.1.13`,
+			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `LightY`]]
+		},
+		{
+			version:`1.1.12`,
+			news:[`From now on the script will work all the time.`]
+		},
+		{
+			version:`1.1.10`,
+			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `Stryker123`], `Became a Ts and made my tag ${`[TS&Scripter]`.fontcolor(`#009eff`)} instead of ${`[Scripter]`.fontcolor(`#009eff`)}.`]
+		},
+		{
+			version:`1.1.2`,
+			news:[`Updated user card.`, `Export/Import logs.`]
+		},
+	],
 	getm: function(){
 		var xm=new XMLHttpRequest();
 		xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
@@ -35,18 +98,123 @@ window.vers = {
 		const d = this.getm();
 
 		if(this.checkVer(this.v,d.v)){
-			console.log("e");
 			const ver = document.createElement("div");
 			ver.id = "version-warning";
 			
 			ver.innerHTML = `<div class="v-title">TS mod</div><br><div class="v-cv">Current version: </div><div>${this.v}</div><br><div class="v-nv">Latest version: </div><div>${d.v}</div>`;
 
 			document.body.appendChild(ver);
-		}else{
-			console.log("ee");
+		}
+	},
+
+	
+	genLog: function(version, news){
+		let newData = 
+		`<div class="changelog-section">`+
+			`<div class="changelog-section-header">`+
+				`<span style="vertical-align: middle;">${version}</span>`+
+			`</div>`+
+			`<ul class="changelog-change-list">`;
+
+		for(let i = 0; i < news.length; i++){
+			if(typeof news[i] == "string"){
+				newData += `<li>${news[i]}</li>`
+			}else{
+				newData += `<li>${news[i][0]}`
+				newData += `<ul>`
+				for(let j = 1; j < news[i].length; j++){
+					newData += `<li>${news[i][j]}</li>`
+				}
+				newData += `</ul></li>`
+			}
+		}
+		newData +=
+			`</ul>`+
+		`</div>`;
+		
+		return newData;
+	},
+	/*color: function(text, color){
+		return `<aa style="${color}">${text}</aa>`;
+	}*/
+}
+
+window.vers.chlogMut = new MutationObserver(function (m) {
+	const chlog = document.querySelector('.changelog');
+	
+	
+	if (chlog && !document.getElementById("tsm-chlog")) {
+		const newEl = document.createElement("div");
+		newEl.id = "tsm-chlog";
+		chlog.parentNode.appendChild(newEl);
+		
+		const btn1 = document.createElement("button");
+		const btn2 = document.createElement("button");
+
+		btn1.innerText = "Evades.io"; btn2.innerText = "TS Mod";
+		btn1.style.height = btn2.style.height = "24px";
+		btn1.style.width = btn2.style.width = "50%";
+
+		btn1.style.backgroundColor = btn2.style.backgroundColor = "antiquewhite";
+		btn1.style.border = btn2.style.border = "solid 2px #000";
+		btn1.style.borderRadius = btn2.style.borderRadius = "6px";
+		
+		btn1.addEventListener("click", (e)=>{
+			newEl.style.height = "24px";
+		});
+		btn2.addEventListener("click", (e)=>{
+			newEl.style.height = "274px";
+		});
+
+		newEl.appendChild(btn1);
+		newEl.appendChild(btn2);
+		
+		const alog = document.createElement("div");
+		alog.style.width = "300px";
+		alog.style.height = "250px";
+		alog.style.overflow = "auto";
+
+		alog.innerHTML = `<div class="changelog-header">Changelog</div>`;
+		const arr = window.vers.changeLog;
+		for(let i = 0; i < arr.length; i++){
+			alog.innerHTML += window.vers.genLog(arr[i].version, arr[i].news);
+		}
+		newEl.appendChild(alog);
+		//newEl.appendChild(chlog);
+		
+		newEl.style.float = "left";
+		newEl.style.width = "300px";
+		newEl.style.height = "24px";//"274px";
+		newEl.style.position = "absolute";
+		newEl.style.left = "50%";
+		newEl.style.transform = "translate(-500px, -24px)";
+		newEl.style.border = "1px solid #585858";
+		newEl.style.borderRadius = "5px";
+		newEl.style.color = "#fff";
+		newEl.style.backgroundColor = "#222";
+		
+		newEl.style.overflow = "hidden";
+
+		/*chlog.style.position = "inherit";
+		chlog.style.left = "0";
+		chlog.style.transform = "translate(0,0)";*/
+
+		//chlog.style.backgroundColor = '#db1512';
+		
+		if(newEl.previousElementSibling)
+		newEl.parentNode.insertBefore(newEl, newEl.previousElementSibling);
+		
+		//window.vers.chlogMut.disconnect();
+	}else
+	if(!chlog){
+		if(document.getElementById("tsm-chlog")){
+			document.getElementById("tsm-chlog").remove();
+			window.vers.chlogMut.disconnect();
 		}
 	}
-}
+});
+window.vers.chlogMut.observe(document, {childList: true, subtree: true});
+
 
 window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
 
@@ -154,9 +322,7 @@ window.client = {
 
 	toggleHeroList: function(hideOnly = false){
 		const THELEM = document.querySelector(".herolist");
-		console.log(THELEM);
 		if(THELEM){
-			console.log("remove");
 			THELEM.parentNode.remove();
 		}
 		if(hideOnly){
@@ -168,7 +334,6 @@ window.client = {
 		backpan.style.height = "100%";
 
 		backpan.addEventListener("click", ()=>{
-			console.log("click")
 			window.client.toggleHeroList(true);
 		});
 
@@ -178,7 +343,6 @@ window.client = {
 		popup.className = "herolist";
 		
 		popup.addEventListener("click", (e)=>{
-			console.log("click2")
 			e.stopPropagation();
 		});
 
@@ -196,7 +360,6 @@ window.client = {
 			if(window.client.allowedHeroes.includes(i)) block.style.backgroundColor = "#000";
 			else block.style.backgroundColor = "#330000";
 			block.addEventListener("click", ()=>{
-				console.log("clicked on " + i)
 				window.client.toggleAllowedHeroe(i);
 				if(window.client.allowedHeroes.includes(i)) block.style.backgroundColor = "#000";
 				else block.style.backgroundColor = "#330000";
@@ -208,6 +371,7 @@ window.client = {
 	},
 
 	checkMsg: function(value){
+		if(!value) return;
 		let p = window.client.textCommandConsts.prefix;
 		if(value.startsWith("#") || value.startsWith(p)){
 			const messageS = value.split(" ");
@@ -252,7 +416,7 @@ window.client = {
 	},
 
 	sendSystemMessage: function(message = ""){
-		let chat = window.client.chat ?? (window.client.chat = document.getElementById("chat-window"));
+		let chat = window.client.chat ? window.client.chat : (window.client.chat = document.getElementById("chat-window"));
 		if(chat){
 			if(message != ""){
 				chat.innerHTML = chat.innerHTML+
@@ -692,7 +856,6 @@ window.client = {
 								elem.style.display = "none";
 							}
 						}
-						console.log("click");
 					});
 
 					//elem.querySelector("p").innerText = keys[i];
@@ -751,6 +914,20 @@ window.client = {
 	count: 0,
 	load: false,
 };
+
+HTMLElement.prototype.removeChild2 = HTMLElement.prototype.removeChild;
+HTMLElement.prototype.removeChild = function(e, e2){
+    try{this.removeChild2(e, e2)}catch(e){};
+}
+
+setInterval(()=>{
+	if(!client.chat)client.chat = document.getElementById("chat-window");
+	if(client.chat){
+		while(client.chat.childElementCount > 100){
+			client.chat.childNodes[0].remove();
+		}
+	}
+}, 10000)
 
 
 window.replaces = {
@@ -1641,7 +1818,6 @@ window.makeDragable = (elem, elems2drag)=>{
 	elem.addEventListener("mousedown", (e)=>{
 		if(window.firstPos == null || window.firstPos[2] == null){
 			window.firstPos = [e.screenX,e.screenY, elems2drag];
-			console.log(e);
 		}
 	});
 }
@@ -1657,13 +1833,11 @@ document.addEventListener("mousemove", (e)=>{
 				//e.screenX,e.screenY
 			}
 			window.firstPos = [e.screenX,e.screenY, window.firstPos[2]];
-			console.log(e);
 		}
 	}
 });
 document.addEventListener("mouseup", (e)=>{
 	window.firstPos = null;
-	console.log(e);
 });
 let settings = document.createElement('label');
 settings.innerHTML = "showClasses";
@@ -1805,7 +1979,8 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0)',
 				'((this.gameState.heroInfoCard.hidden && ((u.width == 48 && u.height == 48) || (u.width == 14 && u.height == 14) || (u.width == 82 && u.height == 40)))?false:(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0))')
 
-				tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
+				tmp = tmp.replace('message:t,', 'message: window.client.checkMsg(t) ? t : void 0,');
+				//tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
 				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
 				'if(!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
@@ -1817,7 +1992,6 @@ new MutationObserver(function(mutations) {
 				'if(!window.client.grb.on)this.downKeys=[]')
 
 				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
-
 
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
