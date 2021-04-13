@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.33
+// @version     1.1.34
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -14,8 +14,13 @@
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.33",
+	v: "1.1.34",
 	changeLog: [
+		//1333333
+		{
+			version:`1.1.34`,
+			news:[[`Added piger's alt to ${`TS`.fontcolor(`#ad86d8`)}:`, `1333333`]]
+		},
 		{
 			version:`1.1.33`,
 			news:[`Changelog!`, `Fixed a bug when you could get a gray screen at a random moment.`]
@@ -225,7 +230,7 @@ window.tags = {
 		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', 'prod1gy', 'Zade',
 		',DSG,', 'Дракончик)))',
-		'noPiger', 'piger',
+		'noPiger', 'piger', '1333333',
 		'DEFA', 'ZaLo', 'notdefa'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
