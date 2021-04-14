@@ -1,7 +1,16 @@
+
 window.vers = {
 	chlogMut: null,
 	v: "99.99.99",
 	changeLog: [
+		{
+			version:`1.1.35`,
+			news:[`Fixed a bug where you needed to change area to be able to rightclick on a player in the leaderboard.`]
+		},
+		{
+			version:`1.1.34`,
+			news:[[`Added piger's alt to ${`TS`.fontcolor(`#ad86d8`)}:`, `1333333`]]
+		},
 		{
 			version:`1.1.33`,
 			news:[`Changelog!`, `Fixed a bug when you could get a gray screen at a random moment.`]
@@ -125,6 +134,13 @@ window.vers = {
 	}*/
 }
 
+new MutationObserver(function (m){
+	if(document.querySelector(".leaderboard-line.Central-Core-Dull")){
+		window.updateLeaderboard();
+		this.disconnect();
+	}
+}).observe(document, {childList: true, subtree: true});
+
 window.vers.chlogMut = new MutationObserver(function (m) {
 	const chlog = document.querySelector('.changelog');
 	
@@ -211,7 +227,7 @@ window.tags = {
 		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', 'prod1gy', 'Zade',
 		',DSG,', 'Дракончик)))',
-		'noPiger', 'piger',
+		'noPiger', 'piger', '1333333',
 		'DEFA', 'ZaLo', 'notdefa'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
@@ -1843,36 +1859,10 @@ window.updateName = (id, name) => {
 	}
 }
 
-
-
-
 window.loadGame = () => {
 	window.createNewLeaderboard();
 	client.load = true;
 }
-
-
-
-window.kek = function() {};
-window.WebSocket.prototype._send = window.WebSocket.prototype.send;
-window.WebSocket.prototype.send = function (data) {
-	if (this.url.indexOf('evades.io/api/game/connect?') + 1) {
-		if (this.url != kek.url) window.kek = this;
-	}
-
-    this.onmessage = function (e) {}
-
-    if (window.protobuf) {
-        let msg = protobuf.ClientPayload.toObject(protobuf.ClientPayload.decode(data));
-        if (msg.keys && msg.keys.find(k=>k.keyType==6&&k.keyEvent==1) && client.main.effects.effects[0] && client.main.effects.effects[0].effectType==2)
-            window.client.freeze_time = +new Date();
-    }
-    client.afkTime = +new Date();
-	this._send(data);
-}
-
-window.sendDecodeData = msg => window.kek._send(protobuf.ClientPayload.encode(msg).finish());
-window.sendData = msg => window.kek._send(new Uint8Array(msg));
 
 window.genPrefix = (name)=>{
 	if(window.client.textCommandConsts.showTag){
@@ -1989,4 +1979,3 @@ window.lastPrefix = {
 			document.body.appendChild(elem);
 		}
 	}
-
