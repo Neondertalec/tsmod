@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.35
+// @version     1.1.36
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -14,8 +14,16 @@
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.35",
+	v: "1.1.36",
 	changeLog: [
+		{
+			version:`1.1.36`,
+			news:[`Leaderboard now has a number to the right of it that shows the server you are in right now.`,
+				[`2 new commands (# for help)`, `#format`, `#setformat`],
+				`New button G in the user card.<br>By clicking on it you get the run of the user coppied in to your clipboard by the format setd by the commands above.`,
+				`Some CSS fixes.`
+			]
+		},
 		{
 			version:`1.1.35`,
 			news:[`Fixed a bug where you needed to change area to be able to rightclick on a player in the leaderboard.`]
@@ -240,7 +248,7 @@ window.tags = {
 		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', 'prod1gy', 'Zade',
 		',DSG,', 'Дракончик)))',
-		'noPiger', 'piger', '1333333',
+		'noPiger', 'piger',
 		'DEFA', 'ZaLo', 'notdefa'],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
@@ -266,15 +274,28 @@ window.getLocal = (key, def)=>{
 	return res !== null? res : def;
 }
 
+/*
 window.secondsFormat = (time, m=true) =>{
 	return	`${m?(time/60>>0)+"m ":""}`+ `${time%60}s`
+};*/
+
+window.secondsFormat = (time, m=true, t=0) =>{
+	
+	return	t === 1 ? `${m?(time/60>>0)+":":""}`+ `${time%60 < 10 ? "0" + (time%60) : time%60}` :
+			`${m?(time/60>>0)+"m ":""}`+ `${time%60}s`
 };
+
 window.timeZero = 0;
 window.getTime = ()=>{
 	if(window.timeZero == 0){
 		window.timeZero = Date.now();
 		const vc = document.getElementById("version-warning");
+		
 		if(vc) vc.remove();
+
+		let styles = document.createElement('style');
+		styles.innerHTML = `body{overflow:hidden;}`;
+		document.head.appendChild(styles);
 	}
 
 	return Math.floor((Date.now() - window.timeZero)/1000);//client.state.self.entity.survivalTime;
@@ -297,6 +318,7 @@ window.client = {
 	userlog:{},
 	userlog2:{},
 	chat:null,
+	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
 	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]")),
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
@@ -311,6 +333,43 @@ window.client = {
 				window.client.state.keys.keyUp(window.client.grb.grbKey);
 			}
 		}
+	},
+
+	genResult:function(name){
+		let format = window.client.format;//"{name} ;; {map} {area} ;; {time} ;; (0/2)";
+		let res, u = window.client.userlog[name];
+		if(u){
+			const list = [...u.travel, ...u.deaths].sort((a1,a2)=>{return a1[0]-a2[0]}),
+			hero = window.client.elem.hero.innerText,
+			time = window.client.getTimeDiff(name, u.logids[0], u.logids[1]),
+			lastMapData = list[time[4]],
+			map = window.getShortName(lastMapData[2]),
+			area = window.normalizeArea(lastMapData[3]),
+			time1 = time[1],
+			time2 = time[2];
+
+			res = "```\n" +
+			format.replace("{name}", name)
+			.replace("{map}", map)
+			.replace("{area}", area)
+			.replace("{time}", time[0])
+			.replace("{start time}", time1)
+			.replace("{end time}", time2)
+			.replace("{hero}", hero)
+			+"\n```";
+		}
+		let sellector;
+		if(!(sellector = document.getElementById("copy-sellector2"))){
+
+			const cs = document.createElement("div");
+			cs.innerHTML = `<input id="copy-sellector2" value="nop" style="position:absolute; left:-100%; width:10px; border:none;">`;
+			document.body.appendChild(cs);
+			sellector = cs.childNodes[0];
+		}
+		sellector.value = res;
+		sellector.select();
+		document.execCommand('copy');
+		console.log(res);
 	},
 
 	toggleAllowedHeroe: function(nr){
@@ -397,7 +456,10 @@ window.client = {
 					`${p}prefix - set prefix<br>`+
 					`${p}toggletag - switches ON/OFF<br>`+
 					`${p}banned - change the way users banned from tournaments are shown<br>`+
-					`${p}grb - toggle grb mode (if on - onlu d and arrow right works. type again to stop)`);
+					`${p}grb - toggle grb mode (if on - only D and arrow right works. type again to stop)<br>`+
+					`${p}format - shows the details of ${p}setformat<br>`+
+					`${p}setformat - changes the format of the generated run results`
+					);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
@@ -424,6 +486,20 @@ window.client = {
 			if([p+"grb"].includes(messageS[0])){
 				window.client.grb.toggle();
 				window.client.sendSystemMessage(`GRB is now turned ${["off","on"][window.client.grb.on ? 1 : 0]}`);
+			}else
+			if([p+"format"].includes(messageS[0])){
+				window.client.sendSystemMessage(
+					`Keywords: map, area, time, start time, end time, hero.`+
+					`<br>Working example:<br>${p}setformat {name} ;; {map} {area} ;; {time}<br>`+
+					`current: ${window.client.format}`
+				);
+			}else
+			if([p+"setformat"].includes(messageS[0])){
+				let newFromat = [...messageS];
+				newFromat.splice(0, 1);
+				newFromat = newFromat.join(" ");
+				localStorage.setItem("ts-resFormat", window.client.format = newFromat);
+				window.client.sendSystemMessage(`Newformat is setd to "${newFromat}"`);
 			}
 			return false;
 		}
@@ -541,7 +617,7 @@ window.client = {
 
 	timeDiffRes:[0, null],
 
-	getTimeDiff:function(name = "", t1 = 0, t2 = 0, res){
+	getTimeDiff:function(name = "", t1 = 0, t2 = 0, res = null){
 		const u = window.client.userlog[name];
 		if(u){
 			u.logids = [t1,t2];
@@ -554,6 +630,10 @@ window.client = {
 				ct2 = list[list.length-1];
 			}else{
 				ct2 = list.find((e)=>{return e[5] == t2})
+				if(!ct2){
+					list = list.sort((a,b)=>{return a[0]-b[0]})
+					ct2 = list[list.length-1];
+				}
 			}
 
 			if(ct1){
@@ -565,18 +645,24 @@ window.client = {
 			if(t2){
 				window.client.timeDiffRes[1] = null;
 			}else{
-				window.client.timeDiffRes[1] = res;
+				if(res) window.client.timeDiffRes[1] = res;
 			}
 
 			if(ct1 && t2){
-				res.innerHTML = window.secondsFormat(Math.abs(ct1[0] - ct2[0]));
+				const timed = Math.abs(ct1[0] - ct2[0])
+				if(res) res.innerHTML = window.secondsFormat(timed);
+				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1];
 			}else
 			{
-				res.innerHTML = window.secondsFormat(Math.abs(Math.floor(ct2[0] - window.client.timeDiffRes[0])));
+				if(!ct1) ct1 = list[0];
+				const timed = Math.abs(Math.floor(ct1[0] - ct2[0]));
+				if(res) res.innerHTML = window.secondsFormat(timed);
+				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1];
 			}
-			return;
 		}
-		res.innerHTML = window.secondsFormat(0);
+		const timed = window.secondsFormat(0, true, 1);
+		if(res) res.innerHTML = window.secondsFormat(0);
+		return [timed, timed, timed, 0, 0];
 	},
 
 	onNewLog: function(name = "", log = null){
@@ -1126,11 +1212,9 @@ window.addEventListener('DOMContentLoaded', e=>{
 	window.vers.check();
 	document.body.oncontextmenu = e => false;
 
-
 	let styles = document.createElement('style');
 	let newihtml = `
-	body{overflow:hidden;}
-	
+	body{overflow-x:hidden;}
 	#version-warning{
 		position: absolute;
 		top: 0;
@@ -1233,11 +1317,14 @@ window.addEventListener('DOMContentLoaded', e=>{
 	}
 
 	.chat-message-contextmenu.fake button#add.bbtn{
-		left: 50px;
+		left: 53px;
 	}
 
 	.chat-message-contextmenu.fake button#reset.bbtn{
-		left: 90px;
+		left: 95px;
+	}
+	.chat-message-contextmenu.fake button#gen.bbtn{
+		right: 53px;
 	}
 
 	.chat-message-contextmenu.fake > ul{
@@ -1699,7 +1786,9 @@ window.updateLeaderboard = () => {
 	document.body.onclick = () => {
 		client.count = 0; //window.removeFakes();
 	};
-
+	let llb;
+    if(llb = document.querySelector(".leaderboard-title"))socket.onmessage = (m)=>{console.log(llb.innerText = "Leaderboard " + (1+ +m.currentTarget.url.split("?")[1].split("&")[0].split("=")[1])); socket.onmessage = null};
+	
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
 			let HeroT, Hero, Level, Name;
@@ -1721,7 +1810,6 @@ window.updateLeaderboard = () => {
 							}
 						}
 					}
-
 					if (element.name == event.toElement.innerHTML) {
                         window.z = element.name;
 
@@ -1759,6 +1847,7 @@ window.updateLeaderboard = () => {
 			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
 			`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
 			`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
+			`<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>`+
 			`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
 			`<button id="close"class="bbtn"onClick="window.client.hideLogs();this.parentNode.remove()"title="Close the popup.">X</button>`+
 			`<div class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
