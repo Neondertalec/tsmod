@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.36
+// @version     1.1.37
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -11,11 +11,22 @@
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @grant       none
 // ==/UserScript==
+console.log("%cScript loading...","color: green; font-size: 20px");
+console.groupCollapsed("what happened between loading")
+console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.36",
+	v: "1.1.37",
 	changeLog: [
+		{
+			version:`1.1.37`,
+			news:[
+				`New Log type of ${`purple color`.fontcolor("#7b478e")} that shows when the user leaves or joins the server.`,
+				`Some CSS fixes.`,
+				`Bug fixes.`
+			]
+		},
 		{
 			version:`1.1.36`,
 			news:[`Leaderboard now has a number to the right of it that shows the server you are in right now.`,
@@ -311,7 +322,7 @@ window.client = {
 		hero:null,
 	},
 
-	logTypesToShow:[0,1,2,3,4,5],
+	logTypesToShow:[0,1,2,3,4,5,6],
 
 	freeze_time: +new Date(),
     opos:[null,null],
@@ -369,7 +380,6 @@ window.client = {
 		sellector.value = res;
 		sellector.select();
 		document.execCommand('copy');
-		console.log(res);
 	},
 
 	toggleAllowedHeroe: function(nr){
@@ -532,13 +542,13 @@ window.client = {
 
 			const f = (act)=>{
 				document.querySelector(".log-popup").childNodes.forEach((el)=>{
-
+					
 					if(el.className == "ele " + cname){
 						el.style.display = act ? "" : "none";
 					}
 				});
 			}
-
+			
 			if(input.checked && key == -1){
 				window.client.logTypesToShow.push(nr);
 				f(true);
@@ -558,7 +568,7 @@ window.client = {
 		}
 	},
 
-	showLog:function(name = "", y = 0, deleted){
+	showLog:function(name = "", y = 0, deleted = false, dragable=true){
 		let u = null;
 		if(Object.keys(window.client.userlog2)?.length > 0){
 			u = window.client.userlog2[name] ?? window.client.userlog[name];
@@ -600,12 +610,12 @@ window.client = {
 				elem2.style.right = `${elposx + 490}px`;
 				elem2.className = "log-popup-extra";
 				
-				for(var i = 0; i < 6; i++){
+				for(var i = 0; i < 7; i++){
 					elem2.innerHTML += `<input type="checkbox" onclick="window.client.editLogType(this)" ${window.client.logTypesToShow.includes(i) ? "checked": ""} class="custombox ${window.styleByNr(i)}"></input>`;
 				}
 				
 				document.body.appendChild(elem2);
-				window.makeDragable(elem, [elem, elem2])
+				if(dragable) window.makeDragable(elem, [elem, elem2])
 				return [elem, elem2];
 			}else
 			if(!deleted){
@@ -731,9 +741,11 @@ window.client = {
 	logUserAreas: function(usr){
 		const time = window.getTime();
 		const ctime = secondsFormat(Math.floor(time));
+
 		if(window.client.userlog[usr.name]){
 			let uo = window.client.userlog[usr.name];
 			let len = uo.travel.length;
+			if(uo.q)return;
 			if(uo.travel[len-1][3] != usr.areaName
 			|| uo.travel[len-1][2] != usr.regionName){
 				uo.travel.push([
@@ -762,9 +774,14 @@ window.client = {
 
 		}else{
 			window.client.userlog[usr.name] = {
-				dead:false,exited:false,totalDeaths:0,logid:3,logids:["",""],
-				deaths:[[time, ctime, usr.regionName, usr.areaName, 2, 2]],
-				travel:[[time, ctime, usr.regionName, usr.areaName, usr.victoryArea ? 5 : 0, 1]]};
+				dead:false,exited:false,q:false,totalDeaths:0,logid:2,logids:["",""],
+				deaths:[/*[time, ctime, usr.regionName, usr.areaName, 2, 2]*/],
+				travel:[[time, ctime, usr.regionName, usr.areaName, 6, 1]/*[time, ctime, usr.regionName, usr.areaName, usr.victoryArea ? 5 : 0, 1]*/]};
+				//let uo = window.client.userlog[usr.name];
+				window.updateLeaderboard();
+				/*uo.travel.push([
+					time, ctime, usr.regionName, usr.areaName, 6, uo.logid++
+				]);*/
 		}
 	},
 
@@ -777,10 +794,63 @@ window.client = {
 	},
 
     drBefore: function(e, t) {
-		for(var i in client.state.globalEntities){
+		
+		let namesA = [];
+		let namesB = [];
+
+		
+		for(let i in window.client.userlog){
+			if(!window.client.userlog[i].q)namesA.push(i);
+		}
+
+		for(let i in client.state.globalEntities){
+			namesB.push(client.state.globalEntities[i].name);
 			window.client.logUserAreas(client.state.globalEntities[i]);
 			if(client.state.globalEntities[i].name == window.z){
 				window.client.opos[0] = client.state.globalEntities[i];
+			}
+		}
+
+		for(let i = namesA.length; i >= 0; i--){
+			if(namesB.includes(namesA[i])){
+				namesB.splice(namesB.indexOf(namesA[i]), 1);
+				namesA.splice(i, 1);
+			}
+		}
+		if(namesA.length > 0 ||namesB.length > 0){
+			setTimeout(window.updateLeaderboard,50);
+		}
+
+		for(i of namesA){
+			if(!window.client.userlog[i].q){
+				window.client.userlog[i].q = true;
+				let uo = window.client.userlog[i];
+				uo.dead = false;
+				uo.exited = false;
+				//"leave?"
+				window.client.customLog(i, 6, "travel", false);
+			}
+		}
+		
+		for(i of namesB){
+			if(window.client.userlog[i].q){
+				window.client.userlog[i].q = false;
+				//"join?"
+				
+				const time = window.getTime();
+				const ctime = secondsFormat(Math.floor(time));
+
+				let uo = window.client.userlog[i];
+
+				for(let j in client.state.globalEntities){
+					if(client.state.globalEntities[j].name == i){
+						let usr = client.state.globalEntities[j];
+						uo.travel.push([time, ctime, usr.regionName, usr.areaName, 6, uo.logid++]);
+						window.client.customLog(i, 6, "travel", true);
+						return;
+					}
+				}
+
 			}
 		}
 
@@ -969,7 +1039,7 @@ window.client = {
 							p2.remove();
 						}
 
-						const o = window.client.showLog(keys[i], 100);
+						const o = window.client.showLog(keys[i], 100, false, false);
 						if(o && o[0]){
 							o[0].style.top = "50%";
 							o[0].style.right = "50%";
@@ -1083,10 +1153,10 @@ window.replaces = {
 }
 
 window.nrByStyle = (style)=>{
-	return ["","dead", "alive", "custom", "arexit", "victory"].findIndex((v)=>{return v == style})
+	return ["","dead", "alive", "custom", "arexit", "victory", "qoj"].findIndex((v)=>{return v == style})
 }
 window.styleByNr = (nr)=>{
-	return ["","dead", "alive", "custom", "arexit", "victory"][nr];
+	return ["","dead", "alive", "custom", "arexit", "victory", "qoj"][nr];
 }
 
 function id2name (id) {
@@ -1409,6 +1479,9 @@ window.addEventListener('DOMContentLoaded', e=>{
 	.log-popup > .ele.victory{
 		background-color: #aa6600;
 	}
+	.log-popup > .ele.qoj{
+		background-color: #7b478e;
+	}
 
 	.log-popup > .ele > div{
 		float:left;
@@ -1540,6 +1613,13 @@ window.addEventListener('DOMContentLoaded', e=>{
 	.custombox.victory[type="checkbox"]:before{
 		background: #aa6600;
 	}
+
+	/*quit or join--------------------------------------------------------*/
+
+	.custombox.qoj[type="checkbox"]:before{
+		background: #7b478e;
+	}
+	
 
 	/*toggle show users-------------------------------------------------------------*/
 
@@ -1770,6 +1850,7 @@ window.fireB = () => {
 	event.initEvent("keydown", true, true);
 	event.keyCode = 66;
 	document.dispatchEvent(event);
+	setTimeout(window.updateLeaderboard, 50);
 };
 
 window.createNewLeaderboard = () => {
@@ -1786,8 +1867,8 @@ window.updateLeaderboard = () => {
 	document.body.onclick = () => {
 		client.count = 0; //window.removeFakes();
 	};
-	let llb;
-    if(llb = document.querySelector(".leaderboard-title"))socket.onmessage = (m)=>{console.log(llb.innerText = "Leaderboard " + (1+ +m.currentTarget.url.split("?")[1].split("&")[0].split("=")[1])); socket.onmessage = null};
+	let llb = document.querySelector(".leaderboard-title");
+    if(llb && llb?.innerText == "Leaderboard")(llb.innerText = window.lbText)||(socket.onmessage = (m)=>{llb.innerText = window.lbText = "Leaderboard " + (1+ +m.currentTarget.url.split("?")[1].split("&")[0].split("=")[1]); socket.onmessage = null});
 	
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
@@ -1797,26 +1878,32 @@ window.updateLeaderboard = () => {
 					const element = client.state.globalEntities[i];
 
 					if (client.showClasses) {
-						let right = event.toElement.innerHTML.split(")");
+						/*let right = event.target.innerText.split(")");
 						if (right.length > 1) {
 							let left = right[right.length - 2].split("(");
-							if (left.length > 1) {
+							if (left.length > 1) {*/
 
-								Hero = left[event.toElement.innerHTML.split("(").length - 1]
-								Name = event.toElement.innerHTML.split(" (" + Hero + ")")[event.toElement.innerHTML.split(" (" + Hero + ")").length - 2].replace(window.timerRegex, "");
-								if (element.name == Name) Level = element.level;
+								if (event.target.innerText.replace(window.timerRegex, "").startsWith(element.name + " (") || event.target.innerText.replace(window.timerRegex, "") === element.name){
+									window.z = element.name;
+									HeroT = element.heroType;
+									Hero = id2name(HeroT);
+									Name = element.name;
+
+									Level = element.level;
+								}
 								continue;
 
-							}
-						}
+							//}
+						//}
 					}
-					if (element.name == event.toElement.innerHTML) {
+					
+					if (element.name == event.target.innerText) {
                         window.z = element.name;
 
 						HeroT = element.heroType;
 						Hero = id2name(HeroT);
 						Level = element.level;
-						Name = event.toElement.innerHTML;
+						Name = element.name;
 					}
 				}
 			} else {
@@ -1827,7 +1914,7 @@ window.updateLeaderboard = () => {
 			//if (client.count > 0) document.getElementsByClassName('fake')[0].remove();
 			client.count = 1;
 
-			const name = client.showClasses ? Name : event.toElement.innerHTML;
+			const name = client.showClasses ? Name : event.target.innerText;
 
 			let o = null;
 			for(var i in client.state.entities){
@@ -1987,6 +2074,7 @@ window.lastPrefix = {
 }
 
 new MutationObserver(function(mutations) {
+	
 	if (document.getElementsByTagName('script')[0]) {
 		var elem = Array.from(document.querySelectorAll('script')).find(a=>a.src.match(/app\.[0-9a-f]{8}\.js/));
 		if (elem) {
@@ -2080,6 +2168,9 @@ new MutationObserver(function(mutations) {
 				}).observe(document, {childList: true, subtree: true});
 
 				eval(tmp);
+				console.groupEnd()
+				console.log("%cScript loadied.","color: green; font-size: 20px");
+
 			`;
 			document.body.appendChild(elem);
 			this.disconnect();
