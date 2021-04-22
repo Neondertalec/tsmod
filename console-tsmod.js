@@ -6,6 +6,11 @@ window.vers = {
 	chlogMut: null,
 	v: "99.99.99",
 	changeLog: [
+		//'R0YqL', 'Nickchm'
+		{
+			version:`1.1.38`,
+			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `R0YqL`, `Nickchm`]]
+		},
 		{
 			version:`1.1.37`,
 			news:[
@@ -247,7 +252,10 @@ window.tags = {
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', 'prod1gy', 'Zade',
 		',DSG,', 'Дракончик)))',
 		'noPiger', 'piger',
-		'DEFA', 'ZaLo', 'notdefa'],
+		'DEFA', 'ZaLo', 'notdefa',
+		'R0YqL',
+		'Nickchm'
+	],
 	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', '1Phoenix1', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
