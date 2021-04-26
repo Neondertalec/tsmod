@@ -1,3 +1,4 @@
+
 console.log("%cScript loading...","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
 console.log("...")
@@ -6,7 +7,10 @@ window.vers = {
 	chlogMut: null,
 	v: "99.99.99",
 	changeLog: [
-		//'R0YqL', 'Nickchm'
+		{
+			version:`1.1.39`,
+			news:[`${`Bold Rock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
+		},
 		{
 			version:`1.1.38`,
 			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `R0YqL`, `Nickchm`]]
@@ -1173,7 +1177,8 @@ function id2name (id) {
 	'Cent',
 	'Jotunn',
 	'Candy',
-	'Mirage'
+	'Mirage',
+	'Bold Rock'
 	][id];
 }
 
@@ -1199,6 +1204,7 @@ window.getShortName = (map)=>{
 		"Toxic Territory": 		"TT",
 		"Magnetic Monopole": 	"MM2",
 		"Stellar Square": 		"SS",
+		"Assorted Alcove": 		"AA",
 	}
 
 	return maps[map] ? maps[map] : map
@@ -1269,6 +1275,8 @@ window.getHeroColor = function(Hero){
 			return "#ff80bd";
 		case "Mirage":
 			return "#020fa2";
+		case "Bold Rock":
+			return "#a18446";
 	}
 	return "white";
 }
