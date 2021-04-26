@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.38
+// @version     1.1.39
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -17,9 +17,12 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.38",
+	v: "1.1.39",
 	changeLog: [
-		//'R0YqL', 'Nickchm'
+		{
+			version:`1.1.39`,
+			news:[`${`Bold Rock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
+		},
 		{
 			version:`1.1.38`,
 			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `R0YqL`, `Nickchm`]]
@@ -1186,7 +1189,8 @@ function id2name (id) {
 	'Cent',
 	'Jotunn',
 	'Candy',
-	'Mirage'
+	'Mirage',
+	'Bold Rock'
 	][id];
 }
 
@@ -1212,6 +1216,7 @@ window.getShortName = (map)=>{
 		"Toxic Territory": 		"TT",
 		"Magnetic Monopole": 	"MM2",
 		"Stellar Square": 		"SS",
+		"Assorted Alcove": 		"AA",
 	}
 
 	return maps[map] ? maps[map] : map
@@ -1282,6 +1287,8 @@ window.getHeroColor = function(Hero){
 			return "#ff80bd";
 		case "Mirage":
 			return "#020fa2";
+		case "Bold Rock":
+			return "#a18446";
 	}
 	return "white";
 }
