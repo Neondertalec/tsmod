@@ -11,7 +11,7 @@
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @grant       none
 // ==/UserScript==
-console.log("%cScript loading...","color: green; font-size: 20px");
+console.log("%cScript loading... ","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
 console.log("...")
 
