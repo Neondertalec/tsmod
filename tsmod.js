@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.39
+// @version     1.1.40
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -17,8 +17,12 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.39",
+	v: "1.1.40",
 	changeLog: [
+		{
+			version:`1.1.40`,
+			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from prod1gy.`]
+		},
 		{
 			version:`1.1.39`,
 			news:[`${`Bold Rock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
@@ -265,7 +269,7 @@ window.tags = {
 	'[TS]': ['ylzaac😎',
 		'Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy',
 		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
-		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', 'prod1gy', 'Zade',
+		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', /*'prod1gy',*/ 'Zade',
 		',DSG,', 'Дракончик)))',
 		'noPiger', 'piger',
 		'DEFA', 'ZaLo', 'notdefa',
