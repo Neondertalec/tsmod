@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.40
+// @version     1.1.41
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -17,8 +17,17 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.40",
+	v: "1.1.41",
 	changeLog: [
+		{
+			version:`1.1.41`,
+			news:[[`When you leftclick on the area on the leaderboard a window will show.<br>In the window you need to:`,
+					`Sellect the players that were on that area when the popup was opened`,
+					`Sellect log id's that you need. (a R button is there to update the list)`,
+					`Set the format of the result (It saves), hover for the hint.`],
+				`Areas in the leaderboard now have a number to the left of them that show the amount of players that are in it right now`,
+				[`1 new command (# for help)`, `#toggleusers`]]
+		},
 		{
 			version:`1.1.40`,
 			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from prod1gy.`]
@@ -336,6 +345,245 @@ window.client = {
 		xp:null,
 		hero:null,
 	},
+	areaData:{
+		data:{},
+		check: ()=>{
+			if (!client.state)return;
+			window.client.areaData.data = {};
+			for (let i in client.state.globalEntities) {
+				const user = client.state.globalEntities[i];
+				window.client.areaData.addUser(user);
+			}
+			window.client.areaData.updateLb();
+		},
+		addUser: (user)=>{
+			const data = window.client.areaData.data;
+			if(user.regionName in data){
+				data[user.regionName].users[user.name] = user;
+				data[user.regionName].len ++;
+			}else{
+				data[user.regionName] = {users:{}, len:0};
+				window.client.areaData.addUser(user);
+			}
+		},
+		updateLb:()=>{
+			for (let areas of [...document.getElementsByClassName('leaderboard-world-title')]) {
+				let aname = areas.getAttribute("areaName");
+				if(!aname){
+					areas.setAttribute("areaName", aname = areas.innerText);
+					areas.addEventListener("click", ()=>{
+						window.client.areaData.openAreaPopup(false, aname);
+					});
+				}
+				if(window.client.textCommandConsts.showUIACnt)areas.innerText = `${window.client.areaData.data[aname]?.len} ${aname}`;
+				else areas.innerText = aname
+			}
+		},
+		openAreaPopup:(closeOnly = false, areaName = "")=>{
+			if(closeOnly){
+				let bp = document.getElementById("areaData");
+				if(bp) bp.remove();
+				return;
+			}
+			const area = window.client.areaData.data[areaName];
+
+			const backpan = document.createElement("div");
+			backpan.style.position = "absolute";
+			backpan.id = "areaData";
+			backpan.style.width = "100%";
+			backpan.style.height = "100%";
+			backpan.style.zIndex = "1002";
+
+			backpan.addEventListener("click", ()=>{
+				window.client.areaData.openAreaPopup(true);
+			});
+
+			document.body.appendChild(backpan);
+
+			const popup = document.createElement("div");
+			popup.className = "areaPopup";
+			
+			popup.addEventListener("click", (e)=>{
+				e.stopPropagation();
+			});
+
+			let allObjs = [];
+			let names = [];
+
+			//{//sellect logs
+				const popup_logs = document.createElement("div")
+				popup_logs.className = "log_part";
+
+				popup_logs.innerHTML = `<div class="theader">Sellect logs</div>`;
+
+				const refreshButton = document.createElement("button");
+				refreshButton.className = "refresh";
+				refreshButton.innerHTML = "R";
+				popup_logs.children[0].appendChild(refreshButton);
+
+				const popup_logs_scroll = document.createElement("div");
+				popup_logs_scroll.className = "scoll_elem";
+
+				const setLogs = ()=>{
+					popup_logs_scroll.innerHTML = "";
+					for(let i of allObjs){
+						popup_logs_scroll.appendChild(window.client.createLogLine(i));
+					}
+				}
+				popup_logs.appendChild(popup_logs_scroll);
+
+				const startInput = document.createElement("input");
+				const endInput = document.createElement("input");
+
+				startInput.type = endInput.type = "number";
+
+				popup_logs.appendChild(startInput);
+				popup_logs.appendChild(endInput);
+				startInput.setAttribute("c-lock","");
+				endInput.setAttribute("c-lock","");
+				//c-lock
+
+			//}
+
+			//{//result
+				const popup_result = document.createElement("div")
+				popup_result.className = "result_part";
+
+				popup_result.innerHTML = `<div class="theader">Result</div>`;
+
+				const popup_result_text = document.createElement("textarea");
+				popup_result_text.className = "result_elem";
+				popup_result_text.setAttribute("c-lock", "")
+				popup_result_text.readOnly = true;
+
+				const genResult = (p, regetArr = true)=>{
+
+					if(regetArr){
+						allObjs = [];
+						names = [];
+						p.querySelectorAll(".scoll_user.sellected").forEach((e)=>{
+							let n = e.innerHTML.substring(1, e.innerHTML.length -1);
+							let u = window.client.userlog[n];
+							if(u){
+								names.push(n);
+								allObjs = [...allObjs, ...u.deaths, ...u.travel];
+							}
+						})
+						let index = 0;
+						allObjs = allObjs.filter((a)=>a[2] == areaName).sort((a,b)=>a[0] - b[0]).map((l)=>(l[5] = ++index, l));
+						console.log(allObjs);
+					}
+
+					setLogs();
+					if(allObjs.length == 0)return;
+
+					const hero = "none",//window.client.elem.hero.innerText,
+					name = names.join(" + "),
+					time = window.client.getTimeDiff("", parseInt(startInput.value), parseInt(endInput.value), null, allObjs),
+					lastMapData = allObjs[time[4]],
+					map = window.getShortName(lastMapData[2]),
+					area = window.normalizeArea(lastMapData[3]),
+					time1 = time[1],
+					time2 = time[2];
+
+					res = "```\n" +
+					window.client.teamFormat.replace("{name}", name)
+					.replace("{map}", map)
+					.replace("{area}", area)
+					.replace("{time}", time[0])
+					.replace("{start time}", time1)
+					.replace("{end time}", time2)
+					//.replace("{hero}", hero)
+					+"\n```";
+
+					popup_result_text.innerHTML = res;
+
+				}
+				
+
+
+				popup_result.appendChild(popup_result_text);
+			//}
+
+			//{//sellect users team
+				const popup_users = document.createElement("div")
+				popup_users.className = "users_part";
+
+				popup_users.innerHTML = `<div class="theader">Sellect users of a team</div>`;
+
+				const popup_users_scroll = document.createElement("div");
+				popup_users_scroll.className = "scoll_elem";
+
+				for(user in area.users){
+					const userelem = document.createElement("div");
+					userelem.className = "scoll_user";
+					userelem.innerText = " "+user+" ";
+
+					userelem.addEventListener("click", ()=>{
+						if(userelem.classList.contains("sellected")){
+							userelem.classList.remove("sellected");
+						}else{
+							userelem.classList.add("sellected");
+						}
+						genResult(popup_users_scroll);
+					});
+					
+					
+					popup_users_scroll.appendChild(userelem);
+				}
+				popup_users.appendChild(popup_users_scroll);
+				startInput.addEventListener("input", ()=>{
+					genResult(popup_users_scroll, false);
+				});
+				endInput.addEventListener("input", ()=>{
+					genResult(popup_users_scroll, false);
+				});
+				refreshButton.addEventListener("click", ()=>{
+					genResult(popup_users_scroll);
+				})
+			//}
+
+			//{//set result format
+				const popup_format = document.createElement("div")
+				popup_format.className = "format_part";
+
+				popup_format.innerHTML = `<div class="theader">Set the result format</div>`;
+
+				const popup_format_input = document.createElement("input");
+				popup_format_input.setAttribute("c-lock","");
+				popup_format_input.className = "format_elem";
+				popup_format_input.value = window.client.teamFormat;
+				popup_format_input.title = 
+				"{name} - Team players names e.g. player1 + player2 + player3.\n"+
+				"{map} - The name of the map.\n"+
+				"{area} - The last log area.\n"+
+				"{time} - The time from 1st to last log.\n"+
+				"{start time} - The first log time.\n"+
+				"{end time} - The last log time.\n";
+				/*
+				window.client.teamFormat.replace("{name}", name)
+					.replace("{map}", map)
+					.replace("{area}", area)
+					.replace("{time}", time[0])
+					.replace("{start time}", time1)
+					.replace("{end time}", time2)
+					.replace("{hero}", hero)
+					+"\n```";
+					 */
+				popup_format_input.addEventListener("input", ()=>{
+					localStorage.setItem("ts-resTFormat", window.client.teamFormat = popup_format_input.value);
+					genResult(popup_users_scroll, false);
+				})
+				popup_format.appendChild(popup_format_input);
+			//}
+
+			popup.appendChild(popup_users);
+			popup.appendChild(popup_logs);
+			popup.appendChild(popup_format);
+			popup.appendChild(popup_result);
+			backpan.appendChild(popup);
+		}
+	},
 
 	logTypesToShow:[0,1,2,3,4,5,6],
 
@@ -344,12 +592,15 @@ window.client = {
 	userlog:{},
 	userlog2:{},
 	chat:null,
+	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
 	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]")),
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
 		bannedType: +getLocal("ts-bannedType", "0"),
+		showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
+		
 	},
 	grb:{
 		on: false,
@@ -477,12 +728,13 @@ window.client = {
 
 			if(["#", p, p+"help"].includes(messageS[0])){
 				window.client.sendSystemMessage(
-					`${p} is the prefix<br>`+
-					`${p}prefix - set prefix<br>`+
-					`${p}toggletag - switches ON/OFF<br>`+
-					`${p}banned - change the way users banned from tournaments are shown<br>`+
-					`${p}grb - toggle grb mode (if on - only D and arrow right works. type again to stop)<br>`+
-					`${p}format - shows the details of ${p}setformat<br>`+
+					`${p} is the prefix.<br>`+
+					`${p}prefix - set prefix.<br>`+
+					`${p}toggletag - switches ON/OFF.<br>`+
+					`${p}toggleusers - toggles users count on the leaderboard.<br>`+
+					`${p}banned - change the way users banned from tournaments are shown.<br>`+
+					`${p}grb - toggle grb mode (if on - only D and arrow right works. type again to stop).<br>`+
+					`${p}format - shows the details of ${p}setformat.<br>`+
 					`${p}setformat - changes the format of the generated run results`
 					);
 			}else
@@ -497,6 +749,10 @@ window.client = {
 			if([p+"toggletag"].includes(messageS[0])){
 				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
 				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}else
+			if([p+"toggleusers"].includes(messageS[0])){
+				localStorage.setItem("ts-showUIACnt", window.client.textCommandConsts.showUIACnt = !window.client.textCommandConsts.showUIACnt);
+				window.client.sendSystemMessage(`User cont is now turned ${["off","on"][+window.client.textCommandConsts.showUIACnt]}`);
 			}else
 			if([p+"banned"].includes(messageS[0])){
 				if(messageS.length > 1){
@@ -642,11 +898,11 @@ window.client = {
 
 	timeDiffRes:[0, null],
 
-	getTimeDiff:function(name = "", t1 = 0, t2 = 0, res = null){
-		const u = window.client.userlog[name];
-		if(u){
-			u.logids = [t1,t2];
-			let list = [...u.travel, ...u.deaths];
+	getTimeDiff:function(name = "", t1 = 0, t2 = 0, res = null, customData = null){
+		const u = customData ? null : window.client.userlog[name];
+		if(u || customData){
+			if(!customData) u.logids = [t1,t2];
+			let list = customData ? customData : [...u.travel, ...u.deaths];
 			let ct1 = list.find((e)=>{return e[5] == t1});
 			let ct2 = 0;
 
@@ -739,18 +995,29 @@ window.client = {
 
 				let logElem = document.getElementById("log-" + name)
 				if(logElem && Object.keys(window.client.userlog2).length == 0 ){
-					const line = document.createElement("div");
+					logElem.appendChild(window.client.createLogLine(uo[arrname][len]));
+					/*const line = document.createElement("div");
 					line.style.display = window.client.logTypesToShow.includes(type) ? "": "none";
 					line.className = `ele ${window.styleByNr(type)}`;
 					line.title = uo[arrname][len][5];
 
 					line.innerHTML = `<div id="logid">${uo[arrname][len][5]}|</div><div id="time">${uo[arrname][len][1]}</div><div id="map">${window.getShortName(uo[arrname][len][2])}</div><div id="area">${window.normalizeArea(uo[arrname][len][3])}</div>`
-					logElem.appendChild(line);
+					logElem.appendChild(line);*/
 				}
 
 				window.client.onNewLog(name, uo[arrname][len]);
 			}
 		}
+	},
+
+	createLogLine: function(dataArray){
+		const line = document.createElement("div");
+		line.style.display = window.client.logTypesToShow.includes(dataArray[4]) ? "": "none";
+		line.className = `ele ${window.styleByNr(dataArray[4])}`;
+		line.title = dataArray[5];
+
+		line.innerHTML = `<div id="logid">${dataArray[5]}|</div><div id="time">${dataArray[1]}</div><div id="map">${window.getShortName(dataArray[2])}</div><div id="area">${window.normalizeArea(dataArray[3])}</div>`
+		return line			
 	},
 
 	logUserAreas: function(usr){
@@ -1091,8 +1358,6 @@ window.client = {
 		return false;
 	},
 
-    afkTime: +new Date(),
-
 	showClasses: false,
 
 	autoMode: false,
@@ -1351,6 +1616,10 @@ window.addEventListener('DOMContentLoaded', e=>{
 		display:none!important;
 	}
 
+	.leaderboard-title-break > .leaderboard-world-title{
+		font-size: 15px;
+	}
+
 	.chat-message-contextmenu.fake{
 		width:200px;
 		height: 306px;
@@ -1469,6 +1738,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 		overflow-y: auto;
 	}
 
+	.areaPopup > .log_part > .scoll_elem > .ele,
 	.log-popup > .ele{
 		color:white;
 		width:100%;
@@ -1480,41 +1750,57 @@ window.addEventListener('DOMContentLoaded', e=>{
 		text-align: center;
 	}
 
+	.areaPopup > .log_part > .scoll_elem > .ele.dead,
 	.log-popup > .ele.dead{
 		background-color:#7c5d5a;
 	}
 
+	.areaPopup > .log_part > .scoll_elem > .ele.alive,
 	.log-popup > .ele.alive{
 		background-color:#576a4d;
 	}
 
+	.areaPopup > .log_part > .scoll_elem > .ele.custom,
 	.log-popup > .ele.custom{
 		background-color: #807f45/*#949494*/;
 	}
 
+	.areaPopup > .log_part > .scoll_elem > .ele.arexit,
 	.log-popup > .ele.arexit{
 		background-color: #949494;
 	}
+
+	.areaPopup > .log_part > .scoll_elem > .ele.victory,
 	.log-popup > .ele.victory{
 		background-color: #aa6600;
 	}
+
+	.areaPopup > .log_part > .scoll_elem > .ele.qoj,
 	.log-popup > .ele.qoj{
 		background-color: #7b478e;
 	}
-
+	
+	.areaPopup > .log_part > .scoll_elem > .ele > div,
 	.log-popup > .ele > div{
 		float:left;
 	}
 
+	.areaPopup > .log_part > .scoll_elem > .ele > div#logid,
 	.log-popup > .ele > div#logid{
 		width:16%;
 	}
+
+	.areaPopup > .log_part > .scoll_elem > .ele > div#time,
 	.log-popup > .ele > div#time{
 		width:25%;
 	}
+
+	.areaPopup > .log_part > .scoll_elem > .ele > div#map,
 	.log-popup > .ele > div#map{
 		width:35%;
 	}
+
+	.areaPopup > .log_part > .scoll_elem > .ele > div#area,
 	.log-popup > .ele > div#area{
 		width:24%;
 	}
@@ -1666,25 +1952,32 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 
 
-	/*herolist*/
+	/*herolist and base areaPopup*/
 
+	.areaPopup *::-webkit-scrollbar-track-piece,
+	.areaPopup::-webkit-scrollbar-track-piece,
 	.herolist::-webkit-scrollbar-track-piece{ /*scrollbar back*/
 		/*background: #000000 !important;*/
 		background: #ffffff40!important;
 		border: solid 5px rgba(0, 0, 0, 0)!important;
 	}
 
+	.areaPopup *::-webkit-scrollbar-thumb,
+	.areaPopup::-webkit-scrollbar-thumb,
 	.herolist::-webkit-scrollbar-thumb{ /*scrollbar thingie*/
 		/*background: #000000 !important;*/
 		background: #c1c1c1!important;
 		border: solid 5px rgba(0, 0, 0, 0)!important;
 		border-radius: 5px!important;
 	}
-
+	.areaPopup *::-webkit-scrollbar,
+	.areaPopup::-webkit-scrollbar,
 	.herolist::-webkit-scrollbar{
 		width: 7px!important;
+		height: 7px!important;
 	}
 
+	.areaPopup,
 	.herolist{
 		width:500px;
 		height:400px;
@@ -1720,6 +2013,116 @@ window.addEventListener('DOMContentLoaded', e=>{
 		text-align: center;
 		width: 100%;
 		margin-top: 10px;
+	}
+
+	/*areaPopup*/
+	.areaPopup{
+		background-color: #000000a1;
+	}
+
+	.areaPopup > .users_part{
+		height: 88px;
+		width: 100%;
+	}
+	.areaPopup > .log_part{
+		max-height: 330px;
+		width: 100%;
+	}
+	.areaPopup > .result_part{
+		min-height: 100px;
+	}
+	.areaPopup > .format_part{
+		height: 80px;
+		width: 100%;
+	}
+
+	.areaPopup > .format_part > .format_elem{
+		height: 26px;
+		font-size: 11pt;
+		width: 485px;
+		background-color: darkgray;
+		border: solid 2px grey;
+	}
+
+	.areaPopup > .result_part > .result_elem{
+		background-color: #4c4c4c;
+		color: beige;
+		text-align: center;
+		padding: 5px;
+		width:480px;
+		height:60px;
+		resize: none;
+	}
+
+	.areaPopup > .log_part > .scoll_elem{
+		max-height: 250px;
+    	overflow-y: auto;
+		margin-top: 5px;
+	}
+
+	.areaPopup > .log_part > input{
+		text-align: center;
+		background-color: darkgray;
+		width: 236px;
+		border: solid 2px grey;
+		margin-right: 1px;
+		margin-left: 1px;
+}
+
+	.areaPopup > div > .theader{
+		width: 100%;
+		font-size: 30pt;
+		height: fit-content;
+		text-align: center;
+		line-height: unset;
+		color: #8e8e8e;
+		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;
+	}
+
+	.areaPopup > div > .theader > button{
+		background-color: burlywood;
+		border: solid 2px #967b59;
+		float: right;
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		right: 4px;
+		transform: translateY(4px);
+	}
+
+	.areaPopup > .users_part > .scoll_elem{
+		text-align: center;
+		width: 100%;
+		height: 34px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		padding-top: 5px;
+	
+	}
+
+	.areaPopup > .users_part > .scoll_elem > .scoll_user{
+		display: unset;
+		color: beige;
+		background: #222222;
+		height: 20px;
+		padding: 5px;
+		border: solid 1px #444444;
+		min-width: fit-content;
+		margin-left: 2px;
+		margin-right: 2px;
+		white-space: nowrap;
+
+		user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+	    -ms-user-select: none;
+
+	}
+	.areaPopup > .users_part > .scoll_elem > .scoll_user.sellected{
+		background: #0b2700;
+		border: solid 1px #0a3502;
+
 	}
 
 	/*logger-users*/
@@ -1883,6 +2286,7 @@ window.removeFakes = ()=>{
 
 window.z = "";
 window.updateLeaderboard = () => {
+	//window.client.areaData.check();
 	document.body.onclick = () => {
 		client.count = 0; //window.removeFakes();
 	};
@@ -2072,6 +2476,7 @@ window.updateName = (id, name) => {
 window.loadGame = () => {
 	window.createNewLeaderboard();
 	client.load = true;
+	console.log("loaded", client)
 }
 
 window.genPrefix = (name)=>{
@@ -2112,7 +2517,6 @@ new MutationObserver(function(mutations) {
 					'n.Payloads.FramePayload.decode(l);window.protobuf||(window.protobuf=n.Payloads);'
 				);
 
-				// Удалить пеллеты и показать большие шары на карте
 				//id: 1
 				tmp = tmp.replace(
 					'this.chat.style.visibility="visible",',
@@ -2177,6 +2581,8 @@ new MutationObserver(function(mutations) {
 				'if(!window.client.grb.on)this.downKeys=[]')
 
 				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
+
+				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
 
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
