@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.41
+// @version     1.1.42
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -17,8 +17,14 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.41",
+	v: "1.1.42",
 	changeLog: [
+		{
+			version:`1.1.42`,
+			news:[`Some bug fixes.`,
+			[`1 new command (# for help)`, `#toggleusercard`],
+			`Every <b>bold</b> text from the ${`[SCRIPT]`.fontcolor(`#ffceb7`)} message is now acting as a button. Some buttons replace the text in the chat input and others add the text.`]
+		},
 		{
 			version:`1.1.41`,
 			news:[[`When you leftclick on the area on the leaderboard a window will show.<br>In the window you need to:`,
@@ -560,16 +566,7 @@ window.client = {
 				"{time} - The time from 1st to last log.\n"+
 				"{start time} - The first log time.\n"+
 				"{end time} - The last log time.\n";
-				/*
-				window.client.teamFormat.replace("{name}", name)
-					.replace("{map}", map)
-					.replace("{area}", area)
-					.replace("{time}", time[0])
-					.replace("{start time}", time1)
-					.replace("{end time}", time2)
-					.replace("{hero}", hero)
-					+"\n```";
-					 */
+
 				popup_format_input.addEventListener("input", ()=>{
 					localStorage.setItem("ts-resTFormat", window.client.teamFormat = popup_format_input.value);
 					genResult(popup_users_scroll, false);
@@ -600,6 +597,7 @@ window.client = {
 		showTag: getLocal("ts-showTag", "false") == "true",
 		bannedType: +getLocal("ts-bannedType", "0"),
 		showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
+		showUcard: getLocal("ts-showUcard", "true") == "true",
 		
 	},
 	grb:{
@@ -720,22 +718,58 @@ window.client = {
 		backpan.appendChild(popup);
 	},
 
+	ucardCssElem: null,
+	toggleUcard: function(on){
+		if(on){
+			if(!window.client.ucardCssElem){
+				window.client.ucardCssElem = document.createElement("style");
+				document.head.appendChild(window.client.ucardCssElem);
+			}
+			window.client.ucardCssElem.innerHTML = 
+			`#leaderboard +
+			.player-contextmenu{
+				display:none!important;
+			}`
+		}else{
+			if(!window.client.ucardCssElem){
+				window.client.ucardCssElem = document.createElement("style");
+				document.head.appendChild(window.client.ucardCssElem);
+			}
+			window.client.ucardCssElem.innerHTML = 
+			`.chat-message-contextmenu.fake{
+				display:none!important;
+			}
+			`
+		}
+	},
+
+	editChatInput: function(add, disptext, edittext){
+		let etext = edittext ? edittext : disptext;
+		let newText = 
+		`<font style="font-weight:bold;" onclick="let e = document.getElementById('chat-input');e.focus();${add?`e.value+='${etext}'`:`e.value='${etext}'`};e">${disptext}</font>`;
+		newText = newText.replaceAll("{prefix}", window.client.textCommandConsts.prefix);
+		return newText;
+	},
+
 	checkMsg: function(value){
 		if(!value) return;
 		let p = window.client.textCommandConsts.prefix;
 		if(value.startsWith("#") || value.startsWith(p)){
 			const messageS = value.split(" ");
-
+			
 			if(["#", p, p+"help"].includes(messageS[0])){
+				let f = (t)=> `<font style="font-weight:bold;" onclick="let e = document.getElementById('chat-input');e.focus();e.value='${t}';e">${t}</font>`
+
 				window.client.sendSystemMessage(
 					`${p} is the prefix.<br>`+
-					`${p}prefix - set prefix.<br>`+
-					`${p}toggletag - switches ON/OFF.<br>`+
-					`${p}toggleusers - toggles users count on the leaderboard.<br>`+
-					`${p}banned - change the way users banned from tournaments are shown.<br>`+
-					`${p}grb - toggle grb mode (if on - only D and arrow right works. type again to stop).<br>`+
-					`${p}format - shows the details of ${p}setformat.<br>`+
-					`${p}setformat - changes the format of the generated run results`
+					`${window.client.editChatInput(false, `{prefix}prefix`)} - set prefix.<br>`+
+					`${window.client.editChatInput(false, `{prefix}toggletag`)} - switches ON/OFF.<br>`+
+					`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
+					`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
+					`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
+					`${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop).<br>`+
+					`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
+					`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results`
 					);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
@@ -752,7 +786,13 @@ window.client = {
 			}else
 			if([p+"toggleusers"].includes(messageS[0])){
 				localStorage.setItem("ts-showUIACnt", window.client.textCommandConsts.showUIACnt = !window.client.textCommandConsts.showUIACnt);
-				window.client.sendSystemMessage(`User cont is now turned ${["off","on"][+window.client.textCommandConsts.showUIACnt]}`);
+				window.client.areaData.updateLb();
+				window.client.sendSystemMessage(`User count is now turned ${["off","on"][+window.client.textCommandConsts.showUIACnt]}`);
+			}else
+			if([p+"toggleusercard"].includes(messageS[0])){
+				localStorage.setItem("ts-showUcard", window.client.textCommandConsts.showUcard = !window.client.textCommandConsts.showUcard);
+				window.client.toggleUcard(window.client.textCommandConsts.showUcard);
+				window.client.sendSystemMessage(`User card is now turned ${["off","on"][+window.client.textCommandConsts.showUcard]}`);
 			}else
 			if([p+"banned"].includes(messageS[0])){
 				if(messageS.length > 1){
@@ -769,9 +809,11 @@ window.client = {
 				window.client.sendSystemMessage(`GRB is now turned ${["off","on"][window.client.grb.on ? 1 : 0]}`);
 			}else
 			if([p+"format"].includes(messageS[0])){
+				let sf = window.client.editChatInput;
+				let f = (t)=>sf(true,t,` {${t}}`);
 				window.client.sendSystemMessage(
-					`Keywords: map, area, time, start time, end time, hero.`+
-					`<br>Working example:<br>${p}setformat {name} ;; {map} {area} ;; {time}<br>`+
+					`Keywords: ${f("map")}, ${f("area")}, ${f("time")}, ${f("start time")}, ${f("end time")}, ${f("hero")}.`+
+					`<br>Working example:<br>${sf(false, `{prefix}setformat {name} ;; {map} {area} ;; {time}`)}<br>`+
 					`current: ${window.client.format}`
 				);
 			}else
@@ -1611,10 +1653,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 		color: #fff;
 		padding: 10px;
 	}
-	#leaderboard +
-	.player-contextmenu{
-		display:none!important;
-	}
 
 	.leaderboard-title-break > .leaderboard-world-title{
 		font-size: 15px;
@@ -2295,134 +2333,136 @@ window.updateLeaderboard = () => {
 	
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
-			let HeroT, Hero, Level, Name;
-			if (client.state) {
-				for (let i in client.state.globalEntities) {
-					const element = client.state.globalEntities[i];
+			if(window.client.textCommandConsts.showUcard){
+				let HeroT, Hero, Level, Name;
+				if (client.state) {
+					for (let i in client.state.globalEntities) {
+						const element = client.state.globalEntities[i];
 
-					if (client.showClasses) {
-						/*let right = event.target.innerText.split(")");
-						if (right.length > 1) {
-							let left = right[right.length - 2].split("(");
-							if (left.length > 1) {*/
+						if (client.showClasses) {
+							/*let right = event.target.innerText.split(")");
+							if (right.length > 1) {
+								let left = right[right.length - 2].split("(");
+								if (left.length > 1) {*/
 
-								if (event.target.innerText.replace(window.timerRegex, "").startsWith(element.name + " (") || event.target.innerText.replace(window.timerRegex, "") === element.name){
-									window.z = element.name;
-									HeroT = element.heroType;
-									Hero = id2name(HeroT);
-									Name = element.name;
+									if (event.target.innerText.replace(window.timerRegex, "").startsWith(element.name + " (") || event.target.innerText.replace(window.timerRegex, "") === element.name){
+										window.z = element.name;
+										HeroT = element.heroType;
+										Hero = id2name(HeroT);
+										Name = element.name;
 
-									Level = element.level;
-								}
-								continue;
+										Level = element.level;
+									}
+									continue;
 
+								//}
 							//}
-						//}
+						}
+						
+						if (element.name == event.target.innerText) {
+							window.z = element.name;
+
+							HeroT = element.heroType;
+							Hero = id2name(HeroT);
+							Level = element.level;
+							Name = element.name;
+						}
 					}
-					
-					if (element.name == event.target.innerText) {
-                        window.z = element.name;
+				} else {
+					Hero = "undefined"
+					Name = "undefined"
+				}
 
-						HeroT = element.heroType;
-						Hero = id2name(HeroT);
-						Level = element.level;
-						Name = element.name;
+				//if (client.count > 0) document.getElementsByClassName('fake')[0].remove();
+				client.count = 1;
+
+				const name = client.showClasses ? Name : event.target.innerText;
+
+				let o = null;
+				for(var i in client.state.entities){
+					let obj = client.state.entities[i]
+					if(obj.name == window.z){
+						o = obj;//experience
+						break;
 					}
 				}
-			} else {
-				Hero = "undefined"
-				Name = "undefined"
-			}
-
-			//if (client.count > 0) document.getElementsByClassName('fake')[0].remove();
-			client.count = 1;
-
-			const name = client.showClasses ? Name : event.target.innerText;
-
-			let o = null;
-			for(var i in client.state.entities){
-				let obj = client.state.entities[i]
-				if(obj.name == window.z){
-					o = obj;//experience
-					break;
+				window.client.hideLogs();
+				window.removeFakes();
+				const elem = document.createElement("div");
+				elem.className = "chat-message-contextmenu fake";
+				elem.style = `top: ${event.y}px; right: 20px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
+				elem.id = "elem-"+name
+				elem.innerHTML =
+				`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
+				`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
+				`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
+				`<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>`+
+				`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
+				`<button id="close"class="bbtn"onClick="window.client.hideLogs();this.parentNode.remove()"title="Close the popup.">X</button>`+
+				`<div class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
+				`<ul style="display: table-cell;">`+
+					`<li style="display: table-cell;">`+
+						`<a href="/profile/${name}" target="_blank">Profile</a>`+
+						`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
+						`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "###" }</b></p>`+
+						`<p id="c1">Level: ${Level}</p>`+
+						`<p id="c2">ss: ${0}</p>`+
+						`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
+						`<div id="timecounter">`+
+						`<input c-lock id="tc-from" type="number" value="${window.client.getUserLogIds(name)[0]}" title="Users log id to start time counting from.">`+
+						`<input c-lock id="tc-to" type="number" value="${window.client.getUserLogIds(name)[1]}"title="End time users log id.">`+
+						`<p id="tc-result"></p>`+
+						`</div>`+
+					`</li>`+
+				`</ul>`;
+				document.getElementById('chat').parentNode.parentNode.append(elem);
+				window.client.elem.level = elem.querySelector("ul>li>p#c1");
+				window.client.elem.speed = elem.querySelector("ul>li>p#c2");
+				window.client.elem.xp = elem.querySelector("ul>li>p#c3");
+				window.client.elem.hero = elem.querySelector("ul>li>p>b#c4");
+				window.r = elem;
+				elem.onClick = function(e) {
+					return e.stopPropagation()
 				}
-			}
-			window.client.hideLogs();
-			window.removeFakes();
-			const elem = document.createElement("div");
-			elem.className = "chat-message-contextmenu fake";
-			elem.style = `top: ${event.y}px; right: 20px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
-			elem.id = "elem-"+name
-			elem.innerHTML =
-			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
-			`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
-			`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
-			`<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>`+
-			`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
-			`<button id="close"class="bbtn"onClick="window.client.hideLogs();this.parentNode.remove()"title="Close the popup.">X</button>`+
-			`<div class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
-			`<ul style="display: table-cell;">`+
-				`<li style="display: table-cell;">`+
-					`<a href="/profile/${name}" target="_blank">Profile</a>`+
-					`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
-					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "###" }</b></p>`+
-					`<p id="c1">Level: ${Level}</p>`+
-					`<p id="c2">ss: ${0}</p>`+
-					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
-					`<div id="timecounter">`+
-					`<input c-lock id="tc-from" type="number" value="${window.client.getUserLogIds(name)[0]}" title="Users log id to start time counting from.">`+
-					`<input c-lock id="tc-to" type="number" value="${window.client.getUserLogIds(name)[1]}"title="End time users log id.">`+
-					`<p id="tc-result"></p>`+
-					`</div>`+
-				`</li>`+
-			`</ul>`;
-			document.getElementById('chat').parentNode.parentNode.append(elem);
-            window.client.elem.level = elem.querySelector("ul>li>p#c1");
-            window.client.elem.speed = elem.querySelector("ul>li>p#c2");
-            window.client.elem.xp = elem.querySelector("ul>li>p#c3");
-            window.client.elem.hero = elem.querySelector("ul>li>p>b#c4");
-            window.r = elem;
-			elem.onClick = function(e) {
-				return e.stopPropagation()
-			}
-			window.makeDragable(elem, [elem]);
+				window.makeDragable(elem, [elem]);
 
-			window.client.elem.hero.addEventListener("click", ()=>{
-				window.client.toggleHeroList();
-			});
-
-			const removcl = (el)=>{
-				el.addEventListener("click", (e)=>{
-					e.stopPropagation();
+				window.client.elem.hero.addEventListener("click", ()=>{
+					window.client.toggleHeroList();
 				});
-				el.addEventListener("mousedown", (e)=>{
-					e.stopPropagation();
-				});
-			}
-			
-			removcl(window.client.elem.hero);
-			let btns = elem.querySelectorAll("button");
-			btns.forEach((btn)=>{
-				removcl(btn);
-			});
 
-
-			const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
-			const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
-			const el3 = elem.querySelector("ul>li>#timecounter>#tc-result");
-
-			const f = ()=>{
-
-				if(el3){
-					window.client.getTimeDiff(name, el1.value, el2.value, el3);
+				const removcl = (el)=>{
+					el.addEventListener("click", (e)=>{
+						e.stopPropagation();
+					});
+					el.addEventListener("mousedown", (e)=>{
+						e.stopPropagation();
+					});
 				}
+				
+				removcl(window.client.elem.hero);
+				let btns = elem.querySelectorAll("button");
+				btns.forEach((btn)=>{
+					removcl(btn);
+				});
+
+
+				const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
+				const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
+				const el3 = elem.querySelector("ul>li>#timecounter>#tc-result");
+
+				const f = ()=>{
+
+					if(el3){
+						window.client.getTimeDiff(name, el1.value, el2.value, el3);
+					}
+				}
+
+				el1.addEventListener("input", f);
+				el2.addEventListener("input", f);
+				f();
+
+				return false;
 			}
-
-			el1.addEventListener("input", f);
-			el2.addEventListener("input", f);
-			f();
-
-			return false;
 		};
 		names.style.cursor = "pointer";
 	}
@@ -2476,6 +2516,7 @@ window.updateName = (id, name) => {
 window.loadGame = () => {
 	window.createNewLeaderboard();
 	client.load = true;
+	window.client.toggleUcard(window.client.textCommandConsts.showUcard);
 	console.log("loaded", client)
 }
 
