@@ -8,7 +8,7 @@ if you can't install any extensions, go [here](https://github.com/Neondertalec/t
 2) Click on the + button.  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815553184793755668/unknown.png)
 
-3) Paste this code in there so it look like this.
+3) Paste this code in there so it looks like this.
 
     ```js
     // ==UserScript==
@@ -35,16 +35,16 @@ if you can't install any extensions, go [here](https://github.com/Neondertalec/t
 6) Go to '`Settings`' tab and make sure that '`check for updates`' is ticked.
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815554982085656586/unknown.png)
 
-7) Make sure that [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) is enabled (<aa style="color:red"> **red line** </aa>)  
+7) Also make sure that [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) is enabled (<aa style="color:red"> **red line** </aa>)  
 That the script is the only one turned on (<aa style="color:#5500ff"> **purpe line** </aa>)  
 Then clcik on the '`check for updates`' (<aa style="color:cyan"> **cyan line** </aa>)  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815555840148766730/unknown.png)
 
-8) Refresh your browser (if it doesnt help, reopen ir).
+8) Refresh your browser (if it doesnt help, reopen it).
 
 # Use with console
 
-if you cant install any extensions...  
+if you can't install any extensions...  
 pass this code into the console:
 ```js
 var xm=new XMLHttpRequest();
