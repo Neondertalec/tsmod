@@ -1,4 +1,7 @@
 # How to install
+* **new:** [A short video of how to install](https://youtu.be/XRXmW23zyWw)  
+or:
+
 1) Install [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) or any other UserScript running extension.  
 if you can't install any extensions, go [here](https://github.com/Neondertalec/tsmod/blob/main/README.md#use-with-console)
 
@@ -49,6 +52,101 @@ xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/console
 xm.send();
 eval(xm.response)
 ```
+
+
+Update 1.1.42
+=============
+
+Chat commands
+------------------
+
+Every **bold** text from the `[SCRIPT]` message is now acting as a button. Some buttons replace the text in the chat input and others add the text.
+
+![](https://cdn.discordapp.com/attachments/617049086452957189/841975792166109184/ezgif.com-gif-maker.gif)
+
+User card toggler
+------------------
+
+Now you can toggle the usercard between the script card and the default (no script) card with the `#toggleusercard` command.
+
+if on:  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841973361214619668/unknown.png)  
+if off:  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841973447391444992/unknown.png)
+
+Update 1.1.41
+=============
+
+Team run result generator
+------------------
+
+When you leftclick on the area on the leaderboard a window will show.
+In the window you need to:
+* Sellect the players that were on that area when the popup was opened.
+* Sellect log id's that you need. (a R button is there to update the logs list).
+* Set the format of the result (It saves), hover for the hint.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841972917650194452/unknown.png)  
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841973110479650826/unknown.png)
+
+Leaderboard players counter
+------------------
+
+Areas in the leaderboard now have a number to the left of them that show the amount of players that are in it right now. You can toggle it with a new command `#toggleusers`
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841972314349371392/unknown.png)
+
+Update 1.1.37
+=============
+
+Logs
+------------------
+
+A new log type is now displayed in a **purple** color.  
+It shows when the player joined or left the server.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841969503772082176/unknown.png)
+
+
+Update 1.1.36
+=============
+
+New commands
+------------------
+
+new #format and #setformat commands are added.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841766637387382784/unknown.png)
+
+The **G** button is used to copy a format. by the example above the formated result will be `DepressionOwU ;; Area 1 ;; 2:25 ;; (1/3)`.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841766822848233492/unknown.png)
+
+Server number
+-------------
+The number of the server you are in is displayer in the leaderboard.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841972434546720808/unknown.png)
+
+Update 1.1.33
+=============
+
+Changelog
+------------------
+
+Every change is now described in the changelog on the main page of evades.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841765889689780264/unknown.png)
+
+Update 1.1.32
+=============
+
+Version
+------------------
+
+The versions are now shown when there is an update available.
+
+![image](https://cdn.discordapp.com/attachments/617049086452957189/841765444632182844/unknown.png)
 
 Update 1.1.27
 =============
