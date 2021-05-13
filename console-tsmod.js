@@ -1,4 +1,4 @@
-
+console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.","color: red; font-size: 20px; background: black;border-radius:10px;");
 console.log("%cScript loading... ","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
 console.log("...")
@@ -7,6 +7,17 @@ window.vers = {
 	chlogMut: null,
 	v: "99.99.99",
 	changeLog: [
+		{
+			version:`1.1.43`,
+			news:[
+				`Now you need to see a player just one time to know its vp instead of being suppost to be in the same area as the player.`,
+				`Current result format is now clickable too.`,
+				`"Show heroes" in settings now saves.`,
+				`Leaderboard now shows EU or NA too.`,
+				`When you open user log window it will be automatically scrolled down.<br>`+
+				`If the window is fully scrolled down and a new log adds, it will automatically get scrolled.`,
+			]
+		},
 		{
 			version:`1.1.42`,
 			news:[`Some bug fixes.`,
@@ -802,7 +813,7 @@ window.client = {
 				window.client.sendSystemMessage(
 					`Keywords: ${f("map")}, ${f("area")}, ${f("time")}, ${f("start time")}, ${f("end time")}, ${f("hero")}.`+
 					`<br>Working example:<br>${sf(false, `{prefix}setformat {name} ;; {map} {area} ;; {time}`)}<br>`+
-					`current: ${window.client.format}`
+					`current: ${sf(false,window.client.format, `{prefix}setformat ${window.client.format}`)}`
 				);
 			}else
 			if([p+"setformat"].includes(messageS[0])){
@@ -904,6 +915,7 @@ window.client = {
 				}
 				
 				document.body.appendChild(elem);
+				elem.scrollTop = elem.scrollHeight;
 				
 				const elem2 = document.createElement("div");
 				elem2.id = "log-h-" + name;
@@ -1025,7 +1037,10 @@ window.client = {
 
 				let logElem = document.getElementById("log-" + name)
 				if(logElem && Object.keys(window.client.userlog2).length == 0 ){
+					let sctb = false;
+					if(logElem.scrollTop + logElem.clientHeight == logElem.scrollHeight)sctb = true;
 					logElem.appendChild(window.client.createLogLine(uo[arrname][len]));
+					if(sctb)logElem.scrollTop = logElem.scrollHeight;
 					/*const line = document.createElement("div");
 					line.style.display = window.client.logTypesToShow.includes(type) ? "": "none";
 					line.className = `ele ${window.styleByNr(type)}`;
@@ -1088,9 +1103,12 @@ window.client = {
 			window.client.userlog[usr.name] = {
 				dead:false,exited:false,q:false,totalDeaths:0,logid:2,logids:["",""],
 				deaths:[/*[time, ctime, usr.regionName, usr.areaName, 2, 2]*/],
-				travel:[[time, ctime, usr.regionName, usr.areaName, 6, 1]/*[time, ctime, usr.regionName, usr.areaName, usr.victoryArea ? 5 : 0, 1]*/]};
+				travel:[[time, ctime, usr.regionName, usr.areaName, 6, 1]/*[time, ctime, usr.regionName, usr.areaName, usr.victoryArea ? 5 : 0, 1]*/],
+				vp: undefined,
+			};
+				
 				//let uo = window.client.userlog[usr.name];
-				window.updateLeaderboard();
+			window.updateLeaderboard();
 				/*uo.travel.push([
 					time, ctime, usr.regionName, usr.areaName, 6, uo.logid++
 				]);*/
@@ -1175,6 +1193,7 @@ window.client = {
 					o = obj;//experience
 				}
 				if(obj.name){
+					window.client.userlog[obj.name].vp = obj.winCount;
 					if(!window.client.getHasExited(obj.name)){
 						if(!m){
 							for(var j in client.state.map.area.zones.zones){
@@ -1388,7 +1407,7 @@ window.client = {
 		return false;
 	},
 
-	showClasses: false,
+	showClasses: getLocal("ts-showClasses", "false") == "true",
 
 	autoMode: false,
 	script: false,
@@ -1447,7 +1466,7 @@ window.replaces = {
 						id: "showClasses",
 						checked: client.showClasses,
 						onChange: function (e) {
-							client.showClasses = !client.showClasses;
+							localStorage.setItem("ts-showClasses", client.showClasses = !client.showClasses);
 							if(client.showClasses){
 								document.getElementById("leaderboard").ariaLabel = "fat"
 							}else{
@@ -1639,6 +1658,9 @@ window.getHeroColor = function(Hero){
 		border-radius: 5px;
 		color: #fff;
 		padding: 10px;
+	}
+	.leaderboard-title{
+		font-size: 18px;
 	}
 
 	.leaderboard-title-break > .leaderboard-world-title{
@@ -2315,7 +2337,7 @@ window.updateLeaderboard = () => {
 		client.count = 0; //window.removeFakes();
 	};
 	let llb = document.querySelector(".leaderboard-title");
-    if(llb && llb?.innerText == "Leaderboard")(llb.innerText = window.lbText)||(socket.onmessage = (m)=>{llb.innerText = window.lbText = "Leaderboard " + (1+ +m.currentTarget.url.split("?")[1].split("&")[0].split("=")[1]); socket.onmessage = null});
+    if(llb && llb?.innerText == "Leaderboard")(llb.innerText = window.lbText)||(llb.innerText = window.lbText = "Leaderboard " + (socket.url.startsWith("wss://eu") ? "EU " : "NA ") + (1+ +socket.url.split("?")[1].split("&")[0].split("=")[1]));
 	
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
@@ -2390,7 +2412,7 @@ window.updateLeaderboard = () => {
 					`<li style="display: table-cell;">`+
 						`<a href="/profile/${name}" target="_blank">Profile</a>`+
 						`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
-						`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: "###" }</b></p>`+
+						`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount ? o.winCount : window.client.userlog[name].vp)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (window.client.userlog[name].vp !== undefined ? window.client.userlog[name].vp : "###") }</b></p>`+
 						`<p id="c1">Level: ${Level}</p>`+
 						`<p id="c2">ss: ${0}</p>`+
 						`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
@@ -2524,9 +2546,9 @@ window.lastPrefix = {
 	name:""
 }
 
-	
 	if (document.getElementsByTagName('script')[0]) {
 		var elem = Array.from(document.querySelectorAll('script')).find(a=>a.src.match(/app\.[0-9a-f]{8}\.js/));
+		console.log(elem);
 		if (elem) {
 			let src = elem.src;
 			elem.remove();
@@ -2620,7 +2642,7 @@ window.lastPrefix = {
 
 				eval(tmp);
 				console.groupEnd()
-				console.log("%cScript loadied.","color: green; font-size: 20px");
+				console.log("%cScript loaded.","color: green; font-size: 20px");
 
 			`;
 			document.body.appendChild(elem);
