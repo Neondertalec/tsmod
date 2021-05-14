@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.43
+// @version     1.1.44
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -18,8 +18,27 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.43",
+	v: "1.1.44",
 	changeLog: [
+		{
+			version:`1.1.44`,
+			news:[
+				`The hero in the result generator now depends on the last log time you sellect.<br>`+
+				`That means: if a user rejoins the game with another hero and your last log for the generation is before the refresh log, `+
+				`the log generator will give the hero the player was before reconnecting.<br><b title="`+
+				`log 1: join as magmax\n`+
+				`log 23: join as necro\n`+
+				`log 52: join as shade\n`+
+				`if last log sellected is 1-22 - magmax\n`+
+				`if last log sellected is 23-51 - necro\n`+
+				`if last log sellected is 52+ - shade\n`+
+				`" style="text-decoration: underline;">${`[Hoverable example]`.fontcolor(`#f99261`)}</b>`,
+				`New log key for the team log generator: ${`{hero num}`.fontcolor(`#aaa`)}<br>Example: 1 necro + 4 chrono.`,
+				[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `PotatoNuke`],
+				//`Removed ${`TS`.fontcolor(`#ad86d8`)} from Creazy.`,
+				`Some bug fixes.`,
+				]
+		},
 		{
 			version:`1.1.43`,
 			news:[
@@ -495,8 +514,8 @@ window.client = {
 					setLogs();
 					if(allObjs.length == 0)return;
 
-					const hero = "none",//window.client.elem.hero.innerText,
-					name = names.join(" + "),
+					
+					const name = names.join(" + "),
 					time = window.client.getTimeDiff("", parseInt(startInput.value), parseInt(endInput.value), null, allObjs),
 					lastMapData = allObjs[time[4]],
 					map = window.getShortName(lastMapData[2]),
@@ -504,14 +523,34 @@ window.client = {
 					time1 = time[1],
 					time2 = time[2];
 
+					let hero = [];
+					let heroNum = [];
+					
+					difherocnt = 0;
+					for(let i = 0; i < names.length; i++){
+						let nh = id2name(window.client.getUserHero(names[i], time[6]));
+						if(!hero.includes(nh)) difherocnt++;
+						hero.push(nh)
+						let hnu = heroNum.find((v)=>v[0] == nh);
+						if(hnu){
+							hnu[1] ++;
+						}else{
+							heroNum.push([nh, 1])
+						}
+					}
+
+					hero = difherocnt == 1 ? hero[0] : hero.join(" + ");
+					
+
 					res = "```\n" +
-					window.client.teamFormat.replace("{name}", name)
-					.replace("{map}", map)
-					.replace("{area}", area)
-					.replace("{time}", time[0])
-					.replace("{start time}", time1)
-					.replace("{end time}", time2)
-					//.replace("{hero}", hero)
+					window.client.teamFormat.replaceAll("{name}", name)
+					.replaceAll("{map}", map)
+					.replaceAll("{area}", area)
+					.replaceAll("{time}", time[0])
+					.replaceAll("{start time}", time1)
+					.replaceAll("{end time}", time2)
+					.replaceAll("{hero}", hero)
+					.replaceAll("{hero num}", heroNum.reduce((v,v2)=>{v.push(v2[1] +" "+ v2[0]); return v}, []).join(" + "))
 					+"\n```";
 
 					popup_result_text.innerHTML = res;
@@ -573,6 +612,8 @@ window.client = {
 				popup_format_input.value = window.client.teamFormat;
 				popup_format_input.title = 
 				"{name} - Team players names e.g. player1 + player2 + player3.\n"+
+				"{hero} - Team heroes e.g. magmax + magmax + shade. If all team is magmax, it will say magmax only 1 time.\n"+
+				"{hero num} - Team heroes e.g. 2 magmax + 1 shade.\n"+
 				"{map} - The name of the map.\n"+
 				"{area} - The last log area.\n"+
 				"{time} - The time from 1st to last log.\n"+
@@ -627,8 +668,8 @@ window.client = {
 		let res, u = window.client.userlog[name];
 		if(u){
 			const list = [...u.travel, ...u.deaths].sort((a1,a2)=>{return a1[0]-a2[0]}),
-			hero = window.client.elem.hero.innerText,
 			time = window.client.getTimeDiff(name, u.logids[0], u.logids[1]),
+			hero = id2name(window.client.getUserHero(name, time[6])),//window.client.elem.hero.innerText,
 			lastMapData = list[time[4]],
 			map = window.getShortName(lastMapData[2]),
 			area = window.normalizeArea(lastMapData[3]),
@@ -636,13 +677,13 @@ window.client = {
 			time2 = time[2];
 
 			res = "```\n" +
-			format.replace("{name}", name)
-			.replace("{map}", map)
-			.replace("{area}", area)
-			.replace("{time}", time[0])
-			.replace("{start time}", time1)
-			.replace("{end time}", time2)
-			.replace("{hero}", hero)
+			format.replaceAll("{name}", name)
+			.replaceAll("{map}", map)
+			.replaceAll("{area}", area)
+			.replaceAll("{time}", time[0])
+			.replaceAll("{start time}", time1)
+			.replaceAll("{end time}", time2)
+			.replaceAll("{hero}", hero)
 			+"\n```";
 		}
 		let sellector;
@@ -824,7 +865,7 @@ window.client = {
 				let sf = window.client.editChatInput;
 				let f = (t)=>sf(true,t,` {${t}}`);
 				window.client.sendSystemMessage(
-					`Keywords: ${f("map")}, ${f("area")}, ${f("time")}, ${f("start time")}, ${f("end time")}, ${f("hero")}.`+
+					`Keywords: ${f("name")}, ${f("map")}, ${f("area")}, ${f("time")}, ${f("start time")}, ${f("end time")}, ${f("hero")}.`+
 					`<br>Working example:<br>${sf(false, `{prefix}setformat {name} ;; {map} {area} ;; {time}`)}<br>`+
 					`current: ${sf(false,window.client.format, `{prefix}setformat ${window.client.format}`)}`
 				);
@@ -987,18 +1028,18 @@ window.client = {
 			if(ct1 && t2){
 				const timed = Math.abs(ct1[0] - ct2[0])
 				if(res) res.innerHTML = window.secondsFormat(timed);
-				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1];
+				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1, ct1[0], ct2[0]];
 			}else
 			{
 				if(!ct1) ct1 = list[0];
 				const timed = Math.abs(Math.floor(ct1[0] - ct2[0]));
 				if(res) res.innerHTML = window.secondsFormat(timed);
-				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1];
+				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1, ct1[0], ct2[0]];
 			}
 		}
 		const timed = window.secondsFormat(0, true, 1);
 		if(res) res.innerHTML = window.secondsFormat(0);
-		return [timed, timed, timed, 0, 0];
+		return [timed, timed, timed, 0, 0, 0, 0];
 	},
 
 	onNewLog: function(name = "", log = null){
@@ -1117,6 +1158,7 @@ window.client = {
 				dead:false,exited:false,q:false,totalDeaths:0,logid:2,logids:["",""],
 				deaths:[/*[time, ctime, usr.regionName, usr.areaName, 2, 2]*/],
 				travel:[[time, ctime, usr.regionName, usr.areaName, 6, 1]/*[time, ctime, usr.regionName, usr.areaName, usr.victoryArea ? 5 : 0, 1]*/],
+				heroes:[[usr.heroType, time]],
 				vp: undefined,
 			};
 				
@@ -1134,6 +1176,19 @@ window.client = {
 			return u.logids;
 		}
 		return ["",""];
+	},
+
+	getUserHero:function(name, time){
+		const u = window.client.userlog[name];
+		if(u){
+			for(let i = u.heroes.length-1; i >= 0; i--){
+				let hd = u.heroes[i];
+				if(hd[1] <= time){
+					return hd[0];
+				}
+			}
+		}
+		return -1;
 	},
 
     drBefore: function(e, t) {
@@ -1189,6 +1244,7 @@ window.client = {
 					if(client.state.globalEntities[j].name == i){
 						let usr = client.state.globalEntities[j];
 						uo.travel.push([time, ctime, usr.regionName, usr.areaName, 6, uo.logid++]);
+						uo.heroes.push([usr.heroType, time]);
 						window.client.customLog(i, 6, "travel", true);
 						return;
 					}
