@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.44
+// @version     1.1.45
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -18,150 +18,173 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.44",
-	changeLog: [
-		{
-			version:`1.1.44`,
-			news:[
-				`The hero in the result generator now depends on the last log time you sellect.<br>`+
-				`That means: if a user rejoins the game with another hero and your last log for the generation is before the refresh log, `+
-				`the log generator will give the hero the player was before reconnecting.<br><b title="`+
-				`log 1: join as magmax\n`+
-				`log 23: join as necro\n`+
-				`log 52: join as shade\n`+
-				`if last log sellected is 1-22 - magmax\n`+
-				`if last log sellected is 23-51 - necro\n`+
-				`if last log sellected is 52+ - shade\n`+
-				`" style="text-decoration: underline;">${`[Hoverable example]`.fontcolor(`#f99261`)}</b>`,
-				`New log key for the team log generator: ${`{hero num}`.fontcolor(`#aaa`)}<br>Example: 1 necro + 4 chrono.`,
-				[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `PotatoNuke`],
-				//`Removed ${`TS`.fontcolor(`#ad86d8`)} from Creazy.`,
-				`Some bug fixes.`,
+	v: "1.1.45",
+	cl:{
+		ts:`#ad86d8`,
+		example: `#f99261`,
+		cmd: `#aaa`,
+		scriptmsg: `#ffceb7`,
+		scripter: `#009eff`,
+	},
+
+	toVers:function(v){
+		return `<b style="text-decoration: underline;" onclick="document.querySelector(\`[logid='${v}']\`).scrollIntoView()">${v}</b>`;
+	},
+
+	filllogp:function(){
+
+		window.vers.changeLog = [
+			{
+				version:`1.1.45`,
+				news:[
+					`Bug fixes.`,
+					`The hero displayed in the user card is now depending on the last log time you sellect Analogically to the ${window.vers.toVers("1.1.44")} update.`,
+					`Team result generation window in the format part now has buttons.<br>By clicking on a button the text of it will be added to the end of the format input.`
 				]
-		},
-		{
-			version:`1.1.43`,
-			news:[
-				`Now you need to see a player just one time to know its vp instead of being suppost to be in the same area as the player.`,
-				`Current result format is now clickable too.`,
-				`"Show heroes" in settings now saves.`,
-				`Leaderboard now shows EU or NA too.`,
-				`When you open user log window it will be automatically scrolled down.<br>`+
-				`If the window is fully scrolled down and a new log adds, it will automatically get scrolled.`,
-			]
-		},
-		{
-			version:`1.1.42`,
-			news:[`Some bug fixes.`,
-			[`1 new command (# for help)`, `#toggleusercard`],
-			`Every <b>bold</b> text from the ${`[SCRIPT]`.fontcolor(`#ffceb7`)} message is now acting as a button. Some buttons replace the text in the chat input and others add the text.`]
-		},
-		{
-			version:`1.1.41`,
-			news:[[`When you leftclick on the area on the leaderboard a window will show.<br>In the window you need to:`,
-					`Sellect the players that were on that area when the popup was opened`,
-					`Sellect log id's that you need. (a R button is there to update the list)`,
-					`Set the format of the result (It saves), hover for the hint.`],
-				`Areas in the leaderboard now have a number to the left of them that show the amount of players that are in it right now`,
-				[`1 new command (# for help)`, `#toggleusers`]]
-		},
-		{
-			version:`1.1.40`,
-			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from prod1gy.`]
-		},
-		{
-			version:`1.1.39`,
-			news:[`${`Bold Rock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
-		},
-		{
-			version:`1.1.38`,
-			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `R0YqL`, `Nickchm`]]
-		},
-		{
-			version:`1.1.37`,
-			news:[
-				`New Log type of ${`purple color`.fontcolor("#7b478e")} that shows when the user leaves or joins the server.`,
-				`Some CSS fixes.`,
-				`Bug fixes.`
-			]
-		},
-		{
-			version:`1.1.36`,
-			news:[`Leaderboard now has a number to the right of it that shows the server you are in right now.`,
-				[`2 new commands (# for help)`, `#format`, `#setformat`],
-				`New button G in the user card.<br>By clicking on it you get the run of the user coppied in to your clipboard by the format setd by the commands above.`,
-				`Some CSS fixes.`
-			]
-		},
-		{
-			version:`1.1.35`,
-			news:[`Fixed a bug where you needed to change area to be able to rightclick on a player in the leaderboard.`]
-		},
-		{
-			version:`1.1.34`,
-			news:[[`Added piger's alt to ${`TS`.fontcolor(`#ad86d8`)}:`, `1333333`]]
-		},
-		{
-			version:`1.1.33`,
-			news:[`Changelog!`, `Fixed a bug when you could get a gray screen at a random moment.`]
-		},
-		{
-			version:`1.1.32`,
-			news:[`Display current and new version if an update is available.`]
-		},
-		{
-			version:`1.1.29`,
-			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `DEFA`]]
-		},
-		{
-			version:`1.1.28`,
-			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `,DSG,`,`piger`]]
-		},
-		{
-			version:`1.1.27`,
-			news:[`GRB (Go Right Bot)<br>Added new command: #grb.`]
-		},
-		{
-			version:`1.1.26`,
-			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `prod1gy`, `Zade`]]
-		},
-		{
-			version:`1.1.23`,
-			news:[`Allowed heroes.<br>On hero click a popup will appear.<br>In the popup you can sellect heroes you want to see crossed in the user card.`]
-		},
-		{
-			version:`1.1.22`,
-			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from Priox.`]
-		},
-		{
-			version:`1.1.21`,
-			news:[`Made user cards and user logs dragable.`]
-		},
-		{
-			version:`1.1.19`,
-			news:[`Added 'BANNED' to user who are banned from tournaments.`]
-		},
-		{
-			version:`1.1.15`,
-			news:[`Removed ${`TS`.fontcolor(`#ad86d8`)} from drippyk.`]
-		},
-		{
-			version:`1.1.13`,
-			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `LightY`]]
-		},
-		{
-			version:`1.1.12`,
-			news:[`From now on the script will work all the time.`]
-		},
-		{
-			version:`1.1.10`,
-			news:[[`Added new ${`TS`.fontcolor(`#ad86d8`)}:`, `Stryker123`], `Became a Ts and made my tag ${`[TS&Scripter]`.fontcolor(`#009eff`)} instead of ${`[Scripter]`.fontcolor(`#009eff`)}.`]
-		},
-		{
-			version:`1.1.2`,
-			news:[`Updated user card.`, `Export/Import logs.`]
-		},
-	],
+			},
+			{
+				version:`1.1.44`,
+				news:[
+					`The hero in the result generator now depends on the last log time you sellect.<br>`+
+					`That means: if a user rejoins the game with another hero and your last log for the generation is before the refresh log, `+
+					`the log generator will give the hero the player was before reconnecting.<br><b title="`+
+					`log 1: join as magmax\n`+
+					`log 23: join as necro\n`+
+					`log 52: join as shade\n`+
+					`if last log sellected is 1-22 - magmax\n`+
+					`if last log sellected is 23-51 - necro\n`+
+					`if last log sellected is 52+ - shade\n`+
+					`" style="text-decoration: underline;">${`[Hoverable example]`.fontcolor(this.cl.example)}</b>`,
+					`New log key for the team log generator: ${`{hero num}`.fontcolor(this.cl.cmd)}<br>Example: 1 necro + 4 chrono.`,
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `PotatoNuke`],
+					//`Removed ${`TS`.fontcolor(`#ad86d8`)} from Creazy.`,
+					`Some bug fixes.`,
+					]
+			},
+			{
+				version:`1.1.43`,
+				news:[
+					`Now you need to see a player just one time to know its vp instead of being suppost to be in the same area as the player.`,
+					`Current result format is now clickable too.`,
+					`"Show heroes" in settings now saves.`,
+					`Leaderboard now shows EU or NA too.`,
+					`When you open user log window it will be automatically scrolled down.<br>`+
+					`If the window is fully scrolled down and a new log adds, it will automatically get scrolled.`,
+				]
+			},
+			{
+				version:`1.1.42`,
+				news:[`Some bug fixes.`,
+				[`1 new command (# for help)`, `#toggleusercard`],
+				`Every <b>bold</b> text from the ${`[SCRIPT]`.fontcolor(this.cl.scriptmsg)} message is now acting as a button. Some buttons replace the text in the chat input and others add the text.`]
+			},
+			{
+				version:`1.1.41`,
+				news:[[`When you leftclick on the area on the leaderboard a window will show.<br>In the window you need to:`,
+						`Sellect the players that were on that area when the popup was opened`,
+						`Sellect log id's that you need. (a R button is there to update the list)`,
+						`Set the format of the result (It saves), hover for the hint.`],
+					`Areas in the leaderboard now have a number to the left of them that show the amount of players that are in it right now`,
+					[`1 new command (# for help)`, `#toggleusers`]]
+			},
+			{
+				version:`1.1.40`,
+				news:[`Removed ${`TS`.fontcolor(this.cl.ts)} from prod1gy.`]
+			},
+			{
+				version:`1.1.39`,
+				news:[`${`Bold Rock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
+			},
+			{
+				version:`1.1.38`,
+				news:[[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `R0YqL`, `Nickchm`]]
+			},
+			{
+				version:`1.1.37`,
+				news:[
+					`New Log type of ${`purple color`.fontcolor("#7b478e")} that shows when the user leaves or joins the server.`,
+					`Some CSS fixes.`,
+					`Bug fixes.`
+				]
+			},
+			{
+				version:`1.1.36`,
+				news:[`Leaderboard now has a number to the right of it that shows the server you are in right now.`,
+					[`2 new commands (# for help)`, `#format`, `#setformat`],
+					`New button G in the user card.<br>By clicking on it you get the run of the user coppied in to your clipboard by the format setd by the commands above.`,
+					`Some CSS fixes.`
+				]
+			},
+			{
+				version:`1.1.35`,
+				news:[`Fixed a bug where you needed to change area to be able to rightclick on a player in the leaderboard.`]
+			},
+			{
+				version:`1.1.34`,
+				news:[[`Added piger's alt to ${`TS`.fontcolor(this.cl.ts)}:`, `1333333`]]
+			},
+			{
+				version:`1.1.33`,
+				news:[`Changelog!`, `Fixed a bug when you could get a gray screen at a random moment.`]
+			},
+			{
+				version:`1.1.32`,
+				news:[`Display current and new version if an update is available.`]
+			},
+			{
+				version:`1.1.29`,
+				news:[[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `DEFA`]]
+			},
+			{
+				version:`1.1.28`,
+				news:[[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `,DSG,`,`piger`]]
+			},
+			{
+				version:`1.1.27`,
+				news:[`GRB (Go Right Bot)<br>Added new command: #grb.`]
+			},
+			{
+				version:`1.1.26`,
+				news:[[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `prod1gy`, `Zade`]]
+			},
+			{
+				version:`1.1.23`,
+				news:[`Allowed heroes.<br>On hero click a popup will appear.<br>In the popup you can sellect heroes you want to see crossed in the user card.`]
+			},
+			{
+				version:`1.1.22`,
+				news:[`Removed ${`TS`.fontcolor(this.cl.ts)} from Priox.`]
+			},
+			{
+				version:`1.1.21`,
+				news:[`Made user cards and user logs dragable.`]
+			},
+			{
+				version:`1.1.19`,
+				news:[`Added 'BANNED' to user who are banned from tournaments.`]
+			},
+			{
+				version:`1.1.15`,
+				news:[`Removed ${`TS`.fontcolor(this.cl.ts)} from drippyk.`]
+			},
+			{
+				version:`1.1.13`,
+				news:[[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `LightY`]]
+			},
+			{
+				version:`1.1.12`,
+				news:[`From now on the script will work all the time.`]
+			},
+			{
+				version:`1.1.10`,
+				news:[[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `Stryker123`], `Became a TS and made my tag ${`[TS&Scripter]`.fontcolor(this.cl.scripter)} instead of ${`[Scripter]`.fontcolor(this.cl.scripter)}.`]
+			},
+			{
+				version:`1.1.2`,
+				news:[`Updated user card.`, `Export/Import logs.`]
+			},
+		]
+	},
 	getm: function(){
 		var xm=new XMLHttpRequest();
 		xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
@@ -195,7 +218,7 @@ window.vers = {
 	
 	genLog: function(version, news){
 		let newData = 
-		`<div class="changelog-section">`+
+		`<div class="changelog-section" logid="${version}">`+
 			`<div class="changelog-section-header">`+
 				`<span style="vertical-align: middle;">${version}</span>`+
 			`</div>`+
@@ -223,6 +246,7 @@ window.vers = {
 		return `<aa style="${color}">${text}</aa>`;
 	}*/
 }
+window.vers.filllogp();
 
 new MutationObserver(function (m){
 	if(document.querySelector(".leaderboard-line.Central-Core-Dull")){
@@ -312,7 +336,7 @@ window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki
 
 window.tags = {
 	'[SCR]':['DepressionOwU'],
-	'[TS]': ['ylzaac😎',
+	'[TS]': ['yIzaac😎👌',
 		'Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy',
 		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', /*'prod1gy',*/ 'Zade',
@@ -508,7 +532,6 @@ window.client = {
 						})
 						let index = 0;
 						allObjs = allObjs.filter((a)=>a[2] == areaName).sort((a,b)=>a[0] - b[0]).map((l)=>(l[5] = ++index, l));
-						console.log(allObjs);
 					}
 
 					setLogs();
@@ -608,22 +631,42 @@ window.client = {
 
 				const popup_format_input = document.createElement("input");
 				popup_format_input.setAttribute("c-lock","");
+				popup_format_input.id = "gresf-input";
 				popup_format_input.className = "format_elem";
 				popup_format_input.value = window.client.teamFormat;
-				popup_format_input.title = 
-				"{name} - Team players names e.g. player1 + player2 + player3.\n"+
-				"{hero} - Team heroes e.g. magmax + magmax + shade. If all team is magmax, it will say magmax only 1 time.\n"+
-				"{hero num} - Team heroes e.g. 2 magmax + 1 shade.\n"+
-				"{map} - The name of the map.\n"+
-				"{area} - The last log area.\n"+
-				"{time} - The time from 1st to last log.\n"+
-				"{start time} - The first log time.\n"+
-				"{end time} - The last log time.\n";
 
-				popup_format_input.addEventListener("input", ()=>{
+				const oic = ()=>{
 					localStorage.setItem("ts-resTFormat", window.client.teamFormat = popup_format_input.value);
 					genResult(popup_users_scroll, false);
-				})
+				}
+				popup_format_input.addEventListener("input", oic)
+
+				//sellect
+				const popup_format_hint_input = document.createElement("div");
+				popup_format_hint_input.className = "cmds_elem";
+				
+				const cmdf = (te)=>window.client.editChatInput(true, te, ` {${te}}`, "gresf-input", false)
+				const si = ` class="cmd" title="`;
+
+				popup_format_hint_input.innerHTML = 
+				`${cmdf("name").replace(" ", si+`Team players names e.g. player1 + player2 + player3."`)}`
+				+`${cmdf("hero").replace(" ", si+`Team heroes e.g. magmax + magmax + shade. If all team is magmax, it will say magmax only 1 time."`)}`
+				+`${cmdf("hero num").replace(" ", si+`Team heroes e.g. 2 magmax + 1 shade."`)}`
+				+`${cmdf("map").replace(" ", si+`The name of the map."`)}`
+				+`${cmdf("area").replace(" ", si+`The last log area."`)}`
+				+`${cmdf("time").replace(" ", si+`The time from 1st to last log."`)}`
+				+`${cmdf("start time").replace(" ", si+`The first log time."`)}`
+				+`${cmdf("end time").replace(" ", si+`The last log time."`)}`;
+
+				for(let i of popup_format_hint_input.children){
+					let conc = i.onclick;
+					i.onclick = ()=>{
+						conc();
+						oic();
+					}
+				}
+
+				popup_format.appendChild(popup_format_hint_input);
 				popup_format.appendChild(popup_format_input);
 			//}
 
@@ -796,10 +839,10 @@ window.client = {
 		}
 	},
 
-	editChatInput: function(add, disptext, edittext){
+	editChatInput: function(add, disptext, edittext, inputId = "chat-input", doStyle = true){
 		let etext = edittext ? edittext : disptext;
 		let newText = 
-		`<font style="font-weight:bold;" onclick="let e = document.getElementById('chat-input');e.focus();${add?`e.value+='${etext}'`:`e.value='${etext}'`};e">${disptext}</font>`;
+		`<font ${doStyle? `style="font-weight:bold;"` : ""} onclick="let e = document.getElementById('${inputId}');e.focus();${add?`e.value+='${etext}'`:`e.value='${etext}'`};e">${disptext}</font>`;
 		newText = newText.replaceAll("{prefix}", window.client.textCommandConsts.prefix);
 		return newText;
 	},
@@ -1028,12 +1071,14 @@ window.client = {
 			if(ct1 && t2){
 				const timed = Math.abs(ct1[0] - ct2[0])
 				if(res) res.innerHTML = window.secondsFormat(timed);
+				window.client.refreshHeroOnUcard(name, ct2[0]);
 				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1, ct1[0], ct2[0]];
 			}else
 			{
 				if(!ct1) ct1 = list[0];
 				const timed = Math.abs(Math.floor(ct1[0] - ct2[0]));
 				if(res) res.innerHTML = window.secondsFormat(timed);
+				window.client.refreshHeroOnUcard(name, ct2[0]);
 				return [window.secondsFormat(timed, true, 1), window.secondsFormat(ct1[0], true, 1), window.secondsFormat(ct2[0], true, 1), ct1[5]-1, ct2[5]-1, ct1[0], ct2[0]];
 			}
 		}
@@ -1042,8 +1087,22 @@ window.client = {
 		return [timed, timed, timed, 0, 0, 0, 0];
 	},
 
+	refreshHeroOnUcard: function(name, lasttime){
+		if(name && window.client.elem.hero){
+			let h = window.client.elem.hero
+			let HeroT = window.client.getUserHero(name, lasttime),
+			Hero = id2name(HeroT),
+			Color = window.getHeroColor(Hero);
+			h.style.color = Color;
+			h.className = window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted';
+			h.innerText = Hero;
+
+		}
+	},
+
 	onNewLog: function(name = "", log = null){
 		if(name == window.z && log && window.client.timeDiffRes[1]){
+			window.client.refreshHeroOnUcard(name, log[0]);
 			window.client.timeDiffRes[1].innerHTML = window.secondsFormat(Math.abs(Math.floor(log[0] - window.client.timeDiffRes[0])));
 		}
 	},
@@ -1204,6 +1263,8 @@ window.client = {
 		for(let i in client.state.globalEntities){
 			namesB.push(client.state.globalEntities[i].name);
 			window.client.logUserAreas(client.state.globalEntities[i]);
+			let uo = window.client.userlog[client.state.globalEntities[i].name];
+			if(uo && uo.heroes[uo.heroes.length-1][0] != client.state.globalEntities[i].heroType)uo.heroes.push([client.state.globalEntities[i].heroType, window.getTime()]);
 			if(client.state.globalEntities[i].name == window.z){
 				window.client.opos[0] = client.state.globalEntities[i];
 			}
@@ -2149,8 +2210,12 @@ window.addEventListener('DOMContentLoaded', e=>{
 		min-height: 100px;
 	}
 	.areaPopup > .format_part{
-		height: 80px;
+		height: 120px;
 		width: 100%;
+	}
+
+	.areaPopup > .format_part > .cmds_elem{
+
 	}
 
 	.areaPopup > .format_part > .format_elem{
@@ -2207,6 +2272,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 		transform: translateY(4px);
 	}
 
+	.areaPopup > .format_part > .cmds_elem,
 	.areaPopup > .users_part > .scoll_elem{
 		text-align: center;
 		width: 100%;
@@ -2216,7 +2282,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 		padding-top: 5px;
 	
 	}
-
+	.areaPopup > .format_part > .cmds_elem > .cmd,
 	.areaPopup > .users_part > .scoll_elem > .scoll_user{
 		display: unset;
 		color: beige;
@@ -2499,6 +2565,7 @@ window.updateLeaderboard = () => {
 				window.client.elem.speed = elem.querySelector("ul>li>p#c2");
 				window.client.elem.xp = elem.querySelector("ul>li>p#c3");
 				window.client.elem.hero = elem.querySelector("ul>li>p>b#c4");
+				//window.client.refreshHeroOnUcard(name, ct2[0]);
 				window.r = elem;
 				elem.onClick = function(e) {
 					return e.stopPropagation()
