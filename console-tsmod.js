@@ -23,6 +23,16 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.46`,
+				news:[
+					[
+						`GRB Bug fixes:`,
+						`The command doesnt lock upgrade buttons anymore.`,
+						`When you turn RGB off you automatically stop.`,
+					],
+				]
+			},
+			{
 				version:`1.1.45`,
 				news:[
 					`Bug fixes.`,
@@ -689,7 +699,10 @@ window.client = {
 		grbKey: 3,
 		toggle: function(){
 			if(!(window.client.grb.on = !window.client.grb.on)){
-				window.client.state.keys.keyUp(window.client.grb.grbKey);
+				setTimeout(()=>{
+					window.client.state.keys.keyUp(window.client.grb.grbKey);
+					console.log("drpd");
+				}, 75)
 			}
 		}
 	},
@@ -2743,10 +2756,10 @@ window.lastPrefix = {
 				//tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
 				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
-				'if(!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
+				'if((e>3||e<0)||!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
 
 				tmp = tmp.replace('null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))',
-				'if(!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
+				'if((e>3||e<0)||!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
 
 				tmp = tmp.replace('this.downKeys=[]',
 				'if(!window.client.grb.on)this.downKeys=[]')

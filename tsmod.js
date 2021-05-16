@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.45
+// @version     1.1.46
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -18,7 +18,7 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.45",
+	v: "1.1.46",
 	cl:{
 		ts:`#ad86d8`,
 		example: `#f99261`,
@@ -34,6 +34,16 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.46`,
+				news:[
+					[
+						`GRB Bug fixes:`,
+						`The command doesnt lock upgrade buttons anymore.`,
+						`When you turn RGB off you automatically stop.`,
+					],
+				]
+			},
 			{
 				version:`1.1.45`,
 				news:[
@@ -701,7 +711,10 @@ window.client = {
 		grbKey: 3,
 		toggle: function(){
 			if(!(window.client.grb.on = !window.client.grb.on)){
-				window.client.state.keys.keyUp(window.client.grb.grbKey);
+				setTimeout(()=>{
+					window.client.state.keys.keyUp(window.client.grb.grbKey);
+					console.log("drpd");
+				}, 75)
 			}
 		}
 	},
@@ -2758,10 +2771,10 @@ new MutationObserver(function(mutations) {
 				//tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
 				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
-				'if(!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
+				'if((e>3||e<0)||!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
 
 				tmp = tmp.replace('null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))',
-				'if(!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
+				'if((e>3||e<0)||!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
 
 				tmp = tmp.replace('this.downKeys=[]',
 				'if(!window.client.grb.on)this.downKeys=[]')
