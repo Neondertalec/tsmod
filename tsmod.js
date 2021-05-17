@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.46
+// @version     1.1.47
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -18,7 +18,7 @@ console.log("...")
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.46",
+	v: "1.1.47",
 	cl:{
 		ts:`#ad86d8`,
 		example: `#f99261`,
@@ -34,13 +34,28 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			//name, hero, hero num
+			{
+				version:`1.1.47`,
+				news:[
+					`Bug fixes`,
+					[
+						`the following keys now can accept a splitter argument:`,
+						`${`{name}`.fontcolor(this.cl.cmd)}`,
+						`${`{hero}`.fontcolor(this.cl.cmd)}`,
+						`${`{hero num}`.fontcolor(this.cl.cmd)}`,
+						`[BREAK POINT]`,
+						`For example if you type ${`{name}`.fontcolor(this.cl.cmd)}, the splitter will be "+".<br>But if you type ${`{name &}`.fontcolor(this.cl.cmd)}, the splitter will be "&".`,
+					]
+				]
+			},
 			{
 				version:`1.1.46`,
 				news:[
 					[
 						`GRB Bug fixes:`,
-						`The command doesnt lock upgrade buttons anymore.`,
-						`When you turn RGB off you automatically stop.`,
+						`The command doesn't lock upgrade buttons anymore.`,
+						`When you turn GRB off you automatically stop.`,
 					],
 				]
 			},
@@ -48,7 +63,7 @@ window.vers = {
 				version:`1.1.45`,
 				news:[
 					`Bug fixes.`,
-					`The hero displayed in the user card is now depending on the last log time you sellect Analogically to the ${window.vers.toVers("1.1.44")} update.`,
+					`The hero displayed in the user card is now depending on the last log time you sellect analogically to the ${window.vers.toVers("1.1.44")} update.`,
 					`Team result generation window in the format part now has buttons.<br>By clicking on a button the text of it will be added to the end of the format input.`
 				]
 			},
@@ -57,15 +72,15 @@ window.vers = {
 				news:[
 					`The hero in the result generator now depends on the last log time you sellect.<br>`+
 					`That means: if a user rejoins the game with another hero and your last log for the generation is before the refresh log, `+
-					`the log generator will give the hero the player was before reconnecting.<br><b title="`+
-					`log 1: join as magmax\n`+
-					`log 23: join as necro\n`+
-					`log 52: join as shade\n`+
-					`if last log sellected is 1-22 - magmax\n`+
-					`if last log sellected is 23-51 - necro\n`+
-					`if last log sellected is 52+ - shade\n`+
+					`the log generator will give the hero, the player was before reconnecting.<br><b title="`+
+					`log 1: join as Magmax\n`+
+					`log 23: join as Necro\n`+
+					`log 52: join as Shade\n`+
+					`if last log sellected is 1-22 - Magmax\n`+
+					`if last log sellected is 23-51 - Necro\n`+
+					`if last log sellected is 52+ - Shade\n`+
 					`" style="text-decoration: underline;">${`[Hoverable example]`.fontcolor(this.cl.example)}</b>`,
-					`New log key for the team log generator: ${`{hero num}`.fontcolor(this.cl.cmd)}<br>Example: 1 necro + 4 chrono.`,
+					`New log key for the team log generator: ${`{hero num}`.fontcolor(this.cl.cmd)}<br>Example: 1 Necro + 4 Chrono.`,
 					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `PotatoNuke`],
 					//`Removed ${`TS`.fontcolor(`#ad86d8`)} from Creazy.`,
 					`Some bug fixes.`,
@@ -77,7 +92,7 @@ window.vers = {
 					`Now you need to see a player just one time to know its vp instead of being suppost to be in the same area as the player.`,
 					`Current result format is now clickable too.`,
 					`"Show heroes" in settings now saves.`,
-					`Leaderboard now shows EU or NA too.`,
+					`Leaderboard now shows "EU" or "NA" too.`,
 					`When you open user log window it will be automatically scrolled down.<br>`+
 					`If the window is fully scrolled down and a new log adds, it will automatically get scrolled.`,
 				]
@@ -239,11 +254,24 @@ window.vers = {
 				newData += `<li>${news[i]}</li>`
 			}else{
 				newData += `<li>${news[i][0]}`
-				newData += `<ul>`
+				newData += `<ul>`;
+				let brkd = -1;
 				for(let j = 1; j < news[i].length; j++){
+					if(news[i][j] === "[BREAK POINT]"){
+						brkd = j+1;
+						break;
+					}
 					newData += `<li>${news[i][j]}</li>`
 				}
-				newData += `</ul></li>`
+				if(brkd != -1){
+					newData += `</ul>`
+					for(let j = brkd; j < news[i].length; j++){
+						newData += news[i][j];
+					}
+					newData += `</li>`
+				}else{
+					newData += `</ul></li>`
+				}
 			}
 		}
 		newData +=
@@ -557,6 +585,7 @@ window.client = {
 					time2 = time[2];
 
 					let hero = [];
+					let heroes = [];
 					let heroNum = [];
 					
 					difherocnt = 0;
@@ -571,11 +600,55 @@ window.client = {
 							heroNum.push([nh, 1])
 						}
 					}
-
+					heroes = difherocnt == 1 ? hero[0] : hero;
 					hero = difherocnt == 1 ? hero[0] : hero.join(" + ");
 					
+					const splres = window.client.splitArgKeys(window.client.teamFormat);
+					res = "```\n" + window.client.teamFormat;
+					splres.forEach((r)=>{
+						if(r.startsWith("name") && r.length > 4 && r[4] == " "){
+							let arg = r.substring(5, r.length);
+							res = res.replaceAll(`{${r}}`, names.join(` ${arg} `));
+						}else
+						if(r.startsWith("hero num") && r.length > 8 && r[8] == " "){
+							let arg = r.substring(9, r.length);
+							res = res.replaceAll(`{${r}}`, heroNum.reduce((v,v2)=>{v.push(v2[1] +" "+ v2[0]); return v}, []).join(` ${arg} `));
+						}else
+						if(r.startsWith("hero") && r != "hero num" && r.length > 4 && r[4] == " "){
+							let arg = r.substring(5, r.length);
+							res = res.replaceAll(`{${r}}`, heroes.join(` ${arg} `));
+						}else{
+							switch(r){
+								case "name":
+									res = res.replaceAll("{name}", name);
+									break;
+								case "map":
+									res = res.replaceAll("{map}", map);
+									break;
+								case "area":
+									res = res.replaceAll("{area}", area);
+									break;
+								case "time":
+									res = res.replaceAll("{time}", time[0]);
+									break;
+								case "start time":
+									res = res.replaceAll("{start time}", time1);
+									break;
+								case "end time":
+									res = res.replaceAll("{end time}", time2);
+									break;
+								case "hero":
+									res = res.replaceAll("{hero}", hero);
+									break;
+								case "hero num":
+									res = res.replaceAll("{hero num}", heroNum.reduce((v,v2)=>{v.push(v2[1] +" "+ v2[0]); return v}, []).join(" + "));
+									break;
+							}
+						}
+					});
+					res += "\n```";
 
-					res = "```\n" +
+					/*res = "```\n" +
 					window.client.teamFormat.replaceAll("{name}", name)
 					.replaceAll("{map}", map)
 					.replaceAll("{area}", area)
@@ -584,7 +657,7 @@ window.client = {
 					.replaceAll("{end time}", time2)
 					.replaceAll("{hero}", hero)
 					.replaceAll("{hero num}", heroNum.reduce((v,v2)=>{v.push(v2[1] +" "+ v2[0]); return v}, []).join(" + "))
-					+"\n```";
+					+"\n```";*/
 
 					popup_result_text.innerHTML = res;
 
@@ -719,6 +792,12 @@ window.client = {
 		}
 	},
 
+	splitArgKeys:function(text, isTeam){
+		const r = text.match(/\{(name|map|area|time|start time|end time|hero|hero num).*?\}/gm);
+		if(r) return r.map((e)=>e.substring(1, e.length -1));
+		return [];
+	},
+
 	genResult:function(name){
 		let format = window.client.format;//"{name} ;; {map} {area} ;; {time} ;; (0/2)";
 		let res, u = window.client.userlog[name];
@@ -732,7 +811,36 @@ window.client = {
 			time1 = time[1],
 			time2 = time[2];
 
-			res = "```\n" +
+			const splres = window.client.splitArgKeys(format);
+			res = "```\n" + format;
+			splres.forEach((r)=>{
+				switch(r){
+					case "name":
+						res = res.replaceAll("{name}", name);
+						break;
+					case "map":
+						res = res.replaceAll("{map}", map);
+						break;
+					case "area":
+						res = res.replaceAll("{area}", area);
+						break;
+					case "time":
+						res = res.replaceAll("{time}", time[0]);
+						break;
+					case "start time":
+						res = res.replaceAll("{start time}", time1);
+						break;
+					case "end time":
+						res = res.replaceAll("{end time}", time2);
+						break;
+					case "hero":
+						res = res.replaceAll("{hero}", hero);
+						break;
+				}
+			});
+			res += "\n```";
+
+			/*res = "```\n" +
 			format.replaceAll("{name}", name)
 			.replaceAll("{map}", map)
 			.replaceAll("{area}", area)
@@ -740,7 +848,7 @@ window.client = {
 			.replaceAll("{start time}", time1)
 			.replaceAll("{end time}", time2)
 			.replaceAll("{hero}", hero)
-			+"\n```";
+			+"\n```";*/
 		}
 		let sellector;
 		if(!(sellector = document.getElementById("copy-sellector2"))){
@@ -876,7 +984,7 @@ window.client = {
 					`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
 					`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
 					`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
-					`${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop).<br>`+
+					`${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`+
 					`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
 					`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results`
 					);
