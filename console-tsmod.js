@@ -22,7 +22,13 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
-			//name, hero, hero num
+			{
+				version:`1.1.48`,
+				news:[
+					`GRB go woosh...`,
+					`Removed ${`TS`.fontcolor(this.cl.ts)} from DEFA <i>${`(temporally)`.fontcolor(this.cl.cmd)}<i>.`,
+				]
+			},
 			{
 				version:`1.1.47`,
 				news:[
@@ -33,7 +39,7 @@ window.vers = {
 						`${`{hero}`.fontcolor(this.cl.cmd)}`,
 						`${`{hero num}`.fontcolor(this.cl.cmd)}`,
 						`[BREAK POINT]`,
-						`For example if you type ${`{name}`.fontcolor(this.cl.cmd)}, the splitter wil be "+".<br>But if you type ${`{name &}`.fontcolor(this.cl.cmd)}, the splitter will be "&".`,
+						`For example if you type ${`{name}`.fontcolor(this.cl.cmd)}, the splitter will be "+".<br>But if you type ${`{name &}`.fontcolor(this.cl.cmd)}, the splitter will be "&".`,
 					]
 				]
 			},
@@ -368,7 +374,7 @@ window.tags = {
 		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', /*'prod1gy',*/ 'Zade',
 		',DSG,', 'Дракончик)))',
 		'noPiger', 'piger',
-		'DEFA', 'ZaLo', 'notdefa',
+		//'DEFA', 'ZaLo', 'notdefa',
 		'R0YqL',
 		'Nickchm'
 	],
@@ -771,6 +777,8 @@ window.client = {
 		on: false,
 		grbKey: 3,
 		toggle: function(){
+			const lt = window.getTag(window.client.main.name);
+			if(lt=="")return 2;
 			if(!(window.client.grb.on = !window.client.grb.on)){
 				setTimeout(()=>{
 					window.client.state.keys.keyUp(window.client.grb.grbKey);
@@ -972,7 +980,7 @@ window.client = {
 					`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
 					`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
 					`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
-					`${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`+
+					`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
 					`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
 					`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results`
 					);
@@ -1010,8 +1018,8 @@ window.client = {
 				window.client.sendSystemMessage(`Invalid input. Use a number from 0 to 1`);
 			}else
 			if([p+"grb"].includes(messageS[0])){
-				window.client.grb.toggle();
-				window.client.sendSystemMessage(`GRB is now turned ${["off","on"][window.client.grb.on ? 1 : 0]}`);
+				let r = window.client.grb.toggle();
+				window.client.sendSystemMessage(r != 2 ? `GRB is now turned ${["off","on"][window.client.grb.on ? 1 : 0]}` : `GRB is currently unavailable!`);
 			}else
 			if([p+"format"].includes(messageS[0])){
 				let sf = window.client.editChatInput;
@@ -2771,6 +2779,16 @@ window.loadGame = () => {
 	client.load = true;
 	window.client.toggleUcard(window.client.textCommandConsts.showUcard);
 	console.log("loaded", client)
+}
+
+window.getTag = (name)=>{
+	for(var tagKey in window.tags){
+		let tag = window.tags[tagKey];
+		if(tag.includes(name)){
+			return tagKey;
+		}
+	}
+	return "";
 }
 
 window.genPrefix = (name)=>{
