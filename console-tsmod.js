@@ -9,10 +9,13 @@ window.vers = {
 	v: "99.99.99",
 	cl:{
 		ts:`#ad86d8`,
+		to:`#6f8fd5`,
+		jrm:`#f1c40f`,
 		example: `#f99261`,
 		cmd: `#aaa`,
 		scriptmsg: `#ffceb7`,
 		scripter: `#009eff`,
+		customs:{gianni:`#009b77`}
 	},
 
 	toVers:function(v){
@@ -22,6 +25,21 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.49`,
+				news:[
+					[`1 new command (# for help)`, `${`#toggletimer`.fontcolor(this.cl.cmd)}`],
+					[
+						`New promotions for ${`[Jr. Mod]`.fontcolor(this.cl.jrm)}:`,
+						`${`[TS]`.fontcolor(this.cl.ts)} piger`,
+						`${`[TS]`.fontcolor(this.cl.ts)} LightY`,
+						`${`[TO]`.fontcolor(this.cl.to)} asdfasdfasdf1234`,
+						`${`[TO]`.fontcolor(this.cl.to)} Pasemrus`,
+						`${`[TO]`.fontcolor(this.cl.to)} thiccsucc`
+					],
+					[`First ever custom tag:`,`${`[evader]`.fontcolor(this.cl.customs.gianni)} Gianni`],
+				]
+			},
 			{
 				version:`1.1.48`,
 				news:[
@@ -94,7 +112,7 @@ window.vers = {
 			{
 				version:`1.1.42`,
 				news:[`Some bug fixes.`,
-				[`1 new command (# for help)`, `#toggleusercard`],
+				[`1 new command (# for help)`, `${`#toggleusercard`.fontcolor(this.cl.cmd)}`],
 				`Every <b>bold</b> text from the ${`[SCRIPT]`.fontcolor(this.cl.scriptmsg)} message is now acting as a button. Some buttons replace the text in the chat input and others add the text.`]
 			},
 			{
@@ -104,7 +122,7 @@ window.vers = {
 						`Sellect log id's that you need. (a R button is there to update the list)`,
 						`Set the format of the result (It saves), hover for the hint.`],
 					`Areas in the leaderboard now have a number to the left of them that show the amount of players that are in it right now`,
-					[`1 new command (# for help)`, `#toggleusers`]]
+					[`1 new command (# for help)`, `${`#toggleusers`.fontcolor(this.cl.cmd)}`]]
 			},
 			{
 				version:`1.1.40`,
@@ -129,7 +147,7 @@ window.vers = {
 			{
 				version:`1.1.36`,
 				news:[`Leaderboard now has a number to the right of it that shows the server you are in right now.`,
-					[`2 new commands (# for help)`, `#format`, `#setformat`],
+					[`2 new commands (# for help)`, `${`#format`.fontcolor(this.cl.cmd)}`, `${`#setformat`.fontcolor(this.cl.cmd)}`],
 					`New button G in the user card.<br>By clicking on it you get the run of the user coppied in to your clipboard by the format setd by the commands above.`,
 					`Some CSS fixes.`
 				]
@@ -160,7 +178,7 @@ window.vers = {
 			},
 			{
 				version:`1.1.27`,
-				news:[`GRB (Go Right Bot)<br>Added new command: #grb.`]
+				news:[`GRB (Go Right Bot)<br>Added new command: ${`#grb`.fontcolor(this.cl.cmd)}.`]
 			},
 			{
 				version:`1.1.26`,
@@ -371,15 +389,15 @@ window.tags = {
 	'[TS]': ['yIzaac😎👌',
 		'Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy',
 		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
-		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', 'LightY', /*'prod1gy',*/ 'Zade',
+		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 		',DSG,', 'Дракончик)))',
-		'noPiger', 'piger',
+		'noPiger',
 		//'DEFA', 'ZaLo', 'notdefa',
 		'R0YqL',
 		'Nickchm'
 	],
-	'[TO]': ['Jayyyyyyyyyyyyyy', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
-	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram'],
+	'[TO]': ['Jayyyyyyyyyyyyyy'],
+	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', '1Phoenix1', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
 	'[Sr. Mod]': ['Jackal'],
 	'[H. Mod]': ['Exoriz', 'extirpater'],
@@ -771,6 +789,7 @@ window.client = {
 		bannedType: +getLocal("ts-bannedType", "0"),
 		showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
 		showUcard: getLocal("ts-showUcard", "true") == "true",
+		timerReal: getLocal("ts-timerReal", "true") == "true",
 		
 	},
 	grb:{
@@ -979,10 +998,11 @@ window.client = {
 					`${window.client.editChatInput(false, `{prefix}toggletag`)} - switches ON/OFF.<br>`+
 					`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
 					`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
+					`${window.client.editChatInput(false, `{prefix}toggletimer`)} - changes the timer (if on - timer shows real time. if off - timer shows the time that will be shown on the death screen.).<br>`+
 					`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
 					`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
 					`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
-					`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results`
+					`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`
 					);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
@@ -996,6 +1016,10 @@ window.client = {
 			if([p+"toggletag"].includes(messageS[0])){
 				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
 				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}else
+			if([p+"toggletimer"].includes(messageS[0])){
+				localStorage.setItem("ts-timerReal", window.client.textCommandConsts.timerReal = !window.client.textCommandConsts.timerReal);
+				window.client.sendSystemMessage(`timer now shows ${["end screen time","real time"][+window.client.textCommandConsts.timerReal]}`);
 			}else
 			if([p+"toggleusers"].includes(messageS[0])){
 				localStorage.setItem("ts-showUIACnt", window.client.textCommandConsts.showUIACnt = !window.client.textCommandConsts.showUIACnt);
@@ -1681,7 +1705,7 @@ window.replaces = {
 	id2: function (e,t,l) {
 
 		t.font = 'bold ' + e.default.font(30);
-		let secs = secondsFormat(window.getTime());
+		let secs = secondsFormat(window.client.textCommandConsts.timerReal ? window.getTime() : window.client.main.survivalTime);
 		t.strokeText(secs, l, 80);
 		t.fillText(secs, l, 80);
 
@@ -2532,6 +2556,12 @@ window.getHeroColor = function(Hero){
 		content: "[TS]";
 		margin-right: 4px;
 		color: ${window.tagData["[TS]"].color};
+	}
+	/*gianni custom*/
+	span[arialabel="Gianni"]::before{
+		content: "[evader]";
+		margin-right: 4px;
+		color: #009b77;
 	}
 
 	span[arialabel^="Guest"]::before{
