@@ -36,6 +36,7 @@ there are several ways to update the script:
 * in evades.io click on tampermonkey extension -> Utilities -> Check for userscript updates:  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/848149936356851732/unknown.png)
 * in script editor click on File -> Check for updates:
+
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/848150527531286528/unknown.png)  
 can't update? [see this](https://github.com/Neondertalec/tsmod/blob/main/faq.md#wtd4).
 # Script doesnt work
@@ -45,7 +46,8 @@ WTD1
 ------------
 
 If the content of the script is less than 20 lines, you probably didn't update it.  
-check if the script is updated: [how to update](https://github.com/Neondertalec/tsmod/blob/main/faq.md#how-to-update).
+check if the script is updated: 
+[how to update](https://github.com/Neondertalec/tsmod/blob/main/faq.md#how-to-update).
 
 
 WTD2
