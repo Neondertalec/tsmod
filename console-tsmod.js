@@ -1,8 +1,46 @@
-
 console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.","color: red; font-size: 20px; background: black;border-radius:10px;");
 console.log("%cScript loading... ","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
 console.log("...")
+
+window.customTags = [
+	{
+		names: ["Gianni"],
+		color: "#009b77",
+		text: "[evader]",
+		rainbow: false,
+	},
+	{
+		names: ["Invi"],
+		color: "#51dddd",
+		text: "[Invi]",
+		rainbow: false,
+	},
+	{
+		names: ["LightY"],
+		color: "#f19dba",
+		text: "[litijo]",
+		rainbow: false,
+	},
+	{
+		names: ["Jayyyyyyyyyyyyyy", "GuеstZunolo"/*thats me, not jay lol*/],
+		color: "#f00",
+		text: "[Dep's BFF]",
+		rainbow: true,
+	},
+	{
+		names: ["R0YqL"],
+		color: "#009b77",
+		text: "[Roy]",
+		rainbow: false,
+	},
+	{
+		names: ["Pasemrus"],
+		color: "#51dddd",
+		text: "[Air]",
+		rainbow: false,
+	},
+]
 
 window.vers = {
 	chlogMut: null,
@@ -15,7 +53,6 @@ window.vers = {
 		cmd: `#aaa`,
 		scriptmsg: `#ffceb7`,
 		scripter: `#009eff`,
-		customs:{gianni:`#009b77`, invi:`#51dddd`, lighty:`#f19dba`}
 	},
 
 	toVers:function(v){
@@ -26,13 +63,29 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.51`,
+				news:[
+					[
+						`New promotions for ${`[Jr. Mod]`.fontcolor(this.cl.jrm)}:`,
+						`${`[TS]`.fontcolor(this.cl.ts)} Exscord`,
+					],
+					[
+						`Fourth, fifth and sixth custom tags:`,
+						`${`[Roy]`.fontcolor("#009b77")} R0YqL`,
+						`${`[Air]`.fontcolor("#51dddd")} Pasemrus`
+					],
+					`<font class="rainbowText">[Dep's BFF]</font> Jayyyyyyyyyyyyyy<br>`+
+					`${`WaIt... It ChAnGeS CoLoRs?!`.fontcolor(this.cl.cmd)}`
+				]
+			},
+			{
 				version:`1.1.50`,
 				news:[
 					`Some css fixes.`,
 					[
-						`Secont and Third ever custom tags:`,
-						`${`[Invi]`.fontcolor(this.cl.customs.invi)} Invi`,
-						`${`[litijo]`.fontcolor(this.cl.customs.lighty)} LightY`
+						`Second and Third custom tags:`,
+						`${`[Invi]`.fontcolor("#51dddd")} Invi`,
+						`${`[litijo]`.fontcolor(`#f19dba`)} LightY`
 					],
 				]
 			},
@@ -48,7 +101,7 @@ window.vers = {
 						`${`[TO]`.fontcolor(this.cl.to)} Pasemrus`,
 						`${`[TO]`.fontcolor(this.cl.to)} thiccsucc`
 					],
-					[`First ever custom tag:`,`${`[evader]`.fontcolor(this.cl.customs.gianni)} Gianni`],
+					[`First ever custom tag:`,`${`[evader]`.fontcolor(`#009b77`)} Gianni`],
 				]
 			},
 			{
@@ -410,12 +463,13 @@ window.tags = {
 		'Nickchm'
 	],
 	'[TO]': ['Jayyyyyyyyyyyyyy'],
-	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
+	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc', 'Exscord'],
 	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', '1Phoenix1', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
 	'[Sr. Mod]': ['Jackal'],
 	'[H. Mod]': ['Exoriz', 'extirpater'],
 	'[Dev]': ['Stovoy', 'MiceLee', 'TTTruck', 'DDBus']
 }
+
 window.tagData = {
 	'[SCR]': {presudo:"[TS&Scripter]", color:"#009eff"},
 	'[TS]': {presudo:"[TS]", color:"#ad86d8"},
@@ -2589,32 +2643,49 @@ window.getHeroColor = function(Hero){
 		content: "[TS]";
 		margin-right: 4px;
 		color: ${window.tagData["[TS]"].color};
+	}`
+	if(window.customTags){
+		for(let tagdata of window.customTags){
+			let newarr = [];
+			for(let tname of tagdata.names){
+				newarr.push('span[arialabel="'+ tname +'"]::before')
+			}
+			newihtml += newarr.join(",") + `{
+				content: "${tagdata.text}";
+				margin-right: 4px;
+				color: ${tagdata.color};
+				${tagdata.rainbow?
+					`animation-name: rainbowTextkf;
+					animation-duration: 20s;
+					animation-iteration-count: infinite;`:
+					``
+				}
+			}`
+		}
 	}
-	/*Gianni custom*/
-	span[arialabel="Gianni"]::before{
-		content: "[evader]";
-		margin-right: 4px;
-		color: #009b77;
-	}
-	/*Invi custom*/
-	span[arialabel="Invi"]::before{
-		content: "[Invi]";
-		margin-right: 4px;
-		color: #51dddd;
-	}
-
-	/*LightY custom*/
-	span[arialabel="LightY"]::before{
-		content: "[litijo]";
-		margin-right: 4px;
-		color: #f19dba;
-	}
-
+	newihtml +=`
 	span[arialabel^="Guest"]::before{
 		content: "[guest]";
 		margin-right: 4px;
 		color: ${window.tagData["[guest]"].color};
 	}
+
+	
+	@keyframes rainbowTextkf {
+		0%   {color: hsl(0, 100%, 50%);}
+		25%   {color: hsl(90, 100%, 50%);}
+		50%   {color: hsl(180, 100%, 50%);}
+		75%   {color: hsl(270, 100%, 50%);}
+		100% {color: hsl(360, 100%, 50%);}
+	}
+	
+	.rainbowText {
+		color: red;
+		animation-name: rainbowTextkf;
+		animation-duration: 20s;
+		animation-iteration-count: infinite;
+	}
+
 	`;
 
 	styles.innerHTML = newihtml;
