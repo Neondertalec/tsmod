@@ -1,3 +1,4 @@
+## [FAQ link](https://github.com/Neondertalec/tsmod/blob/main/faq.md#how-to-install)
 # How to install
 * **new:** [A short video of how to install](https://youtu.be/XRXmW23zyWw)  
 or:

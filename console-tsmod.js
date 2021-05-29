@@ -15,7 +15,7 @@ window.vers = {
 		cmd: `#aaa`,
 		scriptmsg: `#ffceb7`,
 		scripter: `#009eff`,
-		customs:{gianni:`#009b77`}
+		customs:{gianni:`#009b77`, invi:`#51dddd`, lighty:`#f19dba`}
 	},
 
 	toVers:function(v){
@@ -25,6 +25,17 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.50`,
+				news:[
+					`Some css fixes.`,
+					[
+						`Secont and Third ever custom tags:`,
+						`${`[Invi]`.fontcolor(this.cl.customs.invi)} Invi`,
+						`${`[litijo]`.fontcolor(this.cl.customs.lighty)} LightY`
+					],
+				]
+			},
 			{
 				version:`1.1.49`,
 				news:[
@@ -326,10 +337,12 @@ window.vers.chlogMut = new MutationObserver(function (m) {
 		btn1.style.borderRadius = btn2.style.borderRadius = "6px";
 		
 		btn1.addEventListener("click", (e)=>{
-			newEl.style.height = "24px";
+			newEl.classList.contains("sellected")&&
+			newEl.classList.remove("sellected")
 		});
 		btn2.addEventListener("click", (e)=>{
-			newEl.style.height = "274px";
+			newEl.classList.contains("sellected")||
+			newEl.classList.add("sellected")
 		});
 
 		newEl.appendChild(btn1);
@@ -1916,6 +1929,26 @@ window.getHeroColor = function(Hero){
 	#version-warning > .v-nv + div{
 		color: forestgreen;
 	}
+	/*#tsm-chlog*/
+	
+	#tsm-chlog{
+		float: left;
+		width: 300px;
+		height: 24px;
+		position: absolute;
+		left: 50%;
+		transform: translate(-500px, -24px);
+		border: 1px solid rgb(88, 88, 88);
+		border-radius: 5px;
+		color: rgb(255, 255, 255);
+		background-color: rgb(34, 34, 34);
+		overflow: hidden;
+	}
+
+	#tsm-chlog.sellected{
+		height: 274px!important;
+	}
+	
 
 	/*otherrrrrrr*/
 	.settings {
@@ -2557,11 +2590,24 @@ window.getHeroColor = function(Hero){
 		margin-right: 4px;
 		color: ${window.tagData["[TS]"].color};
 	}
-	/*gianni custom*/
+	/*Gianni custom*/
 	span[arialabel="Gianni"]::before{
 		content: "[evader]";
 		margin-right: 4px;
 		color: #009b77;
+	}
+	/*Invi custom*/
+	span[arialabel="Invi"]::before{
+		content: "[Invi]";
+		margin-right: 4px;
+		color: #51dddd;
+	}
+
+	/*LightY custom*/
+	span[arialabel="LightY"]::before{
+		content: "[litijo]";
+		margin-right: 4px;
+		color: #f19dba;
 	}
 
 	span[arialabel^="Guest"]::before{
@@ -2809,6 +2855,8 @@ window.loadGame = () => {
 	client.load = true;
 	window.client.toggleUcard(window.client.textCommandConsts.showUcard);
 	console.log("loaded", client)
+	let e;
+	document.head.appendChild((e = document.createElement("style"),e.innerHTML = `html,body{overflow-y: hidden!important;}`,e))
 }
 
 window.getTag = (name)=>{
