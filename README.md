@@ -54,6 +54,113 @@ xm.send();
 eval(xm.response)
 ```
 
+Update 1.1.52
+=============
+
+Addons
+------
+From now on you can have another extension that will allow you to have a custom tag in the chat and a prefix in the game (#toggletag command) without modifying the script itself.
+
+### the code to use:  
+  
+```js
+// ==UserScript==
+// @name        TS-Mod-addons
+// @version     1.0.0
+// @description	Evades.io TS script addon.
+// @author      Script by: MeOw:3 (🎀Depression🎀#5556).
+// @match       https://evades.io/*
+// @match       https://evades.online/*
+// @match       https://eu.evades.io/*
+// @run-at      document-idle
+// @grant       none
+// ==/UserScript==
+
+(()=>{
+    let e = document.createElement("div");
+    e.id = "EXDATAtags";
+    e.style = "display:none;";
+    document.body.appendChild(e);
+
+    // CUSTOM PART START ---------------------------------
+
+    e.innerHTML=`
+    window.tagsEX = {...window.tagsEX,...{
+        '[ct]':['USER NAME', 'USER NAME 2'],
+    }}
+    window.tagDataEX = {...window.tagDataEX,...{
+        '[ct]': {presudo:"[TAG NAME]", color:"#fff"},
+    }}`;
+
+
+    let data = [
+        {
+            names: ["USER NAME", "USER NAME 2"],
+            color: "#529b77",
+            text: "[custom tag]",
+            rainbow: false,
+        },
+    ]
+
+    // CUSTOM PART END -----------------------------------
+
+    let styles = document.createElement('style');
+    let newihtml = "";
+    for(let tagdata of data){
+			let newarr = [];
+			for(let tname of tagdata.names){
+				newarr.push('span[arialabel="'+ tname +'"]::before')
+			}
+			newihtml += newarr.join(",") + `{
+				content: "${tagdata.text}"!important;
+				margin-right: 4px;
+				color: ${tagdata.color}!important;
+				${tagdata.rainbow?
+					`animation-name: rainbowTextkf;
+					animation-duration: 20s;
+					animation-iteration-count: infinite;`:
+					``
+				}
+			}`
+		}
+    styles.innerHTML = newihtml;
+    document.head.appendChild(styles);
+})()
+```
+
+As you can see there is a seperated part.
+
+The first part you can modify is this:
+```js
+e.innerHTML=`
+window.tagsEX = {...window.tagsEX,...{
+    '[ct]':['USER NAME', 'USER NAME 2'],
+}}
+window.tagDataEX = {...window.tagDataEX,...{
+    '[ct]': {presudo:"[TAG NAME]", color:"#fff"},
+}}`;
+```
+
+The **`[ct]`** acts as a key. It should be the same in the top and the bottom parts.  
+The **`USER NAME`** is the name of the players you want to assing this prefix.  
+The **`#fff`** is the place where you put the color you want.
+
+The second part you can modify is this:
+```js
+let data = [
+    {
+        names: ["USER NAME", "USER NAME 2"],
+        color: "#529b77",
+        text: "[custom tag]",
+        rainbow: false,
+    },
+]
+```
+
+The **`names`** contains the names of the players you want to assign the tags.  
+The **`color`** is the color of the tag.  
+The **`text`** is tag.
+The **`rainbow`** is whether you want it to change colors or on (the **`color`** doesnt get used then).
 
 Update 1.1.42
 =============

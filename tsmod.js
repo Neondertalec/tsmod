@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.51
+// @version     1.1.52
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -53,11 +53,17 @@ window.customTags = [
 		text: "[Air]",
 		rainbow: false,
 	},
+	{
+		names: ["thiccsucc"],
+		color: "#9D2005",
+		text: "[THICC]",
+		rainbow: false,
+	},
 ]
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.51",
+	v: "1.1.52",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -75,6 +81,18 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.52`,
+				news:[
+					`Bug fixes.`,
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `Rxpct`, `Antony666`],
+					[
+						`Seventh custom tag:`,
+						`${`[THICC]`.fontcolor("#9D2005")} thiccsucc`
+					],
+					`Local tag (chat) and prefix (ingame over the name #toggletag) support.<br><a style="color:${this.cl.cmd}" target="_blank" href="https://github.com/Neondertalec/tsmod#update-1152">[see this for details]</a>.`
+				]
+			},
 			{
 				version:`1.1.51`,
 				news:[
@@ -463,6 +481,9 @@ window.vers.chlogMut.observe(document, {childList: true, subtree: true});
 
 window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
 
+window.tagsEX = {};
+window.tagDataEX = {};
+
 window.tags = {
 	'[SCR]':['DepressionOwU'],
 	'[TS]': ['yIzaac😎👌',
@@ -473,7 +494,9 @@ window.tags = {
 		'noPiger',
 		//'DEFA', 'ZaLo', 'notdefa',
 		'R0YqL',
-		'Nickchm'
+		'Nickchm',
+		'Rxpct',
+		'Antony666'
 	],
 	'[TO]': ['Jayyyyyyyyyyyyyy'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc', 'Exscord'],
@@ -482,7 +505,6 @@ window.tags = {
 	'[H. Mod]': ['Exoriz', 'extirpater'],
 	'[Dev]': ['Stovoy', 'MiceLee', 'TTTruck', 'DDBus']
 }
-
 window.tagData = {
 	'[SCR]': {presudo:"[TS&Scripter]", color:"#009eff"},
 	'[TS]': {presudo:"[TS]", color:"#ad86d8"},
@@ -680,7 +702,7 @@ window.client = {
 					let heroes = [];
 					let heroNum = [];
 					
-					difherocnt = 0;
+					let difherocnt = 0;
 					for(let i = 0; i < names.length; i++){
 						let nh = id2name(window.client.getUserHero(names[i], time[6]));
 						if(!hero.includes(nh)) difherocnt++;
@@ -696,7 +718,7 @@ window.client = {
 					hero = difherocnt == 1 ? hero[0] : hero.join(" + ");
 					
 					const splres = window.client.splitArgKeys(window.client.teamFormat);
-					res = "```\n" + window.client.teamFormat;
+					let res = "```\n" + window.client.teamFormat;
 					splres.forEach((r)=>{
 						if(r.startsWith("name") && r.length > 4 && r[4] == " "){
 							let arg = r.substring(5, r.length);
@@ -769,7 +791,7 @@ window.client = {
 				const popup_users_scroll = document.createElement("div");
 				popup_users_scroll.className = "scoll_elem";
 
-				for(user in area.users){
+				for(let user in area.users){
 					const userelem = document.createElement("div");
 					userelem.className = "scoll_user";
 					userelem.innerText = " "+user+" ";
@@ -862,7 +884,7 @@ window.client = {
 	chat:null,
 	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
-	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]")),
+	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]")),
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
@@ -1006,7 +1028,7 @@ window.client = {
 			e.stopPropagation();
 		});
 
-		for(let i = 0; i < 18; i++){
+		for(let i = 0; i < 19; i++){
 			let hero = id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
@@ -1241,7 +1263,7 @@ window.client = {
 				elem2.style.right = `${elposx + 490}px`;
 				elem2.className = "log-popup-extra";
 				
-				for(var i = 0; i < 7; i++){
+				for(let i = 0; i < 7; i++){
 					elem2.innerHTML += `<input type="checkbox" onclick="window.client.editLogType(this)" ${window.client.logTypesToShow.includes(i) ? "checked": ""} class="custombox ${window.styleByNr(i)}"></input>`;
 				}
 				
@@ -1703,7 +1725,7 @@ window.client = {
 								elem.style.display = "";
 							}
 						}else{
-							index = window.client.loggerShown.findIndex((a)=>{return a == keys[i]})
+							let index = window.client.loggerShown.findIndex((a)=>{return a == keys[i]})
 							if(index != -1) window.client.loggerShown.splice(index, 1);
 							if(window.client.loggerShownOnly){
 								elem.style.display = "none";
@@ -2619,7 +2641,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	if(window.tags){
 		if(window.tags["[SCR]"]){
 			let newarr = [];
-			for(var i in window.tags["[SCR]"]){
+			for(let i in window.tags["[SCR]"]){
 				newarr.push('span[arialabel="'+ window.tags["[SCR]"][i] +'"]::before')
 			}
 			newihtml += newarr.join(",");
@@ -2633,7 +2655,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	if(window.tags){
 		if(window.tags["[TO]"]){
 			let newarr = [];
-			for(var i in window.tags["[TO]"]){
+			for(let i in window.tags["[TO]"]){
 				newarr.push('span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
 			}
 			newihtml += newarr.join(",");
@@ -2647,7 +2669,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	if(window.tags){
 		if(window.tags["[TS]"]){
 			let newarr = [];
-			for(var i in window.tags["[TS]"]){
+			for(let i in window.tags["[TS]"]){
 				newarr.push('span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
 			}
 			newihtml += newarr.join(",");
@@ -2665,9 +2687,9 @@ window.addEventListener('DOMContentLoaded', e=>{
 				newarr.push('span[arialabel="'+ tname +'"]::before')
 			}
 			newihtml += newarr.join(",") + `{
-				content: "${tagdata.text}";
+				content: "${tagdata.text}"!important;
 				margin-right: 4px;
-				color: ${tagdata.color};
+				color: ${tagdata.color}!important;
 				${tagdata.rainbow?
 					`animation-name: rainbowTextkf;
 					animation-duration: 20s;
@@ -2942,7 +2964,13 @@ window.loadGame = () => {
 	window.client.toggleUcard(window.client.textCommandConsts.showUcard);
 	console.log("loaded", client)
 	let e;
-	document.head.appendChild((e = document.createElement("style"),e.innerHTML = `html,body{overflow-y: hidden!important;}`,e))
+	document.head.appendChild((e = document.createElement("style"),e.innerHTML = `html,body{overflow: hidden!important;}`,e))
+
+	//loadextension
+	let els = document.querySelectorAll("#EXDATAtags");
+	if(els)for(let el of els){
+		eval(el.innerHTML);
+	}
 }
 
 window.getTag = (name)=>{
@@ -2957,6 +2985,14 @@ window.getTag = (name)=>{
 
 window.genPrefix = (name)=>{
 	if(window.client.textCommandConsts.showTag){
+		for(var tagKey in window.tagsEX){
+			let tag = window.tagsEX[tagKey];
+			if(tag.includes(name)){
+				window.lastPrefix.name = window.tagDataEX[tagKey].presudo;
+				window.lastPrefix.color = window.tagDataEX[tagKey].color;
+				return;
+			}
+		}
 		for(var tagKey in window.tags){
 			let tag = window.tags[tagKey];
 			if(tag.includes(name)){
