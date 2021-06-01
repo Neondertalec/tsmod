@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.53
+// @version     1.1.54
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -63,7 +63,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.53",
+	v: "1.1.54",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -80,7 +80,13 @@ window.vers = {
 
 	filllogp:function(){
 
-		window.vers.changeLog = [//prepackagedsushi
+		window.vers.changeLog = [
+			{
+				version:`1.1.54`,
+				news:[
+					`Bug fixes.`
+				]
+			},
 			{
 				version:`1.1.53`,
 				news:[
@@ -2696,7 +2702,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 			newihtml += newarr.join(",") + `{
 				content: "${tagdata.text}"!important;
 				margin-right: 4px;
-				color: ${tagdata.color}!important;
+				color: ${tagdata.color}${!tagdata.rainbow?`!important`:``};
 				${tagdata.rainbow?
 					`animation-name: rainbowTextkf;
 					animation-duration: 20s;

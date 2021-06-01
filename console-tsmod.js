@@ -67,7 +67,13 @@ window.vers = {
 
 	filllogp:function(){
 
-		window.vers.changeLog = [//prepackagedsushi
+		window.vers.changeLog = [
+			{
+				version:`1.1.54`,
+				news:[
+					`Bug fixes.`
+				]
+			},
 			{
 				version:`1.1.53`,
 				news:[
@@ -2682,7 +2688,7 @@ window.getHeroColor = function(Hero){
 			newihtml += newarr.join(",") + `{
 				content: "${tagdata.text}"!important;
 				margin-right: 4px;
-				color: ${tagdata.color}!important;
+				color: ${tagdata.color}${!tagdata.rainbow?`!important`:``};
 				${tagdata.rainbow?
 					`animation-name: rainbowTextkf;
 					animation-duration: 20s;
