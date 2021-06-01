@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.52
+// @version     1.1.53
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -63,7 +63,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.52",
+	v: "1.1.53",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -80,7 +80,13 @@ window.vers = {
 
 	filllogp:function(){
 
-		window.vers.changeLog = [
+		window.vers.changeLog = [//prepackagedsushi
+			{
+				version:`1.1.53`,
+				news:[
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `prepackagedsushi`],
+				]
+			},
 			{
 				version:`1.1.52`,
 				news:[
@@ -496,7 +502,8 @@ window.tags = {
 		'R0YqL',
 		'Nickchm',
 		'Rxpct',
-		'Antony666'
+		'Antony666',
+		'prepackagedsushi'
 	],
 	'[TO]': ['Jayyyyyyyyyyyyyy'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc', 'Exscord'],

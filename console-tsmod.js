@@ -1,4 +1,3 @@
-
 console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.","color: red; font-size: 20px; background: black;border-radius:10px;");
 console.log("%cScript loading... ","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
@@ -68,7 +67,13 @@ window.vers = {
 
 	filllogp:function(){
 
-		window.vers.changeLog = [
+		window.vers.changeLog = [//prepackagedsushi
+			{
+				version:`1.1.53`,
+				news:[
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `prepackagedsushi`],
+				]
+			},
 			{
 				version:`1.1.52`,
 				news:[
@@ -484,7 +489,8 @@ window.tags = {
 		'R0YqL',
 		'Nickchm',
 		'Rxpct',
-		'Antony666'
+		'Antony666',
+		'prepackagedsushi'
 	],
 	'[TO]': ['Jayyyyyyyyyyyyyy'],
 	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc', 'Exscord'],
