@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.54
+// @version     1.1.55
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -15,7 +15,6 @@ console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY 
 console.log("%cScript loading... ","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
 console.log("...")
-
 window.customTags = [
 	{
 		names: ["Gianni"],
@@ -63,7 +62,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.54",
+	v: "1.1.55",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -81,6 +80,15 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.55`,
+				news:[
+					`Bug fixes.`,
+					`Custom commands? Well.. You need to know how stuff works to make them...`,
+					`The ${window.vers.toVers("1.1.52")} update is now changed a bit.<br>Check the <a style="color:${this.cl.cmd}" target="_blank" href="https://github.com/Neondertalec/tsmod#update-1152">[README.md]</a> and update it to the new way.`,
+					`New tag ${`[TW]`.fontcolor(`#FFA390`)} is added. It will not require you to update the script when a tourney is over.`
+				]
+			},
 			{
 				version:`1.1.54`,
 				news:[
@@ -348,6 +356,27 @@ window.vers = {
 
 	check: function(){
 		const d = this.getm();
+		if(d.tw){
+			let customNames = window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[]);
+			let names = d.tw.filter((e)=>!customNames.includes(e));
+	
+	
+			let styles = document.createElement('style');
+	
+			let newihtml = "";
+			let newarr = [];
+			for(let tname of names){
+				newarr.push('span[arialabel="'+ tname +'"]::before')
+			}
+			newihtml += newarr.join(",") + `{
+				content: "[TW]"!important;
+				margin-right: 4px;
+				color: #FFA390!important;
+			}`
+				
+			styles.innerHTML = newihtml;
+			document.head.appendChild(styles);
+		}
 
 		if(this.checkVer(this.v,d.v)){
 			const ver = document.createElement("div");
@@ -493,8 +522,8 @@ window.vers.chlogMut.observe(document, {childList: true, subtree: true});
 
 window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
 
-window.tagsEX = {};
-window.tagDataEX = {};
+globalThis.tagsEX = {};
+globalThis.tagDataEX = {};
 
 window.tags = {
 	'[SCR]':['DepressionOwU'],
@@ -530,7 +559,7 @@ window.tagData = {
 	'[Dev]': {presudo:"[Developer]", color:"#3498db"}
 }
 
-window.getLocal = (key, def)=>{
+globalThis.getLocal = (key, def)=>{
 	let res = localStorage.getItem(key)
 	return res !== null? res : def;
 }
@@ -562,7 +591,7 @@ window.getTime = ()=>{
 	return Math.floor((Date.now() - window.timeZero)/1000);//client.state.self.entity.survivalTime;
 };
 
-window.client = {
+globalThis.client = {
 	state: undefined,
 	main: undefined,
     elem:{
@@ -898,6 +927,7 @@ window.client = {
 	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
 	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]")),
+	textCommandConstsE:[],
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
 		showTag: getLocal("ts-showTag", "false") == "true",
@@ -1107,18 +1137,25 @@ window.client = {
 			if(["#", p, p+"help"].includes(messageS[0])){
 				let f = (t)=> `<font style="font-weight:bold;" onclick="let e = document.getElementById('chat-input');e.focus();e.value='${t}';e">${t}</font>`
 
-				window.client.sendSystemMessage(
-					`${p} is the prefix.<br>`+
-					`${window.client.editChatInput(false, `{prefix}prefix`)} - set prefix.<br>`+
-					`${window.client.editChatInput(false, `{prefix}toggletag`)} - switches ON/OFF.<br>`+
-					`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
-					`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
-					`${window.client.editChatInput(false, `{prefix}toggletimer`)} - changes the timer (if on - timer shows real time. if off - timer shows the time that will be shown on the death screen.).<br>`+
-					`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
-					`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
-					`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
-					`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`
-					);
+				let sysText = `${p} is the prefix.<br>`+
+				`${window.client.editChatInput(false, `{prefix}prefix`)} - set prefix.<br>`+
+				`${window.client.editChatInput(false, `{prefix}toggletag`)} - switches ON/OFF.<br>`+
+				`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
+				`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
+				`${window.client.editChatInput(false, `{prefix}toggletimer`)} - changes the timer (if on - timer shows real time. if off - timer shows the time that will be shown on the death screen.).<br>`+
+				`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
+				`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
+				`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
+				`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`
+
+				if(window.client.textCommandConstsE.length > 0){
+					sysText += `<br>CUSTOM COMMANDS<br><br>`;
+					for(let cmd of window.client.textCommandConstsE){
+						sysText += `${window.client.editChatInput(false, `{prefix}${cmd[1]}`)} - ${cmd[2]}`;
+					}
+				}
+
+				window.client.sendSystemMessage(sysText);
 			}else
 			if([p+"prefix"].includes(messageS[0])){
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
@@ -1175,6 +1212,16 @@ window.client = {
 				newFromat = newFromat.join(" ");
 				localStorage.setItem("ts-resFormat", window.client.format = newFromat);
 				window.client.sendSystemMessage(`Newformat is setd to "${newFromat}"`);
+			}else{
+
+				if(window.client.textCommandConstsE.length > 0){
+					for(let cmd of window.client.textCommandConstsE){
+						if(p+cmd[1] == messageS[0]){
+							cmd[3](cmd);
+						}
+					}
+				}
+
 			}
 			return false;
 		}
@@ -1191,7 +1238,7 @@ window.client = {
 						`<span class="chat-message-sender" arialabel="[SCRIPT]">`+
 							`[SCRIPT]`+
 						`</span>`+
-						`: ${message}.`+
+						`: ${message}`+
 					`</span>`+
 				`</div>`
 			}
@@ -2975,15 +3022,8 @@ window.loadGame = () => {
 	window.createNewLeaderboard();
 	client.load = true;
 	window.client.toggleUcard(window.client.textCommandConsts.showUcard);
-	console.log("loaded", client)
 	let e;
 	document.head.appendChild((e = document.createElement("style"),e.innerHTML = `html,body{overflow: hidden!important;}`,e))
-
-	//loadextension
-	let els = document.querySelectorAll("#EXDATAtags");
-	if(els)for(let el of els){
-		eval(el.innerHTML);
-	}
 }
 
 window.getTag = (name)=>{
@@ -2998,7 +3038,7 @@ window.getTag = (name)=>{
 
 window.genPrefix = (name)=>{
 	if(window.client.textCommandConsts.showTag){
-		for(var tagKey in window.tagsEX){
+		for(let tagKey in window.tagsEX){
 			let tag = window.tagsEX[tagKey];
 			if(tag.includes(name)){
 				window.lastPrefix.name = window.tagDataEX[tagKey].presudo;
@@ -3006,7 +3046,7 @@ window.genPrefix = (name)=>{
 				return;
 			}
 		}
-		for(var tagKey in window.tags){
+		for(let tagKey in window.tags){
 			let tag = window.tags[tagKey];
 			if(tag.includes(name)){
 				window.lastPrefix.name = window.tagData[tagKey].presudo;

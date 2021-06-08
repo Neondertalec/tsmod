@@ -77,20 +77,12 @@ From now on you can have another extension that will allow you to have a custom 
 // ==/UserScript==
 
 (()=>{
-    let e = document.createElement("div");
-    e.id = "EXDATAtags";
-    e.style = "display:none;";
-    document.body.appendChild(e);
-
-    // CUSTOM PART START ---------------------------------
-
-    e.innerHTML=`
-    window.tagsEX = {...window.tagsEX,...{
+    globalThis.tagsEX = {...globalThis.tagsEX,...{
         '[ct]':['USER NAME', 'USER NAME 2'],
     }}
-    window.tagDataEX = {...window.tagDataEX,...{
+    globalThis.tagDataEX = {...globalThis.tagDataEX,...{
         '[ct]': {presudo:"[TAG NAME]", color:"#fff"},
-    }}`;
+    }};
 
 
     let data = [
@@ -132,13 +124,12 @@ As you can see there is a seperated part.
 
 The first part you can modify is this:
 ```js
-e.innerHTML=`
-window.tagsEX = {...window.tagsEX,...{
+globalThis.tagsEX = {...globalThis.tagsEX,...{
     '[ct]':['USER NAME', 'USER NAME 2'],
 }}
-window.tagDataEX = {...window.tagDataEX,...{
+globalThis.tagDataEX = {...globalThis.tagDataEX,...{
     '[ct]': {presudo:"[TAG NAME]", color:"#fff"},
-}}`;
+}};
 ```
 
 The **`[ct]`** acts as a key. It should be the same in the top and the bottom parts.  
