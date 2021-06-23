@@ -101,7 +101,7 @@ From now on you can have another extension that will allow you to have a custom 
     for(let tagdata of data){
 			let newarr = [];
 			for(let tname of tagdata.names){
-				newarr.push('span[arialabel="'+ tname +'"]::before')
+				newarr.push('#chat-window span[arialabel="'+ tname +'"]::before')
 			}
 			newihtml += newarr.join(",") + `{
 				content: "${tagdata.text}"!important;

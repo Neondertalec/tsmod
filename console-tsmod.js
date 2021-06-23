@@ -68,6 +68,25 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.56`,
+				news:[
+					`Bug fixes.`,
+					`The ${window.vers.toVers("1.1.41")} update 1st part:<br>`+
+					`The place where you need to sellect the team players now has a button <b>[A]</b><br>`+
+					`The button toggles between 2 list. The 1st list is with the players who were in the area at the time the window got opened.<br>`+
+					`The 2nd list shows all players that have been detected.`,
+					`In the leaderboard you can now see ${`[M]`.fontcolor(`#e67e22`)} and ${`[D]`.fontcolor(`#3498db`)} tags. ${`[M]`.fontcolor(`#e67e22`)} is for moderators, ${`[D]`.fontcolor(`#3498db`)} is for developers`,
+					[
+						`1 new command (# for help)`,
+						`${`#togglelbtags`.fontcolor(this.cl.cmd)}`,
+						`[BREAK POINT]`,
+						`This command toggles the tags in the leaderboard. The ${window.vers.toVers("1.1.52")} update is changed again.`
+					],
+					`The log of death in SS now shows the level instead of area.`,
+					`More stuff for the custom commands.`,
+				]
+			},
+			{
 				version:`1.1.55`,
 				news:[
 					`Bug fixes.`,
@@ -232,7 +251,7 @@ window.vers = {
 			},
 			{
 				version:`1.1.39`,
-				news:[`${`Bold Rock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
+				news:[`${`Boldrock`.fontcolor(`#a18446`)} and ${`Assorted Alcove`.fontcolor(`#805b12`)} are now displayed properly in the user card and logs.`]
 			},
 			{
 				version:`1.1.38`,
@@ -544,7 +563,7 @@ window.tagData = {
 	'[Sr. Mod]': {presudo:"[Senior Mod]", color:"#e74c3c"},
 	'[H. Mod]': {presudo:"[Head Mod]", color:"#f03333"/*"#c00000"*/},
 	'[Dev]': {presudo:"[Developer]", color:"#3498db"}
-}
+}//-1px -1px 0 #000, 1px -1px 0px #000, -1px 1px 20px #000, 1px 1px 5px #000
 
 globalThis.getLocal = (key, def)=>{
 	let res = localStorage.getItem(key)
@@ -579,14 +598,54 @@ window.getTime = ()=>{
 };
 
 globalThis.client = {
+	events:{
+		events:{
+			chatMessage:0,
+			playerCountChange:1,
+		},
+		listners:{},
+		/**
+		 * @param {number} key 
+		 * @param {function()} fnc 
+		 */
+		addEventListener:function(key, fnc){
+			if(!this.listners[key]){
+				this.listners[key] = [];
+			}
+			this.listners[key].push(fnc);
+		},
+		/**
+		 * @param {number} key 
+		 * @param {function()} fnc 
+		 */
+		removeEventListener:function(key, fnc){
+			if(this.listners[key]){
+				let index = this.listners[key].indexOf(fnc);
+				if(index != -1) this.listners[key].splice(this.listners[key].indexOf(fnc),1);
+			}
+		},
+
+		/**
+		 * @param {number} key 
+		 * @param {object} data 
+		 */
+		emit: function(key, data){
+			if(this.listners[key]){
+				this.listners[key].forEach((f)=>{f(data)});
+			}
+		},
+	},
+
 	state: undefined,
 	main: undefined,
+
     elem:{
 		level:null,
 		speed:null,
 		xp:null,
 		hero:null,
 	},
+
 	areaData:{
 		data:{},
 		check: ()=>{
@@ -733,7 +792,7 @@ globalThis.client = {
 					
 					let difherocnt = 0;
 					for(let i = 0; i < names.length; i++){
-						let nh = id2name(window.client.getUserHero(names[i], time[6]));
+						let nh = window.id2name(window.client.getUserHero(names[i], time[6]));
 						if(!hero.includes(nh)) difherocnt++;
 						hero.push(nh)
 						let hnu = heroNum.find((v)=>v[0] == nh);
@@ -815,12 +874,21 @@ globalThis.client = {
 				const popup_users = document.createElement("div")
 				popup_users.className = "users_part";
 
-				popup_users.innerHTML = `<div class="theader">Sellect users of a team</div>`;
+				popup_users.innerHTML = `<div class="theader">Sellect users</div>`;
+				
+				let all = false;
 
 				const popup_users_scroll = document.createElement("div");
 				popup_users_scroll.className = "scoll_elem";
+				
+				
 
-				for(let user in area.users){
+				let fillusers=()=>{
+					for(let i = popup_users_scroll.childNodes.length-1; i >= 0; i--){
+						popup_users_scroll.childNodes[i].remove();
+					}
+					for(let user in all?window.client.userlog:area.users){
+				//for(let user in area.users){
 					const userelem = document.createElement("div");
 					userelem.className = "scoll_user";
 					userelem.innerText = " "+user+" ";
@@ -836,7 +904,18 @@ globalThis.client = {
 					
 					
 					popup_users_scroll.appendChild(userelem);
-				}
+				}genResult(popup_users_scroll);}
+				fillusers();
+
+				const resetUsersButton = document.createElement("button");
+				resetUsersButton.className = "refresh";
+				resetUsersButton.innerHTML = "A";
+				popup_users.childNodes[0].appendChild(resetUsersButton);
+				resetUsersButton.addEventListener("click", ()=>{
+					all = !all;
+					fillusers();
+				});
+
 				popup_users.appendChild(popup_users_scroll);
 				startInput.addEventListener("input", ()=>{
 					genResult(popup_users_scroll, false);
@@ -922,6 +1001,7 @@ globalThis.client = {
 		showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
 		showUcard: getLocal("ts-showUcard", "true") == "true",
 		timerReal: getLocal("ts-timerReal", "true") == "true",
+		lbTags: getLocal("ts-lbTags", "true") == "true",
 		
 	},
 	grb:{
@@ -933,7 +1013,6 @@ globalThis.client = {
 			if(!(window.client.grb.on = !window.client.grb.on)){
 				setTimeout(()=>{
 					window.client.state.keys.keyUp(window.client.grb.grbKey);
-					console.log("drpd");
 				}, 75)
 			}
 		}
@@ -951,7 +1030,7 @@ globalThis.client = {
 		if(u){
 			const list = [...u.travel, ...u.deaths].sort((a1,a2)=>{return a1[0]-a2[0]}),
 			time = window.client.getTimeDiff(name, u.logids[0], u.logids[1]),
-			hero = id2name(window.client.getUserHero(name, time[6])),//window.client.elem.hero.innerText,
+			hero = window.id2name(window.client.getUserHero(name, time[6])),//window.client.elem.hero.innerText,
 			lastMapData = list[time[4]],
 			map = window.getShortName(lastMapData[2]),
 			area = window.normalizeArea(lastMapData[3]),
@@ -1014,7 +1093,7 @@ globalThis.client = {
 		
 		let f = (t)=>{
 			if(window.client.elem.hero != null){
-				if(window.client.elem.hero.innerText == id2name(nr)){
+				if(window.client.elem.hero.innerText == window.id2name(nr)){
 					if(t) window.client.elem.hero.className = "";
 					else window.client.elem.hero.className = "blacklisted";
 				}
@@ -1059,7 +1138,7 @@ globalThis.client = {
 		});
 
 		for(let i = 0; i < 19; i++){
-			let hero = id2name(i);
+			let hero = window.id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
 			block.className = `block asnr${i}`;
@@ -1107,6 +1186,17 @@ globalThis.client = {
 		}
 	},
 
+	toggleLbTagscsscode:"",
+	toggleLbTagscsscodeElem: null,
+	toggleLbTags:function(on){
+		if(!window.client.toggleLbTagscsscodeElem){
+			window.client.toggleLbTagscsscodeElem = document.createElement("style");
+			document.head.appendChild(window.client.toggleLbTagscsscodeElem);
+		}
+		if(on) window.client.toggleLbTagscsscodeElem.innerHTML = window.client.toggleLbTagscsscode;
+		else window.client.toggleLbTagscsscodeElem.innerHTML = "";
+	},
+
 	editChatInput: function(add, disptext, edittext, inputId = "chat-input", doStyle = true){
 		let etext = edittext ? edittext : disptext;
 		let newText = 
@@ -1127,6 +1217,7 @@ globalThis.client = {
 				let sysText = `${p} is the prefix.<br>`+
 				`${window.client.editChatInput(false, `{prefix}prefix`)} - set prefix.<br>`+
 				`${window.client.editChatInput(false, `{prefix}toggletag`)} - switches ON/OFF.<br>`+
+				`${window.client.editChatInput(false, `{prefix}togglelbtags`)} - changes the format of the generated run results.<br>`+
 				`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
 				`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
 				`${window.client.editChatInput(false, `{prefix}toggletimer`)} - changes the timer (if on - timer shows real time. if off - timer shows the time that will be shown on the death screen.).<br>`+
@@ -1138,7 +1229,7 @@ globalThis.client = {
 				if(window.client.textCommandConstsE.length > 0){
 					sysText += `<br>CUSTOM COMMANDS<br><br>`;
 					for(let cmd of window.client.textCommandConstsE){
-						sysText += `${window.client.editChatInput(false, `{prefix}${cmd[1]}`)} - ${cmd[2]}`;
+						sysText += `${window.client.editChatInput(false, `{prefix}${cmd[1]}`)} - ${cmd[2]}<br>`;
 					}
 				}
 
@@ -1155,6 +1246,11 @@ globalThis.client = {
 			if([p+"toggletag"].includes(messageS[0])){
 				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
 				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}else
+			if([p+"togglelbtags"].includes(messageS[0])){
+				localStorage.setItem("ts-lbTags", window.client.textCommandConsts.lbTags = !window.client.textCommandConsts.lbTags);
+				window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
+				window.client.sendSystemMessage(`Leaderboard tags are now turned ${["off","on"][+window.client.textCommandConsts.lbTags]}`);
 			}else
 			if([p+"toggletimer"].includes(messageS[0])){
 				localStorage.setItem("ts-timerReal", window.client.textCommandConsts.timerReal = !window.client.textCommandConsts.timerReal);
@@ -1204,7 +1300,7 @@ globalThis.client = {
 				if(window.client.textCommandConstsE.length > 0){
 					for(let cmd of window.client.textCommandConstsE){
 						if(p+cmd[1] == messageS[0]){
-							cmd[3](cmd);
+							cmd[3](cmd, value);
 						}
 					}
 				}
@@ -1381,7 +1477,7 @@ globalThis.client = {
 		if(name && window.client.elem.hero){
 			let h = window.client.elem.hero
 			let HeroT = window.client.getUserHero(name, lasttime),
-			Hero = id2name(HeroT),
+			Hero = window.id2name(HeroT),
 			Color = window.getHeroColor(Hero);
 			h.style.color = Color;
 			h.className = window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted';
@@ -1421,6 +1517,16 @@ globalThis.client = {
 		}
 	},
 
+	globalEntitiesFind: (f)=>{
+		for(let i in window.client.state.globalEntities){
+			let e = window.client.state.globalEntities[i];
+			if(f(e)){
+				return e;
+			}
+		}
+		return null;
+	},
+
 	customLog: function(name, type = 3, arrname = "travel", onlyElem = false){
 		if(window.client.userlog[name]){
 			const time = window.getTime();
@@ -1431,8 +1537,11 @@ globalThis.client = {
 				let len = uo[arrname].length;
 
 				if(!onlyElem){
+					let o;
 					uo[arrname].push([
-						time, ctime, uo[arrname][len-1][2], uo[arrname][len-1][3], type, uo.logid++
+						time, ctime, uo[arrname][len-1][2], uo[arrname][len-1][2] != "Stellar Square" ? uo[arrname][len-1][3] :
+						(o = window.client.globalEntitiesFind((ee)=>ee.name == name),o?o.level+"":uo[arrname][len-1][3]),
+						 type, uo.logid++
 					]);
 				}else{
 					len --;
@@ -1488,7 +1597,7 @@ globalThis.client = {
 			if(usr.deathTimer != -1){
 				if(!uo.dead){
 					uo.dead = true;
-					uo.deaths.push([time, ctime, usr.regionName, usr.areaName, 1, uo.logid++]);
+					uo.deaths.push([time, ctime, usr.regionName, usr.regionName != "Stellar Square" ? usr.areaName :(usr.level+""), 1, uo.logid++]);
 
 					window.client.customLog(usr.name, 1, "deaths", true);
 
@@ -1501,7 +1610,7 @@ globalThis.client = {
 
 				window.client.customLog(usr.name, 2, "deaths", true);
 			}
-
+			return false;
 		}else{
 			window.client.userlog[usr.name] = {
 				dead:false,exited:false,q:false,totalDeaths:0,logid:2,logids:["",""],
@@ -1516,6 +1625,7 @@ globalThis.client = {
 				/*uo.travel.push([
 					time, ctime, usr.regionName, usr.areaName, 6, uo.logid++
 				]);*/
+				return true;
 		}
 	},
 
@@ -1545,19 +1655,35 @@ globalThis.client = {
 		let namesA = [];
 		let namesB = [];
 
-		
+		let uc = 0;
 		for(let i in window.client.userlog){
 			if(!window.client.userlog[i].q)namesA.push(i);
 		}
 
+		let newpt = [];
 		for(let i in client.state.globalEntities){
+			uc++;
 			namesB.push(client.state.globalEntities[i].name);
-			window.client.logUserAreas(client.state.globalEntities[i]);
+			let isnew = window.client.logUserAreas(client.state.globalEntities[i]);
 			let uo = window.client.userlog[client.state.globalEntities[i].name];
 			if(uo && uo.heroes[uo.heroes.length-1][0] != client.state.globalEntities[i].heroType)uo.heroes.push([client.state.globalEntities[i].heroType, window.getTime()]);
 			if(client.state.globalEntities[i].name == window.z){
 				window.client.opos[0] = client.state.globalEntities[i];
 			}
+			if(isnew){
+				newpt.push({
+					name:client.state.globalEntities[i].name,
+					logs:uo
+				});
+			}
+		}
+		
+		if(newpt.length > 0){
+			globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
+				players:newpt,
+				count:uc,
+				action:"joined",
+			});
 		}
 
 		for(let i = namesA.length; i >= 0; i--){
@@ -1570,26 +1696,39 @@ globalThis.client = {
 			setTimeout(window.updateLeaderboard,50);
 		}
 
+		newpt = [];
 		for(i of namesA){
 			if(!window.client.userlog[i].q){
-				window.client.userlog[i].q = true;
 				let uo = window.client.userlog[i];
+				newpt.push({
+					name:i,
+					logs:uo
+				});
+				uo.q = true;
 				uo.dead = false;
 				uo.exited = false;
 				//"leave?"
 				window.client.customLog(i, 6, "travel", false);
 			}
 		}
-		
+		if(newpt.length > 0){
+
+			globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
+				players:newpt,
+				count:uc,
+				action:"left",
+			});
+		}
+
+		newpt = [];
 		for(i of namesB){
 			if(window.client.userlog[i].q){
-				window.client.userlog[i].q = false;
 				//"join?"
-				
+				let uo = window.client.userlog[i];
 				const time = window.getTime();
 				const ctime = secondsFormat(Math.floor(time));
-
-				let uo = window.client.userlog[i];
+				
+				uo.q = false;
 
 				for(let j in client.state.globalEntities){
 					if(client.state.globalEntities[j].name == i){
@@ -1601,7 +1740,19 @@ globalThis.client = {
 					}
 				}
 
+				newpt.push({
+					name:i,
+					logs:uo
+				});
 			}
+		}
+		if(newpt.length > 0){
+
+			globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
+				players:newpt,
+				count:uc,
+				action:"joined",
+			});
 		}
 
 		let o = null;
@@ -1908,7 +2059,7 @@ window.styleByNr = (nr)=>{
 	return ["","dead", "alive", "custom", "arexit", "victory", "qoj"][nr];
 }
 
-function id2name (id) {
+globalThis.id2name = (id)=>{
 	return [
 	'Magmax',
 	'Rime',
@@ -1928,7 +2079,7 @@ function id2name (id) {
 	'Jotunn',
 	'Candy',
 	'Mirage',
-	'Bold Rock'
+	'Boldrock'
 	][id];
 }
 
@@ -2025,7 +2176,7 @@ window.getHeroColor = function(Hero){
 			return "#ff80bd";
 		case "Mirage":
 			return "#020fa2";
-		case "Bold Rock":
+		case "Boldrock":
 			return "#a18446";
 	}
 	return "white";
@@ -2559,7 +2710,8 @@ window.getHeroColor = function(Hero){
 		margin-right: 1px;
 		margin-left: 1px;
 }
-
+	
+	.areaPopup > div > .theader,
 	.areaPopup > div > .theader{
 		width: 100%;
 		font-size: 30pt;
@@ -2688,49 +2840,70 @@ window.getHeroColor = function(Hero){
 		if(window.tags["[SCR]"]){
 			let newarr = [];
 			for(let i in window.tags["[SCR]"]){
-				newarr.push('span[arialabel="'+ window.tags["[SCR]"][i] +'"]::before')
+				newarr.push('#chat-window span[arialabel="'+ window.tags["[SCR]"][i] +'"]::before')
 			}
 			newihtml += newarr.join(",");
+			newihtml += `{
+				content: "[SCR]";
+				margin-right: 4px;
+				color: ${window.tagData["[SCR]"].color};
+			}`
 		}
-	}
-	newihtml += `{
-		content: "[SCR]";
-		margin-right: 4px;
-		color: ${window.tagData["[SCR]"].color};
-	}`
-	if(window.tags){
+	
 		if(window.tags["[TO]"]){
 			let newarr = [];
 			for(let i in window.tags["[TO]"]){
-				newarr.push('span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
+				newarr.push('#chat-window span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
 			}
 			newihtml += newarr.join(",");
+			newihtml += `{
+				content: "[TO]";
+				margin-right: 4px;
+				color: ${window.tagData["[TO]"].color};
+			}`
 		}
-	}
-	newihtml += `{
-		content: "[TO]";
-		margin-right: 4px;
-		color: ${window.tagData["[TO]"].color};
-	}`
-	if(window.tags){
+		
 		if(window.tags["[TS]"]){
 			let newarr = [];
 			for(let i in window.tags["[TS]"]){
-				newarr.push('span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
+				newarr.push('#chat-window span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
 			}
 			newihtml += newarr.join(",");
+			newihtml += `{
+				content: "[TS]";
+				margin-right: 4px;
+				color: ${window.tagData["[TS]"].color};
+			}`
 		}
+
+		let ff = (ee,tt,cc)=>{//#ff6b5b
+			if(window.tags[tt]){
+				let newarr = [];
+				for(let i in window.tags[tt]){
+					newarr.push('#leaderboard span[arialabel="'+ window.tags[tt][i] +'"]::before')
+				}
+				window.client.toggleLbTagscsscode += newarr.join(",");
+				window.client.toggleLbTagscsscode += `{
+					content: "[${ee}]";
+					margin-right: 4px;
+					color: ${cc};
+					text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
+				}`
+			}
+		}
+
+		ff("M", "[Jr. Mod]", "#f1c40f");
+		ff("M", "[Mod]", "#e67e22");
+		ff("M", "[Sr. Mod]", "#ff6b5b");
+		ff("M", "[H. Mod]", "#f03333");
+		ff("D", "[Dev]", "#3498db");
+		window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
 	}
-	newihtml += `{
-		content: "[TS]";
-		margin-right: 4px;
-		color: ${window.tagData["[TS]"].color};
-	}`
 	if(window.customTags){
 		for(let tagdata of window.customTags){
 			let newarr = [];
 			for(let tname of tagdata.names){
-				newarr.push('span[arialabel="'+ tname +'"]::before')
+				newarr.push('#chat-window span[arialabel="'+ tname +'"]::before')
 			}
 			newihtml += newarr.join(",") + `{
 				content: "${tagdata.text}"!important;
@@ -2746,7 +2919,7 @@ window.getHeroColor = function(Hero){
 		}
 	}
 	newihtml +=`
-	span[arialabel^="Guest"]::before{
+	#chat-window span[arialabel^="Guest"]::before{
 		content: "[guest]";
 		margin-right: 4px;
 		color: ${window.tagData["[guest]"].color};
@@ -2812,6 +2985,12 @@ window.removeFakes = ()=>{
 }
 
 window.z = "";
+window.getAttrInParents=(e,a)=>{
+	let at;
+	if(at = e.getAttribute(a)){
+		return at;
+	}else return window.getAttrInParents(e.parentNode, a);
+}
 window.updateLeaderboard = () => {
 	//window.client.areaData.check();
 	document.body.onclick = () => {
@@ -2823,36 +3002,17 @@ window.updateLeaderboard = () => {
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
 			if(window.client.textCommandConsts.showUcard){
-				let HeroT, Hero, Level, Name;
+				let HeroT, Hero, Level, Name, targetName;
 				if (client.state) {
 					for (let i in client.state.globalEntities) {
 						const element = client.state.globalEntities[i];
 
-						if (client.showClasses) {
-							/*let right = event.target.innerText.split(")");
-							if (right.length > 1) {
-								let left = right[right.length - 2].split("(");
-								if (left.length > 1) {*/
-
-									if (event.target.innerText.replace(window.timerRegex, "").startsWith(element.name + " (") || event.target.innerText.replace(window.timerRegex, "") === element.name){
-										window.z = element.name;
-										HeroT = element.heroType;
-										Hero = id2name(HeroT);
-										Name = element.name;
-
-										Level = element.level;
-									}
-									continue;
-
-								//}
-							//}
-						}
+						targetName = getAttrInParents(event.target,"ariaLabel");
 						
-						if (element.name == event.target.innerText) {
+						if (element.name == targetName) {
 							window.z = element.name;
-
 							HeroT = element.heroType;
-							Hero = id2name(HeroT);
+							Hero = window.id2name(HeroT);
 							Level = element.level;
 							Name = element.name;
 						}
@@ -2862,10 +3022,9 @@ window.updateLeaderboard = () => {
 					Name = "undefined"
 				}
 
-				//if (client.count > 0) document.getElementsByClassName('fake')[0].remove();
 				client.count = 1;
 
-				const name = client.showClasses ? Name : event.target.innerText;
+				const name = targetName;
 
 				let o = null;
 				for(var i in client.state.entities){
@@ -2996,7 +3155,7 @@ window.updateName = (id, name) => {
 			const element = state.globalEntities[i];
 			if (element.id !== id) continue;
 
-			let Hero = id2name(element.heroType);
+			let Hero = window.id2name(element.heroType);
 			let DeathTime = window.secondsFormat(Math.floor(element.deathTimer/1000), false);
 			return typeof name == 'string' ? `${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})` : name;
 		}
@@ -3053,11 +3212,18 @@ window.lastPrefix = {
 			let src = elem.src;
 			elem.remove();
 			elem = document.createElement('script');
-			elem.innerHTML=`
-				var akek=new XMLHttpRequest();
-				akek.open("GET","${src}",false);
-				akek.send();
-				tmp=akek.response;
+			let newInnerHTML=`
+			var akek=new XMLHttpRequest();
+			akek.open("GET","${src}",false);
+			akek.send();
+			tmp=akek.response;`;
+
+            for(let i = 0; i < globalThis.extraReplaces?.length; i++){
+                let d = globalThis.extraReplaces[i];
+                let ns;
+				newInnerHTML += ns=`tmp = tmp.${d[2]===true?"replaceAll":"replace"}('${d[0].replaceAll("\'","\\'")}','${d[1].replaceAll("\'","\\'")}');\n`
+            }
+			newInnerHTML+=`
 
 				// Декодер от protobuf
 				tmp = tmp.replace(
@@ -3099,7 +3265,14 @@ window.lastPrefix = {
 
 				tmp = tmp.replace('null!==this.gameState&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))', 'null!==this.gameState&& !(document.activeElement.getAttributeNames().includes("c-lock"))&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))');
 
-				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:s')
+				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:('+
+				'globalThis.client.events.emit(globalThis.client.events.events.chatMessage, {'+
+					'name:s,'+
+					'content:a,'+
+					'privs:l,'+
+				'}),s)')
+
+				tmp = tmp.replace('"leaderboard-name"','"leaderboard-name",ariaLabel:this.props.player.name');
 
 				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
 				'e.font2=e.font,e.font=(window.ssss2??14)+"px Tahoma, Verdana, Segoe, sans-serif",'+
@@ -3145,6 +3318,7 @@ window.lastPrefix = {
 				console.log("%cScript loaded.","color: green; font-size: 20px");
 
 			`;
+			elem.innerHTML = newInnerHTML;
 			document.body.appendChild(elem);
 		}
 	}
