@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.56
+// @version     1.1.57
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -10,8 +10,13 @@
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @grant       none
-
 // ==/UserScript==
+
+
+globalThis.temp1 = undefined;
+globalThis.temp2 = undefined;
+globalThis.temp3 = undefined;
+
 console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.","color: red; font-size: 20px; background: black;border-radius:10px;");
 console.log("%cScript loading... ","color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading")
@@ -63,7 +68,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.56",
+	v: "1.1.57",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -80,7 +85,18 @@ window.vers = {
 
 	filllogp:function(){
 
-		window.vers.changeLog = [
+		window.vers.changeLog = [//cc0000
+			{
+				version:`1.1.57`,
+				news:[
+					`${`Burning Bunker`.fontcolor(`#805b12`)} is now displayed properly in logs.`,
+					`In the usercard you can left-click on the users name and a window will appear.<br>`+
+					`In the window you can mark the user as a friend (${`[F]`.fontcolor(`#0f0`)}) or put a warning (${`[!]`.fontcolor(`#f00`)}) that will appear in the leaderboard to the left of the users name.<br>`+
+					`You can also leave a note on the user.`,
+					`The R key now works in a different way. Too much to explain, just try it out.`,
+					`Some fixes with the list of players with a role e.g. TS, TO, etc.`,
+				]
+			},
 			{
 				version:`1.1.56`,
 				news:[
@@ -385,6 +401,7 @@ window.vers = {
 	
 			let newihtml = "";
 			let newarr = [];
+			globalThis.tags.tags["[TW]"] = names;
 			for(let tname of names){
 				newarr.push('span[arialabel="'+ tname +'"]::before')
 			}
@@ -451,6 +468,12 @@ window.vers = {
 	/*color: function(text, color){
 		return `<aa style="${color}">${text}</aa>`;
 	}*/
+}
+document.createElementP = function(name, args = null, fnc=null){
+	const element = document.createElement(name)
+	if(args != null)Object.assign(element,args);
+	if(fnc) fnc(element);
+	return element;
 }
 window.vers.filllogp();
 
@@ -545,39 +568,308 @@ window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki
 globalThis.tagsEX = {};
 globalThis.tagDataEX = {};
 
-window.tags = {
-	'[SCR]':['DepressionOwU'],
-	'[TS]': ['yIzaac😎👌',
-		'Creazy','Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ', 'Creazy',
-		//'Priox', "#ДушаУстала", "VaviLon", "Ramzo", "AnonymousBuck", "Dead Angel", "Рг1ох", "Jr❃Jackal",
-		'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
-		',DSG,', 'Дракончик)))',
-		'noPiger',
-		//'DEFA', 'ZaLo', 'notdefa',
-		'R0YqL',
-		'Nickchm',
-		'Rxpct',
-		'Antony666',
-		'prepackagedsushi'
-	],
-	'[TO]': ['Jayyyyyyyyyyyyyy'],
-	'[Jr. Mod]': ['Gazebr', /*'CrEoP',*/ 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc', 'Exscord'],
-	'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'akane🦋', 'Zero〩', '1Phoenix1', '«Ƥħǿēƞɨx»', 'Rc', 'Frenzy', 'NxMarko', 'Darklight'],
-	'[Sr. Mod]': ['Jackal'],
-	'[H. Mod]': ['Exoriz', 'extirpater'],
-	'[Dev]': ['Stovoy', 'MiceLee', 'TTTruck', 'DDBus']
+globalThis.tags = {
+	tags:{
+		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
+		'[YT]':['R0YqL', 'Strat', 'Mr.Danik', 'mRDDanik', 'DD1'],
+		'[ST]':['Zaxoosh'],
+		'[SCR]':['DepressionOwU'],
+		'[TS]': ['yIzaac😎👌',
+			'Creazy',
+			'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
+			'1Phoenix1',
+			'DepressionOwU',
+			//'Exscord',
+			'piger',
+			//'DEFA', 'ZaLo', 'notdefa',
+			'R0YqL',
+			'Nickchm',
+			'Rxpct',
+			'Antony666',
+			'prepackagedsushi',
+			'AWEN',
+			'LightY',
+			'PotatoNuke',
+			'thiccsucc',
+			'⚝Simba⚝',
+			'Amasterclasher',
+			'asdfasdfasdf1234',
+			'Pasemrus',
+			'Jayyyyyyyyyyyyyy',
+			'Gazebr',
+			'Zero〩',
+			'Frenzy',
+			'Mel',
+		],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight'],
+		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
+		'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
+		'[Sr. Mod]': ['Jackal'],
+		'[H. Mod]': ['Exoriz', 'extirpater'],
+		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
+	},
+	alts:{
+		"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
+		//"Exscord": [',DSG,', 'Дракончик)))'],
+		"piger": ['noPiger'],
+		"DEFA": ['ZaLo', 'notdefa'],
+		"Zero〩": ['akane🦋'],
+		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
+		"DDBus": ['TTTruck'],
+	},
+	tagsData:{
+		'[custom]':{
+			priority:100,
+			noOlnTag: true,
+			badge:{
+				bg:"#000",
+				border:"#000",
+				textcolor:"#000",
+				text:"[Custom]",
+				rainbow:true,
+			},
+		},
+		'[TW]':{
+			priority:99,
+			noOlnTag: true,
+			badge:{
+				bg:"#ffa390",
+				border:"#bd7869",
+				textcolor:"#7d493f",
+				text:"[TW]",
+				rainbow:false,
+			},
+		},
+		'[YT]': {
+			priority:0,
+			prefix:{
+				color:"#2accac",
+				text:"[YouTube]",
+			},
+			badge:{
+				bg:"#1abc9c",
+				border:"#0a8a70",
+				textcolor:"#044437",
+				text:"[YouTube]",
+				rainbow:false,
+			},
+		},
+		'[ST]': {
+			priority:11,
+			prefix:{
+				color:"#a258ea",
+				text:"[Streamer]",
+			},
+			badge:{
+				bg:"#9248da",
+				border:"#6220a2",
+				textcolor:"#2e0854",
+				text:"[Stream]",
+				rainbow:false,
+			},
+		},
+		'[TS]': {
+			priority:2,
+			chat:{
+				color:"#ad86d8",
+				text:"[TS]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#ad86d8",
+				text:"[TS]",
+			},
+			badge:{
+				bg:"#ad86d8",
+				border:"#7650a0",
+				textcolor:"#470054",
+				text:"[TS]",
+				rainbow:false,
+			},
+		},
+		'[TO]': {
+			priority:3,
+			chat:{
+				color:"#6f8fd5",
+				text:"[TO]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#6f8fd5",
+				text:"[TO]",
+			},
+			badge:{
+				bg:"#6f8fd5",
+				border:"#2f5098",
+				textcolor:"#203154",
+				text:"[TO]",
+				rainbow:false,
+			},
+		},
+		'[Jr. Mod]': {
+			priority:4,
+			lb:{
+				color:"#f1c40f",
+				text:"[M]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#f1c40f",
+				text:"[Junior Mod]",
+			},
+			badge:{
+				bg:"#f1c40f",
+				border:"#a28200",
+				textcolor:"#655100",
+				text:"[Jr. Mod]",
+				rainbow:false,
+			},
+		},
+		'[Mod]': {
+			priority:5,
+			lb:{
+				color:"#e67e22",
+				text:"[M]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#e67e22",
+				text:"[Moderator]",
+			},
+			badge:{
+				bg:"#e67e22",
+				border:"#a75105",
+				textcolor:"#6b3200",
+				text:"[Mod]",
+				rainbow:false,
+			},
+		},
+		'[Sr. Mod]': {
+			priority:6,
+			lb:{
+				color:"#ff6b5b",
+				text:"[M]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#e74c3c",
+				text:"[Senior Mod]",
+			},
+			badge:{
+				bg:"#e05b49",
+				border:"#a23e30",
+				textcolor:"#611e17",
+				text:"[Sr. Mod]",
+				rainbow:false,
+			},
+		},
+		'[H. Mod]': {
+			priority:7,
+			lb:{
+				color:"#f03333",
+				text:"[M]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#f03333",
+				text:"[Head Mod]",
+			},
+			badge:{
+				bg:"#f03333",
+				border:"#961b1b",
+				textcolor:"#6d0909",
+				text:"[H. Mod]",
+				rainbow:false,
+			},
+		},
+		'[Dev]': {
+			priority:8,
+			lb:{
+				color:"#3498db",
+				text:"[D]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#3498db",
+				text:"[Developer]",
+			},
+			badge:{
+				bg:"#3498db",
+				border:"#1a6394",
+				textcolor:"#0e334c",
+				text:"[Dev]",
+				rainbow:false,
+			},
+		},
+		'[SCR]': {
+			priority:9,
+			chat:{
+				color:"#009eff",
+				text:"[SCR]",
+				rainbow:false,
+			},
+			prefix:{
+				color:"#009eff",
+				text:"[TS&Scripter]",
+			},
+			badge:{
+				bg:"#31b1ff",
+				border:"#0080ff",
+				textcolor:"#002a69",
+				text:"[SCR]",
+				rainbow:false,
+			},
+		},
+	},
+	getUsersTags:function(name){
+		let res = [];
+		
+		for(let rname in this.alts){
+			if(this.alts[rname].includes(name)){
+				name = rname;
+				break;
+			}
+		}
+
+		for(let key in this.tags){
+			if(this.tags[key].includes(name))res.push(key);
+		}
+		res.sort((e1,e2)=>this.tagsData[e1].priority - this.tagsData[e2].priority);
+		return res;
+	},
+
+	getUserHighestTagByType: function(utags, type){
+		for(let t of utags.reverse()){
+			if(tags.tagsData[t][type]) return t;
+		}
+		return null
+	},
+
+	oldTags:{},
+	calcOldTags:function(){
+		console.log("started");
+		this.oldTags = {};
+		let allNames = []
+		for(let key in this.tags){
+			if(this.tagsData[key].noOlnTag)continue;
+			allNames = [...allNames, ...this.tags[key]]
+		}
+
+		allNames = new Set(allNames);
+		
+		for(let name of allNames){
+			let userHa = this.getUsersTags(name);
+			userHa = this.getUserHighestTagByType(userHa, "prefix");
+			if(!this.oldTags[userHa]) this.oldTags[userHa] = [];
+			this.oldTags[userHa].push(name)
+			if(this.alts[name]){
+				this.oldTags[userHa] = [...this.oldTags[userHa], ...this.alts[name]]
+			}
+		}
+		console.log("finished");
+	}
 }
-window.tagData = {
-	'[SCR]': {presudo:"[TS&Scripter]", color:"#009eff"},
-	'[TS]': {presudo:"[TS]", color:"#ad86d8"},
-	'[TO]': {presudo:"[TO]", color:"#6f8fd5"/*"#4e6fb3"*/},
-	'[guest]': {presudo:"[guest]", color:"#91b800"},
-	'[Jr. Mod]': {presudo:"[Junior Mod]", color:"#f1c40f"},
-	'[Mod]': {presudo:"[Moderator]", color:"#e67e22"},
-	'[Sr. Mod]': {presudo:"[Senior Mod]", color:"#e74c3c"},
-	'[H. Mod]': {presudo:"[Head Mod]", color:"#f03333"/*"#c00000"*/},
-	'[Dev]': {presudo:"[Developer]", color:"#3498db"}
-}//-1px -1px 0 #000, 1px -1px 0px #000, -1px 1px 20px #000, 1px 1px 5px #000
+window.tags.calcOldTags();
 
 globalThis.getLocal = (key, def)=>{
 	let res = localStorage.getItem(key)
@@ -864,22 +1156,9 @@ globalThis.client = {
 					});
 					res += "\n```";
 
-					/*res = "```\n" +
-					window.client.teamFormat.replaceAll("{name}", name)
-					.replaceAll("{map}", map)
-					.replaceAll("{area}", area)
-					.replaceAll("{time}", time[0])
-					.replaceAll("{start time}", time1)
-					.replaceAll("{end time}", time2)
-					.replaceAll("{hero}", hero)
-					.replaceAll("{hero num}", heroNum.reduce((v,v2)=>{v.push(v2[1] +" "+ v2[0]); return v}, []).join(" + "))
-					+"\n```";*/
-
 					popup_result_text.innerHTML = res;
 
 				}
-				
-
 
 				popup_result.appendChild(popup_result_text);
 			//}
@@ -1014,7 +1293,7 @@ globalThis.client = {
 		bannedType: +getLocal("ts-bannedType", "0"),
 		showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
 		showUcard: getLocal("ts-showUcard", "true") == "true",
-		timerReal: getLocal("ts-timerReal", "true") == "true",
+		timerReal: (temp1 = getLocal("ts-timerReal", "1"), temp1 == "true" ? 1 : temp1 == "false"? 2 : +temp1),
 		lbTags: getLocal("ts-lbTags", "true") == "true",
 		
 	},
@@ -1031,6 +1310,7 @@ globalThis.client = {
 			}
 		}
 	},
+	userMetas: JSON.parse(getLocal("ts-userMetas", "{}")),
 
 	splitArgKeys:function(text, isTeam){
 		const r = text.match(/\{(name|map|area|time|start time|end time|hero|hero num).*?\}/gm);
@@ -1079,16 +1359,6 @@ globalThis.client = {
 				}
 			});
 			res += "\n```";
-
-			/*res = "```\n" +
-			format.replaceAll("{name}", name)
-			.replaceAll("{map}", map)
-			.replaceAll("{area}", area)
-			.replaceAll("{time}", time[0])
-			.replaceAll("{start time}", time1)
-			.replaceAll("{end time}", time2)
-			.replaceAll("{hero}", hero)
-			+"\n```";*/
 		}
 		let sellector;
 		if(!(sellector = document.getElementById("copy-sellector2"))){
@@ -1210,6 +1480,42 @@ globalThis.client = {
 		if(on) window.client.toggleLbTagscsscodeElem.innerHTML = window.client.toggleLbTagscsscode;
 		else window.client.toggleLbTagscsscodeElem.innerHTML = "";
 	},
+	metascsscodeElem: null,
+	recalcUserMetas: function(){
+		if(!window.client.metascsscodeElem){
+			window.client.metascsscodeElem = document.createElement("style");
+			document.head.appendChild(window.client.metascsscodeElem);
+		}
+		let newiHtml = ``;
+
+		let arr1=[],arr2=[];
+		for(let i in window.client.userMetas){
+			let data = window.client.userMetas[i];
+			if(data.lbtag == "Friend")arr1.push('#leaderboard span[arialabel="'+i+'"]::before')
+			else if(data.lbtag == "Warning")arr2.push('#leaderboard span[arialabel="'+i+'"]::before')
+		}
+		if(arr1.length > 0){
+			newiHtml+=`
+			${arr1.join(",")}{
+				content: "[F]";
+				margin-right: 4px;
+				color: #00ff00;
+				text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
+			}
+			`;
+		}
+		if(arr2.length > 0){
+			newiHtml+=`
+			${arr2.join(",")}{
+				content: "[!]";
+				margin-right: 4px;
+				color: #ff0000;
+				text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
+			}
+			`;
+		}
+		window.client.metascsscodeElem.innerHTML = newiHtml;
+	},
 
 	editChatInput: function(add, disptext, edittext, inputId = "chat-input", doStyle = true){
 		let etext = edittext ? edittext : disptext;
@@ -1249,7 +1555,7 @@ globalThis.client = {
 
 				window.client.sendSystemMessage(sysText);
 			}else
-			if([p+"prefix"].includes(messageS[0])){
+			if([p+"prefix"].includes(messageS[0])){//nd
 				if(messageS[1]?.length > 0 && messageS[1] != "/"){
 					localStorage.setItem("ts-prefix", window.client.textCommandConsts.prefix = messageS[1]);
 					window.client.sendSystemMessage(`The prefix is changed from ${p} is to ${messageS[1]}`);
@@ -1266,10 +1572,10 @@ globalThis.client = {
 				window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
 				window.client.sendSystemMessage(`Leaderboard tags are now turned ${["off","on"][+window.client.textCommandConsts.lbTags]}`);
 			}else
-			if([p+"toggletimer"].includes(messageS[0])){
+			/*if([p+"toggletimer"].includes(messageS[0])){//nd
 				localStorage.setItem("ts-timerReal", window.client.textCommandConsts.timerReal = !window.client.textCommandConsts.timerReal);
 				window.client.sendSystemMessage(`timer now shows ${["end screen time","real time"][+window.client.textCommandConsts.timerReal]}`);
-			}else
+			}else*/
 			if([p+"toggleusers"].includes(messageS[0])){
 				localStorage.setItem("ts-showUIACnt", window.client.textCommandConsts.showUIACnt = !window.client.textCommandConsts.showUIACnt);
 				window.client.areaData.updateLb();
@@ -1326,7 +1632,7 @@ globalThis.client = {
 	},
 
 	sendSystemMessage: function(message = ""){
-		let chat = window.client.chat ? window.client.chat : (window.client.chat = document.getElementById("chat-window"));
+		let chat = window.client.chat.parentNode ? window.client.chat : (window.client.chat = document.getElementById("chat-window"));
 		if(chat){
 			if(message != ""){
 				chat.innerHTML = chat.innerHTML+
@@ -1432,6 +1738,100 @@ globalThis.client = {
 				document.getElementById("log-" + name).remove();
 				document.getElementById("log-h-" + name).remove();
 			}
+		}
+	},
+
+	openUserMetas: function(name, closeonly = false){
+		const THELEM = document.querySelector(".usermetas");
+		if(THELEM){
+			THELEM.parentNode.remove();
+			return;
+		}else
+		if(!closeonly){
+			const res = window.client.userMetas[name]?{...window.client.userMetas[name]}:{
+				lbtag:"",
+				note:"",
+			};
+			const backpan = document.createElement("div");
+			backpan.style.position = "absolute";
+			backpan.style.width = "100%";
+			backpan.style.height = "100%";
+
+			document.body.appendChild(backpan);
+			
+			const popup = document.createElement("div");
+			popup.className = "usermetas";
+			backpan.appendChild(popup);
+			popup.addEventListener("click", (e)=>{
+				e.stopPropagation();
+			});
+
+			const header = document.createElementP("div", {className:"header",innerText:name});
+			popup.appendChild(header);
+
+			const buttonsLay = document.createElement("div");
+			buttonsLay.className = "buttonslay";
+			popup.appendChild(buttonsLay);
+
+			const currentState = document.createElementP("div",{className:"currentState",innerText:res.lbtag}),
+			buttonFriend = document.createElementP("button",{className:"friend",innerText:"Friend"},(e)=>{
+				e.addEventListener("click",()=>{
+					currentState.className = "currentState " + (currentState.innerText = res.lbtag = res.lbtag == e.innerText? "" : e.innerText);
+				})
+			}),
+
+			buttonWarning = document.createElementP("button",{className:"warning",innerText:"Warning"},(e)=>{
+				e.addEventListener("click",()=>{
+					currentState.className = "currentState " + (currentState.innerText = res.lbtag = res.lbtag == e.innerText? "" : e.innerText);				})
+			});
+			buttonsLay.appendChild(buttonFriend);
+			buttonsLay.appendChild(currentState);
+			buttonsLay.appendChild(buttonWarning);
+
+
+			const noteLay = document.createElement("div");
+			noteLay.className = "notelay";
+			popup.appendChild(noteLay);
+
+			const noteInput = document.createElementP("textarea",null,(e)=>{
+				e.setAttribute("c-lock", "");
+				e.value = res.note;
+			});
+			noteLay.appendChild(noteInput);
+
+			const badgesLay = document.createElementP("div",{className:"badgeslay"},(e)=>{
+				const rolesArr = window.tags.getUsersTags(name);
+				for(let i of rolesArr){
+					let tagData = window.tags.tagsData[i];
+					if(tagData.badge){
+						const badge = document.createElementP("div",{className:"badge",innerText:tagData.badge.text},(e)=>{
+							e.setAttribute("badge", i);
+						})
+						e.appendChild(badge);
+					}
+				}
+			});
+			popup.appendChild(badgesLay);
+
+			
+			const buttonSave = document.createElementP("button",{id: "save", innerText:"Save"}, (e)=>{
+				e.addEventListener("click", ()=>{
+					res.note = noteInput.value;
+					window.client.userMetas[name] = res;
+					localStorage.setItem("ts-userMetas", JSON.stringify(window.client.userMetas));
+					window.client.recalcUserMetas();
+					window.client.openUserMetas(name, true);
+				})
+			});
+
+			const buttonCancel = document.createElementP("button",{id: "cancel", innerText:"Cancel"}, (e)=>{
+				e.addEventListener("click", ()=>{
+					window.client.openUserMetas(name, true);
+				});
+			});
+
+			popup.appendChild(buttonSave);
+			popup.appendChild(buttonCancel);
 		}
 	},
 
@@ -1567,13 +1967,6 @@ globalThis.client = {
 					if(logElem.scrollTop + logElem.clientHeight == logElem.scrollHeight)sctb = true;
 					logElem.appendChild(window.client.createLogLine(uo[arrname][len]));
 					if(sctb)logElem.scrollTop = logElem.scrollHeight;
-					/*const line = document.createElement("div");
-					line.style.display = window.client.logTypesToShow.includes(type) ? "": "none";
-					line.className = `ele ${window.styleByNr(type)}`;
-					line.title = uo[arrname][len][5];
-
-					line.innerHTML = `<div id="logid">${uo[arrname][len][5]}|</div><div id="time">${uo[arrname][len][1]}</div><div id="map">${window.getShortName(uo[arrname][len][2])}</div><div id="area">${window.normalizeArea(uo[arrname][len][3])}</div>`
-					logElem.appendChild(line);*/
 				}
 
 				window.client.onNewLog(name, uo[arrname][len]);
@@ -1634,11 +2027,7 @@ globalThis.client = {
 				vp: undefined,
 			};
 				
-				//let uo = window.client.userlog[usr.name];
 			window.updateLeaderboard();
-				/*uo.travel.push([
-					time, ctime, usr.regionName, usr.areaName, 6, uo.logid++
-				]);*/
 				return true;
 		}
 	},
@@ -1856,9 +2245,9 @@ globalThis.client = {
 	loggerShown:[],
 	loggerShownOnly:false,
 	logger:null,
-	openLogger: function(notOnlyLogs = true){
+	openLogger: function(notOnlyLogs = true, olyClose = false){
 		const p = document.querySelector(".log-popup");
-		if(!window.client.logger && notOnlyLogs){
+		if(!window.client.logger && notOnlyLogs && !olyClose){
 			const popup = document.createElement("div");
 			popup.id = "LOGGER-S";
 			popup.className = "logger-users";
@@ -1986,10 +2375,141 @@ globalThis.client = {
 		}
 		else
 		if(notOnlyLogs){
-			window.client.logger.remove();
-			window.client.logger = null;
+			if(window.client.logger){
+				window.client.logger.remove();
+				window.client.logger = null;
+			}
 		}
 		return false;
+	},
+
+	openCustomSettings:function(removeOnly = false){
+		window.client.openCustomCommands(true);
+		if(window.client.openLogger(true, true))return;
+		const element = document.querySelector(".customSettings");
+		if(element){
+			element.parentNode.remove();
+			return;
+		}else
+		if(!removeOnly){
+			document.createElementP("div",null,(backpan)=>{
+				backpan.style.position = "absolute";
+				backpan.style.width = "100%";
+				backpan.style.height = "100%";
+				backpan.style.top = "0";
+				backpan.style.left = "0";
+				document.body.appendChild(backpan);
+	
+				backpan.addEventListener("click", (e)=>{
+					window.client.openCustomSettings(true);
+				});
+
+				backpan.appendChild(document.createElementP("div",{className:"customSettings"},(popup)=>{
+					popup.addEventListener("click", (e)=>{
+						e.stopPropagation();
+					});
+	
+					popup.appendChild(document.createElementP("button",{className:"Logger",innerHTML:"Logger"},(el)=>{
+						el.addEventListener("click", (e)=>{
+							window.client.openCustomSettings(true);
+							window.client.openLogger();
+							e.stopPropagation();
+						});
+					}));
+					popup.appendChild(document.createElementP("button",{className:"Commands",innerHTML:"Commands"},(el)=>{
+						el.addEventListener("click", (e)=>{
+							window.client.openCustomSettings(true);
+							window.client.openCustomCommands();
+							e.stopPropagation();
+						});
+					}));
+				}));
+			});
+		}
+	},
+	openCustomCommands:function(removeOnly = false){
+		const element = document.querySelector(".customCommands");
+		if(element){
+			element.parentNode.remove();
+			return true;
+		}else
+		if(!removeOnly){
+			document.createElementP("div",null,(backpan)=>{
+				backpan.style.position = "absolute";
+				backpan.style.width = "100%";
+				backpan.style.height = "100%";
+				backpan.style.top = "0";
+				backpan.style.left = "0";
+				document.body.appendChild(backpan);
+	
+				backpan.addEventListener("click", (e)=>{
+					window.client.openCustomCommands(true);
+				});
+
+				backpan.appendChild(document.createElementP("div",{className:"customCommands"},(popup)=>{
+					popup.addEventListener("click", (e)=>{
+						e.stopPropagation();
+					});
+
+					const cmdStruct=[
+						["bool", "User tags", "showTag", "ts-showTag", ()=>{}],
+						["bool", "User LB tags", "lbTags", "ts-lbTags", (r)=>{window.client.toggleLbTags(r);}],
+						["bool", "LB users count", "showUIACnt", "ts-showUIACnt", ()=>{window.client.areaData.updateLb();}],
+						["bool", "User card", "showUcard", "ts-showUcard", (r)=>{window.client.toggleUcard(r);}],
+						["option", "Timer:",[
+							["Real time", "1"],
+							["Ingame time", "2"],
+							["None", "3"]
+						],"timerReal", "ts-timerReal", ()=>{}],
+					]
+					let i = 0;
+					popup.appendChild(document.createElementP("div", {className:"lay header"}, (lay)=>{
+						lay.innerHTML += `<label>Custom Settings</label>`;
+						lay.appendChild(document.createElementP("button", {innerHTML:"X"}, (btn)=>{
+							btn.addEventListener("click", ()=>{
+								window.client.openCustomCommands(true);
+							});
+						}));
+					}));
+					for(let cmd of cmdStruct){
+						popup.appendChild(document.createElementP("div", {className:"lay"}, (lay)=>{
+							if(i == cmdStruct.length-1) lay.style.marginBottom = "10px";
+							if(cmd[0] == "bool"){
+								lay.innerHTML += `<label>${cmd[1]}</label>`;
+								//lay.appendChild(document.createElementP("div",{innerHTML:cmd[1]},(el)=>{
+								let checkbox; lay.appendChild(checkbox = document.createElementP("input", {type: "checkbox"}))
+								let r=()=>{checkbox.checked = window.client.textCommandConsts[cmd[2]]};
+								r()
+								checkbox.addEventListener("click", (e)=>{
+									let res;
+									localStorage.setItem(cmd[3], res= window.client.textCommandConsts[cmd[2]] = !window.client.textCommandConsts[cmd[2]]); 
+									//r()
+									if(cmd[4])cmd[4](res);
+									e.stopPropagation();
+								});
+								//}));
+							}else
+							if(cmd[0] == "option"){
+								lay.innerHTML += `<label>${cmd[1]}</label>`;
+								//lay.appendChild(document.createElementP("div",{className:"droplist",innerHTML:`<label>${cmd[1]}</label>`},(el)=>{
+								lay.appendChild(document.createElementP("select",null,(el)=>{
+									for(let d of cmd[2]){
+										el.innerHTML += `<option value="${d[1]}">${d[0]}</option>`
+									}
+									el.value = window.client.textCommandConsts[cmd[3]];
+									el.addEventListener("input", ()=>{
+										localStorage.setItem(cmd[4], window.client.textCommandConsts[cmd[3]] = el.value);
+									})
+								}));
+								//}));
+							}
+						}));
+						i++;
+					}
+				}));
+			});
+		}
+		return false
 	},
 
 	showClasses: getLocal("ts-showClasses", "false") == "true",
@@ -2017,11 +2537,13 @@ setInterval(()=>{
 
 window.replaces = {
 	id2: function (e,t,l) {
+		if(window.client.textCommandConsts.timerReal != 3){
+			t.font = 'bold ' + e.default.font(30);
+			let secs = secondsFormat(window.client.textCommandConsts.timerReal == 1 ? window.getTime() : window.client.main.survivalTime);
+			t.strokeText(secs, l, 80);
+			t.fillText(secs, l, 80);
 
-		t.font = 'bold ' + e.default.font(30);
-		let secs = secondsFormat(window.client.textCommandConsts.timerReal ? window.getTime() : window.client.main.survivalTime);
-		t.strokeText(secs, l, 80);
-		t.fillText(secs, l, 80);
+		}
 
 		t.font = 'bold ' + e.default.font(17);
 		const txt = (client.script && "Script: enabled") ||
@@ -2120,6 +2642,7 @@ window.getShortName = (map)=>{
 		"Magnetic Monopole": 	"MM2",
 		"Stellar Square": 		"SS",
 		"Assorted Alcove": 		"AA",
+		"Burning Bunker": 		"BB",
 	}
 
 	return maps[map] ? maps[map] : map
@@ -2127,11 +2650,15 @@ window.getShortName = (map)=>{
 
 window.normalizeArea = (area)=>{
 	return area
-	.replace("Tunnel", 		"Tun.")
-	.replace("Perimeter", 	"Per.")
-	.replace("Outer", 		"Out.")
-	.replace("Inner", 		"Inn.")
-	.replace("Chamber",		"Cha.")
+	.replace("Tunnel", 			"Tun.")
+	.replace("Perimeter", 		"Per.")
+	.replace("Outer", 			"Out.")
+	.replace("Inner", 			"Inn.")
+	.replace("Chamber",			"Cha.")
+	.replace("Level",			"L")
+	.replace("Locked Ladder",	"L. L.")
+	.replace("Boss",			"B.")
+	.replace("Evades",			"Ev.")
 }
 
 window.getVpColor = (vp)=>{
@@ -2852,67 +3379,66 @@ window.addEventListener('DOMContentLoaded', e=>{
 		background: rgb(183 183 183)!important;
 	}`
 	if(window.tags){
-		if(window.tags["[SCR]"]){
-			let newarr = [];
-			for(let i in window.tags["[SCR]"]){
-				newarr.push('#chat-window span[arialabel="'+ window.tags["[SCR]"][i] +'"]::before')
-			}
-			newihtml += newarr.join(",");
-			newihtml += `{
-				content: "[SCR]";
-				margin-right: 4px;
-				color: ${window.tagData["[SCR]"].color};
-			}`
-		}
-	
-		if(window.tags["[TO]"]){
-			let newarr = [];
-			for(let i in window.tags["[TO]"]){
-				newarr.push('#chat-window span[arialabel="'+ window.tags["[TO]"][i] +'"]::before')
-			}
-			newihtml += newarr.join(",");
-			newihtml += `{
-				content: "[TO]";
-				margin-right: 4px;
-				color: ${window.tagData["[TO]"].color};
-			}`
-		}
-		
-		if(window.tags["[TS]"]){
-			let newarr = [];
-			for(let i in window.tags["[TS]"]){
-				newarr.push('#chat-window span[arialabel="'+ window.tags["[TS]"][i] +'"]::before')
-			}
-			newihtml += newarr.join(",");
-			newihtml += `{
-				content: "[TS]";
-				margin-right: 4px;
-				color: ${window.tagData["[TS]"].color};
-			}`
-		}
-
-		let ff = (ee,tt,cc)=>{//#ff6b5b
-			if(window.tags[tt]){
-				let newarr = [];
-				for(let i in window.tags[tt]){
-					newarr.push('#leaderboard span[arialabel="'+ window.tags[tt][i] +'"]::before')
+		for(let tag in window.tags.tagsData){
+			let tagData = window.tags.tagsData[tag];
+			{//chat
+				if(tagData.chat){
+					let newarr = [];
+					for(let i in window.tags.oldTags[tag]){
+						newarr.push('#chat-window span[arialabel="'+ window.tags.oldTags[tag][i] +'"]::before')
+					}
+					newihtml += newarr.join(",");
+					newihtml += `{
+						content: "${tagData.chat.text}";
+						margin-right: 4px;
+						color: ${tagData.chat.color};
+						${tagData.chat.rainbow?
+							`animation-name: rainbowTextkf;
+							animation-duration: 20s;
+							animation-iteration-count: infinite;`:
+							``
+						}
+					}`
 				}
-				window.client.toggleLbTagscsscode += newarr.join(",");
-				window.client.toggleLbTagscsscode += `{
-					content: "[${ee}]";
-					margin-right: 4px;
-					color: ${cc};
-					text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
-				}`
+			}
+			{//lb
+				if(tagData.lb){
+					let newarr = [];
+					for(let i in window.tags.oldTags[tag]){
+						newarr.push('#leaderboard span[arialabel="'+ window.tags.oldTags[tag][i] +'"]::before')
+					}
+					window.client.toggleLbTagscsscode += newarr.join(",");
+					window.client.toggleLbTagscsscode += `{
+						content: "${tagData.lb.text}";
+						margin-right: 4px;
+						color: ${tagData.lb.color};
+						text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
+						${tagData.lb.rainbow?
+							`animation-name: rainbowTextkf;
+							animation-duration: 20s;
+							animation-iteration-count: infinite;`:
+							``
+						}
+					}`
+				}
+				window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
+			}
+			{//badge
+				if(tagData.badge){
+					newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]{
+						background-color: ${tagData.badge.bg};
+						border-color: ${tagData.badge.border};
+						color: ${tagData.badge.textcolor};
+						${tagData.badge.rainbow?`
+						animation-name: rainbowBadgekf;
+						animation-duration: 10s;
+						animation-iteration-count: infinite;
+						animation-timing-function: linear;`:``
+						}
+					}`
+				}
 			}
 		}
-
-		ff("M", "[Jr. Mod]", "#f1c40f");
-		ff("M", "[Mod]", "#e67e22");
-		ff("M", "[Sr. Mod]", "#ff6b5b");
-		ff("M", "[H. Mod]", "#f03333");
-		ff("D", "[Dev]", "#3498db");
-		window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
 	}
 	if(window.customTags){
 		for(let tagdata of window.customTags){
@@ -2937,7 +3463,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	#chat-window span[arialabel^="Guest"]::before{
 		content: "[guest]";
 		margin-right: 4px;
-		color: ${window.tagData["[guest]"].color};
+		color: #91b800;
 	}
 
 	
@@ -2948,6 +3474,14 @@ window.addEventListener('DOMContentLoaded', e=>{
 		75%   {color: hsl(270, 100%, 50%);}
 		100% {color: hsl(360, 100%, 50%);}
 	}
+
+	@keyframes rainbowBadgekf {
+		0%    {color: hsl(0, 100%, 13%); border-color: hsl(0, 100%, 33%); background-color: hsl(0, 100%, 50%);}
+		25%   {color: hsl(90, 100%, 13%); border-color: hsl(90, 100%, 33%); background-color: hsl(90, 100%, 50%);}
+		50%   {color: hsl(180, 100%, 13%); border-color: hsl(180, 100%, 33%); background-color: hsl(180, 100%, 50%);}
+		75%   {color: hsl(270, 100%, 13%); border-color: hsl(270, 100%, 33%); background-color: hsl(270, 100%, 50%);}
+		100%  {color: hsl(360, 100%, 13%); border-color: hsl(360, 100%, 33%); background-color: hsl(360, 100%, 50%);}
+	}
 	
 	.rainbowText {
 		color: red;
@@ -2955,19 +3489,246 @@ window.addEventListener('DOMContentLoaded', e=>{
 		animation-duration: 20s;
 		animation-iteration-count: infinite;
 	}
+	/*THE USERMETAS---------------------------------------*/
+
+	.usermetas{
+		position: absolute;
+		width: 300px;
+		height: 400px;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #000000aa;
+		overflow: hidden;
+		border-radius: 10px;
+		border: solid 1px #000;
+	}
+
+	.usermetas > .header{
+		width: 100%;
+		height: 40px;
+		line-height: 42px;
+		font-size: 18pt;
+	}
+
+	.usermetas > .buttonslay{
+		margin-top:10px;
+		width: 100%;
+		height: 40px;
+	}
+
+	.usermetas > .buttonslay > button{
+		width: 100px;
+		height: 40px;
+		float: left;
+		font-size: 13pt;
+	}
+	.usermetas > .buttonslay > button.friend{
+		background-color: #00a200;
+		border: solid 2px green;
+		border-top-left-radius: 10px;
+	}
+
+	.usermetas > .buttonslay > button.warning{
+		background-color: #ca0000;
+    	border: solid 2px #6f0000;
+		border-top-right-radius: 10px;
+	}
+
+	.usermetas > .buttonslay > .currentState{
+		width: 96px;
+		height: 36px;
+		float: left;
+		background-color: burlywood;
+		border: solid 2px #a06500;
+		text-align: center;
+		font-size: 13pt;
+		line-height: 33px;
+	}
+
+	.usermetas > .notelay{
+		width: 100%;
+		height: 112px;
+		margin-top: 10px;
+	}
+
+	.usermetas > .notelay > textarea{
+		width: 290px;
+		height: 100px;
+		resize: none;
+		margin: 0;
+		padding: 5px;
+		border: none;
+		border-top: solid 1px #00000052;
+		border-bottom: solid 1px #00000052;
+    	background: #0000002e;
+		color: antiquewhite;
+	}
+
+	.usermetas > button#cancel,
+	.usermetas > button#save{
+		width: 100px;
+		height: 40px;
+		position: absolute;
+		bottom: 5px;
+		right: 5px;
+		background-color: #00a200;
+		border: solid 2px green;
+	}
+	.usermetas > button#cancel{
+		background-color: #ca7500!important;
+		border: solid 2px #733e00!important;
+		left: 5px!important;
+	}
+
+	.usermetas > .badgeslay{
+		width: 300px;
+		height: 135px;
+	}
+
+	.usermetas > .badgeslay > .badge{
+		float: left;
+		font-size: 13px;
+		font-weight: bold;
+		width: 80px;
+   		margin: 6px;
+		height: 37px;
+		line-height: 34px;
+		background: lemonchiffon;
+		text-align: center;
+		border: solid 4px #000;
+		border-radius: 12px;
+	}
+
+	.usermetas *::-webkit-scrollbar-thumb{ /*scrollbar thingie*/
+		background: #8e8e8e!important;
+		border-radius: 5px!important;
+	}
+
+	.usermetas *::-webkit-scrollbar{
+		width: 7px!important;
+		height: 7px!important;
+	}
+
+	/*custom settingssssssss*/
+
+	.customCommands,
+	.customSettings{
+		position: absolute;
+		width: 300px;
+		max-height: 400px;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #000E;
+		overflow: hidden;
+		border-radius: 10px;
+		border: aliceblue;
+		display: inline-grid;
+		justify-items: center;
+		z-index: 1000;
+	}
+
+	.customSettings > button{
+		width: 150px;
+		height: 30px;
+		display: inline-block;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		border-radius: 10px;
+		background: #bbb;
+		border: solid 2px #3e3e3e;
+		color: #000;
+		font-weight: bold;
+	}
+
+	.customCommands > .lay{
+		font-size: 16px;
+		margin-top: 10px;
+		background-color: #404040;
+		border-radius: 5px;
+		padding: 5px;
+		width: 272px;
+		text-align: left;
+		color: white;
+		height: 19px;
+		display: inline-block;
+	}
+
+	.customCommands > .lay.header{
+		background: none;
+		font-size: 20px;
+	}
+	.customCommands > .lay.header > button{
+		height: 20px;
+		width: 25px;
+	}
+	
+	.customCommands > .lay > label{
+		float: left;
+	}
+
+	.customCommands > .lay > *{
+		float: right;
+	}
+
+	/*.customCommands > button{
+		width: 150px;
+		height: 30px;
+		display: inline-block;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		border-radius: 10px;
+		background: #bbb;
+		border: solid 2px #3e3e3e;
+		color: #000;
+		font-weight: bold;
+	}*/
+
+	/*.customCommands > button.red{
+		background: #c10000;
+    	border-color: #6f0000;
+	}
+
+	.customCommands > button.green{
+		background: #20a000;
+   		border-color: #066700;
+	}*/
+
+	.customCommands > .droplist{
+		width: 100%;
+		height: 30px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		background: #bbb;
+		border: solid 2px #3e3e3e;
+		border-radius: 10px;
+		line-height: 27px;
+		text-align: center;
+	}
+
+	.customCommands > .lay > select{
+		background-color: #777;
+		color: #000;
+		font-weight: bold;
+	}
+	.customCommands > .lay > select > option{
+		font-weight: bold;
+	}
 
 	`;
-
+	window.client.recalcUserMetas();
 	styles.innerHTML = newihtml;
 
 	document.head.appendChild(styles);
 
 	document.addEventListener("keydown", (e)=>{
-		if(document.activeElement.localName === "input"){
+		if(document.activeElement.hasAttribute("c-lock")||document.activeElement.localName === "input"){
 			if(document.activeElement?.getAttribute("type") != "checkbox") return;
 		}
 		if(e.code == "KeyR"){
-			window.client.openLogger();
+			window.client.openCustomSettings();
+			//window.client.openLogger();
 		}else
 		if(e.code == "Escape"){
 			window.client.toggleHeroList(true);
@@ -3001,7 +3762,7 @@ window.removeFakes = ()=>{
 }
 
 window.z = "";
-window.getAttrInParents=(e,a)=>{
+globalThis.getAttrInParents=(e,a)=>{
 	let at;
 	if(at = e.getAttribute(a)){
 		return at;
@@ -3056,6 +3817,7 @@ window.updateLeaderboard = () => {
 				elem.className = "chat-message-contextmenu fake";
 				elem.style = `top: ${event.y}px; right: 20px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
 				elem.id = "elem-"+name
+				elem.setAttribute("realname", name);
 				elem.innerHTML =
 				`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
 				`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
@@ -3063,7 +3825,7 @@ window.updateLeaderboard = () => {
 				`<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>`+
 				`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
 				`<button id="close"class="bbtn"onClick="window.client.hideLogs();this.parentNode.remove()"title="Close the popup.">X</button>`+
-				`<div class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
+				`<div id="name"class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
 				`<ul style="display: table-cell;">`+
 					`<li style="display: table-cell;">`+
 						`<a href="/profile/${name}" target="_blank">Profile</a>`+
@@ -3110,7 +3872,15 @@ window.updateLeaderboard = () => {
 					removcl(btn);
 				});
 
-
+				const nameEmem = elem.querySelector("#name")
+				nameEmem.addEventListener("mousedown", (e)=>{e.stopPropagation();});
+				
+				nameEmem.addEventListener("click", (e)=>{
+					window.client.openUserMetas(getAttrInParents(e.target, "realname"));
+					e.stopPropagation();
+				});
+				
+				
 				const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
 				const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
 				const el3 = elem.querySelector("ul>li>#timecounter>#tc-result");
@@ -3161,8 +3931,6 @@ document.addEventListener("mouseup", (e)=>{
 let settings = document.createElement('label');
 settings.innerHTML = "showClasses";
 
-
-window.timerRegex = /[\S\s]+ • /;
 window.updateName = (id, name) => {
 	with (client) {
 		if (!(showClasses && state)) return name;
@@ -3187,8 +3955,8 @@ window.loadGame = () => {
 }
 
 window.getTag = (name)=>{
-	for(var tagKey in window.tags){
-		let tag = window.tags[tagKey];
+	for(var tagKey in window.tags.oldTags){
+		let tag = window.tags.oldTags[tagKey];
 		if(tag.includes(name)){
 			return tagKey;
 		}
@@ -3206,11 +3974,14 @@ window.genPrefix = (name)=>{
 				return;
 			}
 		}
-		for(let tagKey in window.tags){
-			let tag = window.tags[tagKey];
+		for(let tagKey in window.tags.oldTags){
+			let tag = window.tags.oldTags[tagKey];
 			if(tag.includes(name)){
-				window.lastPrefix.name = window.tagData[tagKey].presudo;
-				window.lastPrefix.color = window.tagData[tagKey].color;
+				let tagData = window.tags.tagsData[tagKey];
+				if(tagData.prefix){
+					window.lastPrefix.name = tagData.prefix.text;
+					window.lastPrefix.color = tagData.prefix.color;
+				}else break;
 				return;
 			}
 		}

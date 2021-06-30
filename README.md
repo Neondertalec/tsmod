@@ -37,8 +37,8 @@ if you can't install any extensions, go [here](https://github.com/Neondertalec/t
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815554982085656586/unknown.png)
 
 7) Also make sure that [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ru) is enabled (<aa style="color:red"> **red line** </aa>)  
-That the script is the only one turned on (<aa style="color:#5500ff"> **purpe line** </aa>)  
-Then clcik on the '`check for updates`' (<aa style="color:cyan"> **cyan line** </aa>)  
+That the script is the only one turned on (<aa style="color:#5500ff"> **purple line** </aa>)  
+Then click on the '`check for updates`' (<aa style="color:cyan"> **cyan line** </aa>)  
 ![image](https://cdn.discordapp.com/attachments/617049086452957189/815555840148766730/unknown.png)
 
 8) Refresh your browser (if it doesnt help, reopen it).
@@ -46,7 +46,7 @@ Then clcik on the '`check for updates`' (<aa style="color:cyan"> **cyan line** <
 # Use with console
 
 if you can't install any extensions...  
-pass this code into the console:
+paste this code into the console:
 ```js
 var xm=new XMLHttpRequest();
 xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/console-tsmod.js",false);
