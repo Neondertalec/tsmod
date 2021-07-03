@@ -1,6 +1,7 @@
 globalThis.temp1 = undefined;
 globalThis.temp2 = undefined;
 globalThis.temp3 = undefined;
+globalThis.CANR = true;
 
 console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.","color: red; font-size: 20px; background: black;border-radius:10px;");
 console.log("%cScript loading... ","color: green; font-size: 20px");
@@ -70,11 +71,25 @@ window.vers = {
 
 	filllogp:function(){
 
-		window.vers.changeLog = [//cc0000
+		window.vers.changeLog = [
+			{
+				version:`1.1.58`,
+				news:[
+					`Some bug fixes.`,
+					`${`[TW]`.fontcolor(`#FFA390`)} no longer shows in the leaderboard. ${`<i>Yes, that wasnt a feature.</i>`.fontcolor(this.cl.cmd)}`,
+					[
+						`new buttons in the R key window:`,
+						`Team logger`,
+						`Friends & Notes`
+					],
+					[`new ${`[TS]`.fontcolor(this.cl.ts)} and ${`[TO]`.fontcolor(this.cl.to)}:`,
+					`${`[YouTuber]`.fontcolor("#2accac")} Strat`]
+				]
+			},
 			{
 				version:`1.1.57`,
 				news:[
-					`${`Burning Bunker`.fontcolor(`#805b12`)} is now displayed properly in logs.`,
+					`${`Burning Bunker`.fontcolor(`#e01b1b`)} is now displayed properly in logs.`,
 					`In the usercard you can left-click on the users name and a window will appear.<br>`+
 					`In the window you can mark the user as a friend (${`[F]`.fontcolor(`#0f0`)}) or put a warning (${`[!]`.fontcolor(`#f00`)}) that will appear in the leaderboard to the left of the users name.<br>`+
 					`You can also leave a note on the user.`,
@@ -388,7 +403,7 @@ window.vers = {
 			let newarr = [];
 			globalThis.tags.tags["[TW]"] = names;
 			for(let tname of names){
-				newarr.push('span[arialabel="'+ tname +'"]::before')
+				newarr.push('#chat-window span[arialabel="'+ tname +'"]::before')
 			}
 			newihtml += newarr.join(",") + `{
 				content: "[TW]"!important;
@@ -585,8 +600,9 @@ globalThis.tags = {
 			'Zero〩',
 			'Frenzy',
 			'Mel',
+			'Strat',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight','Strat'],
 		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 		'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
@@ -629,7 +645,7 @@ globalThis.tags = {
 			priority:0,
 			prefix:{
 				color:"#2accac",
-				text:"[YouTube]",
+				text:"[YouTuber]",
 			},
 			badge:{
 				bg:"#1abc9c",
@@ -975,15 +991,17 @@ globalThis.client = {
 			if(closeOnly){
 				let bp = document.getElementById("areaData");
 				if(bp) bp.remove();
-				return;
+				return true;
 			}
-			const area = window.client.areaData.data[areaName];
+			let area = window.client.areaData.data[areaName];
+			if(!area) area = {users:{}, len:0};
 
 			const backpan = document.createElement("div");
 			backpan.style.position = "absolute";
 			backpan.id = "areaData";
 			backpan.style.width = "100%";
 			backpan.style.height = "100%";
+			backpan.style.top = "0";
 			backpan.style.zIndex = "1002";
 
 			backpan.addEventListener("click", ()=>{
@@ -1001,16 +1019,18 @@ globalThis.client = {
 
 			let allObjs = [];
 			let names = [];
+			let all = 0;
 
 			//{//sellect logs
 				const popup_logs = document.createElement("div")
 				popup_logs.className = "log_part";
 
-				popup_logs.innerHTML = `<div class="theader">Sellect logs</div>`;
+				popup_logs.innerHTML = `<div class="theader">logs</div>`;
 
 				const refreshButton = document.createElement("button");
 				refreshButton.className = "refresh";
-				refreshButton.innerHTML = "R";
+				refreshButton.innerHTML = "Refresh";
+				refreshButton.style.width = "70px";
 				popup_logs.children[0].appendChild(refreshButton);
 
 				const popup_logs_scroll = document.createElement("div");
@@ -1055,7 +1075,7 @@ globalThis.client = {
 						names = [];
 						p.querySelectorAll(".scoll_user.sellected").forEach((e)=>{
 							let n = e.innerHTML.substring(1, e.innerHTML.length -1);
-							let u = window.client.userlog[n];
+							let u = all == 2 ? window.client.userlog2[n] : window.client.userlog[n];
 							if(u){
 								names.push(n);
 								allObjs = [...allObjs, ...u.deaths, ...u.travel];
@@ -1152,9 +1172,8 @@ globalThis.client = {
 				const popup_users = document.createElement("div")
 				popup_users.className = "users_part";
 
-				popup_users.innerHTML = `<div class="theader">Sellect users</div>`;
+				popup_users.innerHTML = `<div class="theader">Users</div>`;
 				
-				let all = false;
 
 				const popup_users_scroll = document.createElement("div");
 				popup_users_scroll.className = "scoll_elem";
@@ -1165,7 +1184,7 @@ globalThis.client = {
 					for(let i = popup_users_scroll.childNodes.length-1; i >= 0; i--){
 						popup_users_scroll.childNodes[i].remove();
 					}
-					for(let user in all?window.client.userlog:area.users){
+					for(let user in all == 0 ? area.users: all == 1 ? window.client.userlog : window.client.userlog2){
 				//for(let user in area.users){
 					const userelem = document.createElement("div");
 					userelem.className = "scoll_user";
@@ -1187,10 +1206,12 @@ globalThis.client = {
 
 				const resetUsersButton = document.createElement("button");
 				resetUsersButton.className = "refresh";
-				resetUsersButton.innerHTML = "A";
+				resetUsersButton.innerHTML = "current";
+				resetUsersButton.style.width = "70px";
 				popup_users.childNodes[0].appendChild(resetUsersButton);
 				resetUsersButton.addEventListener("click", ()=>{
-					all = !all;
+					all = ++all%3;
+					resetUsersButton.innerHTML = ["current", "all", "imported"][all];
 					fillusers();
 				});
 
@@ -1210,7 +1231,7 @@ globalThis.client = {
 				const popup_format = document.createElement("div")
 				popup_format.className = "format_part";
 
-				popup_format.innerHTML = `<div class="theader">Set the result format</div>`;
+				popup_format.innerHTML = `<div class="theader">Result format</div>`;
 
 				const popup_format_input = document.createElement("input");
 				popup_format_input.setAttribute("c-lock","");
@@ -1392,6 +1413,7 @@ globalThis.client = {
 		backpan.style.position = "absolute";
 		backpan.style.width = "100%";
 		backpan.style.height = "100%";
+		backpan.style.top = "0";
 
 		backpan.addEventListener("click", ()=>{
 			window.client.toggleHeroList(true);
@@ -1726,13 +1748,16 @@ globalThis.client = {
 		}
 	},
 
-	openUserMetas: function(name, closeonly = false){
+	openUserMetas: function(name, closeonly = false, cb = null){
 		const THELEM = document.querySelector(".usermetas");
 		if(THELEM){
+			globalThis.CANR = true;
+			if(cb)cb();
 			THELEM.parentNode.remove();
 			return;
 		}else
 		if(!closeonly){
+			globalThis.CANR = false;
 			const res = window.client.userMetas[name]?{...window.client.userMetas[name]}:{
 				lbtag:"",
 				note:"",
@@ -1741,6 +1766,7 @@ globalThis.client = {
 			backpan.style.position = "absolute";
 			backpan.style.width = "100%";
 			backpan.style.height = "100%";
+			backpan.style.top = "0";
 
 			document.body.appendChild(backpan);
 			
@@ -1802,16 +1828,21 @@ globalThis.client = {
 			const buttonSave = document.createElementP("button",{id: "save", innerText:"Save"}, (e)=>{
 				e.addEventListener("click", ()=>{
 					res.note = noteInput.value;
+					if(res.note == "" && res.lbtag == ""){
+						if(name in window.client.userMetas)
+						delete window.client.userMetas[name];
+					}
+					else
 					window.client.userMetas[name] = res;
 					localStorage.setItem("ts-userMetas", JSON.stringify(window.client.userMetas));
 					window.client.recalcUserMetas();
-					window.client.openUserMetas(name, true);
+					window.client.openUserMetas(name, true, cb);
 				})
 			});
 
 			const buttonCancel = document.createElementP("button",{id: "cancel", innerText:"Cancel"}, (e)=>{
 				e.addEventListener("click", ()=>{
-					window.client.openUserMetas(name, true);
+					window.client.openUserMetas(name, true, cb);
 				});
 			});
 
@@ -2370,6 +2401,8 @@ globalThis.client = {
 
 	openCustomSettings:function(removeOnly = false){
 		window.client.openCustomCommands(true);
+		window.client.openAllUserMetas(true);
+		window.client.areaData.openAreaPopup(true);
 		if(window.client.openLogger(true, true))return;
 		const element = document.querySelector(".customSettings");
 		if(element){
@@ -2383,6 +2416,8 @@ globalThis.client = {
 				backpan.style.height = "100%";
 				backpan.style.top = "0";
 				backpan.style.left = "0";
+				backpan.style.top = "0";
+
 				document.body.appendChild(backpan);
 	
 				backpan.addEventListener("click", (e)=>{
@@ -2393,25 +2428,156 @@ globalThis.client = {
 					popup.addEventListener("click", (e)=>{
 						e.stopPropagation();
 					});
-	
-					popup.appendChild(document.createElementP("button",{className:"Logger",innerHTML:"Logger"},(el)=>{
-						el.addEventListener("click", (e)=>{
-							window.client.openCustomSettings(true);
-							window.client.openLogger();
-							e.stopPropagation();
-						});
+					
+					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
+						lay.appendChild(document.createElementP("button",{className:"Logger",innerHTML:"Logger"},(el)=>{
+							el.addEventListener("click", (e)=>{
+								window.client.openCustomSettings(true);
+								window.client.openLogger();
+								e.stopPropagation();
+							});
+						}));
 					}));
-					popup.appendChild(document.createElementP("button",{className:"Commands",innerHTML:"Commands"},(el)=>{
-						el.addEventListener("click", (e)=>{
-							window.client.openCustomSettings(true);
-							window.client.openCustomCommands();
-							e.stopPropagation();
-						});
+
+					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
+						lay.appendChild(document.createElementP("button",{className:"Commands",innerHTML:"Commands"},(el)=>{
+							el.addEventListener("click", (e)=>{
+								window.client.openCustomSettings(true);
+								window.client.openCustomCommands();
+								e.stopPropagation();
+							});
+						}));
 					}));
+					
+					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
+						lay.appendChild(document.createElementP("button",{className:"FriendsNNotes",innerHTML:"Friends & Notes"},(el)=>{
+							el.addEventListener("click", (e)=>{
+								window.client.openCustomSettings(true);
+								window.client.openAllUserMetas();
+								e.stopPropagation();
+							});
+						}));
+					}));
+
+					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
+						let mapToOpen = "Central Core";
+						lay.appendChild(document.createElementP("button",{className:"TeamLogger",innerHTML:"Team logger"},(el)=>{
+							el.addEventListener("click", (e)=>{
+								window.client.openCustomSettings(true);
+								window.client.areaData.openAreaPopup(false, mapToOpen);
+								e.stopPropagation();
+							});
+						}));
+						lay.appendChild(document.createElementP("select",null,(el)=>{
+							for(let d in maps){
+								el.innerHTML += `<option value="${d}">${maps[d]}</option>`
+							}
+							el.value = mapToOpen;
+							el.addEventListener("input", ()=>{
+								mapToOpen = el.value;
+							})
+						}));
+					}));
+
 				}));
 			});
 		}
 	},
+
+	openAllUserMetas:function(removeOnly = false){
+		const element = document.querySelector(".allmetas");
+		if(element){
+			element.parentNode.remove();
+			return true;
+		}else
+		if(!removeOnly){
+			document.createElementP("div",null,(backpan)=>{
+				backpan.style.position = "absolute";
+				backpan.style.width = "100%";
+				backpan.style.height = "100%";
+				backpan.style.top = "0";
+				backpan.style.left = "0";
+				document.body.appendChild(backpan);
+	
+				backpan.addEventListener("click", (e)=>{
+					window.client.openAllUserMetas(true);
+				});
+
+				backpan.appendChild(document.createElementP("div",{className:"allmetas"},(popup)=>{
+					popup.addEventListener("click", (e)=>{
+						e.stopPropagation();
+					});
+					
+					popup.appendChild(document.createElementP("div", {className:"lay header"}, (lay)=>{
+						lay.innerHTML += `<label>Frinds & Notes</label>`;
+						lay.appendChild(document.createElementP("button", {innerHTML:"X"}, (btn)=>{
+							btn.addEventListener("click", ()=>{
+								window.client.openAllUserMetas(true);
+							});
+						}));
+					}));
+
+
+					let input, itemsContainer,
+					prior = (t)=>t==""?0:t=="Warning"?1:2,
+					allNames = Object.keys(window.client.userMetas).sort().sort((a,b)=>prior(window.client.userMetas[b].lbtag) - prior(window.client.userMetas[a].lbtag)),
+					displaynames = [...allNames],
+					fill = ()=>{};
+
+					let research = ()=>{
+						displaynames = [...allNames].filter((n)=>n.toLocaleLowerCase().startsWith(input.value.toLocaleLowerCase()));
+						fill();
+					}
+					
+
+					popup.appendChild(document.createElementP("div", {className:"lay"}, (lay)=>{
+						input = lay.appendChild(document.createElementP("input", {className:"search"}, (el)=>{
+							el.addEventListener("input", ()=>{
+								console.log("changes to", input.value)
+								research();
+							});
+						}));
+						lay.appendChild(document.createElementP("button", {innerHTML:"search"}, (btn)=>{
+							btn.addEventListener("click", ()=>{
+								window.client.openAllUserMetas(true);
+								globalThis.CANR = false;
+								window.client.openUserMetas(input.value, false, ()=>{
+									window.client.openAllUserMetas();
+									globalThis.CANR = true;
+								});
+							});
+						}));
+					}));
+
+					popup.appendChild(itemsContainer = document.createElementP("div", {className:"container"}, (lay)=>{
+						(fill=()=>{
+							lay.innerHTML = "";
+							for(let i = 0, l = displaynames.length; i < l; i++){
+								let bgcolor = prior(window.client.userMetas[displaynames[i]].lbtag);
+								bgcolor = bgcolor == 0 ? "transparent" : bgcolor == 1 ? "red" : "green";
+								lay.appendChild(document.createElementP("div", {innerHTML:
+									`<div class="trangleshape" style="border-left-color:${bgcolor}"></div>`+displaynames[i]
+								}, (el)=>{
+									el.setAttribute("uname", displaynames[i]);
+									el.addEventListener("click", ()=>{
+										window.client.openAllUserMetas(true);
+										globalThis.CANR = false;
+										window.client.openUserMetas(el.getAttribute("uname"), false, ()=>{
+											window.client.openAllUserMetas();
+											globalThis.CANR = true;
+										});
+									});
+								}));
+							}	
+						})();
+					}));
+					
+				}));
+			});
+		}
+		return false
+	},
+
 	openCustomCommands:function(removeOnly = false){
 		const element = document.querySelector(".customCommands");
 		if(element){
@@ -2604,31 +2770,32 @@ globalThis.id2name = (id)=>{
 	][id];
 }
 
+const maps = {
+	"Central Core": 		"CC",
+	"Central Core Hard": 	"CCH",
+	"Vicious Valley": 		"VV",
+	"Vicious Valley Hard": 	"VVH",
+	"Elite Expanse": 		"EE",
+	"Wacky Wonderland": 	"WW",
+	"Glacial Gorge": 		"GG",
+	"Glacial Gorge Hard": 	"GGH",
+	"Dangerous District": 	"DD",
+	"Peculiar Pyramid": 	"PP",
+	"Monumental Migration": "MM",
+	"Humongous Hollow": 	"HuHo",
+	"Haunted Halls": 		"HaHa",
+	"Quiet Quarry": 		"QQ",
+	"Frozen Fjord": 		"FF",
+	"Ominous Occult": 		"OO",
+	"Restless Ridge": 		"RR",
+	"Toxic Territory": 		"TT",
+	"Magnetic Monopole": 	"MM2",
+	"Stellar Square": 		"SS",
+	"Assorted Alcove": 		"AA",
+	"Burning Bunker": 		"BB",
+}
+
 window.getShortName = (map)=>{
-	const maps = {
-		"Central Core": 		"CC",
-		"Central Core Hard": 	"CCH",
-		"Vicious Valley": 		"VV",
-		"Vicious Valley Hard": 	"VVH",
-		"Elite Expanse": 		"EE",
-		"Wacky Wonderland": 	"WW",
-		"Glacial Gorge": 		"GG",
-		"Glacial Gorge Hard": 	"GGH",
-		"Dangerous District": 	"DD",
-		"Peculiar Pyramid": 	"PP",
-		"Monumental Migration": "MM",
-		"Humongous Hollow": 	"HuHo",
-		"Haunted Halls": 		"HaHa",
-		"Quiet Quarry": 		"QQ",
-		"Frozen Fjord": 		"FF",
-		"Ominous Occult": 		"OO",
-		"Restless Ridge": 		"RR",
-		"Toxic Territory": 		"TT",
-		"Magnetic Monopole": 	"MM2",
-		"Stellar Square": 		"SS",
-		"Assorted Alcove": 		"AA",
-		"Burning Bunker": 		"BB",
-	}
 
 	return maps[map] ? maps[map] : map
 }
@@ -3584,11 +3751,13 @@ window.getHeroColor = function(Hero){
 		border-radius: 12px;
 	}
 
+	.allmetas *::-webkit-scrollbar-thumb, /*scrollbar thingie*/
 	.usermetas *::-webkit-scrollbar-thumb{ /*scrollbar thingie*/
 		background: #8e8e8e!important;
 		border-radius: 5px!important;
 	}
 
+	.allmetas *::-webkit-scrollbar,
 	.usermetas *::-webkit-scrollbar{
 		width: 7px!important;
 		height: 7px!important;
@@ -3596,6 +3765,7 @@ window.getHeroColor = function(Hero){
 
 	/*custom settingssssssss*/
 
+	.allmetas,
 	.customCommands,
 	.customSettings{
 		position: absolute;
@@ -3613,19 +3783,34 @@ window.getHeroColor = function(Hero){
 		z-index: 1000;
 	}
 
-	.customSettings > button{
-		width: 150px;
+	.customSettings > .lay{
+		width: 100%;
 		height: 30px;
 		display: inline-block;
 		margin-top: 10px;
 		margin-bottom: 10px;
 		border-radius: 10px;
+	}
+
+	.customSettings > .lay > button{
+		width: 150px;
+		height: 30px;
+		display: inline-block;
+		border-radius: 10px;
 		background: #bbb;
 		border: solid 2px #3e3e3e;
 		color: #000;
 		font-weight: bold;
+		margin-left: 75px;
 	}
 
+	.customSettings > .lay > select{
+		float: right;
+		width: 60px;
+		margin-right: 10px;
+		height: 29px;
+	}
+	.allmetas > .lay.header,
 	.customCommands > .lay{
 		font-size: 16px;
 		margin-top: 10px;
@@ -3639,10 +3824,13 @@ window.getHeroColor = function(Hero){
 		display: inline-block;
 	}
 
+	.allmetas > .lay.header,
 	.customCommands > .lay.header{
 		background: none;
 		font-size: 20px;
 	}
+
+	.allmetas > .lay.header > button,
 	.customCommands > .lay.header > button{
 		height: 20px;
 		width: 25px;
@@ -3700,6 +3888,53 @@ window.getHeroColor = function(Hero){
 		font-weight: bold;
 	}
 
+	.allmetas{
+		border: solid 1px #000;
+	}
+
+	.allmetas > .lay{
+		display: inline-grid;
+		justify-items: center;
+		width: 100%;
+		grid-auto-flow: column;
+		margin-top: 10px;
+	}
+
+	.allmetas > .lay.header > button{
+		float: right;
+	}
+
+	.allmetas > .container{
+		width: 100%;
+		margin-top: 10px;
+		max-height: 320px;
+		overflow-y: auto;
+	}
+
+	.allmetas > .container > div{
+		width: 100%;
+		height: 30px;
+		color: white;
+		text-align: center;
+		line-height: 27px;
+		background-color:#111;
+		position: relative;
+	}
+	.allmetas > .container > div:nth-child(2n){
+		background-color:#222;
+	}
+
+	.trangleshape{
+		position: absolute;
+		background-color: transparent;
+		width: 0;
+		border-top: 11px inset transparent;
+		border-left: 15px solid #0f0;
+		border-bottom: 11px solid transparent;
+		border-radius: 100px;
+		left: 5px;
+    	top: 4px;
+	}
 	`;
 	window.client.recalcUserMetas();
 	styles.innerHTML = newihtml;
@@ -3711,7 +3946,7 @@ window.getHeroColor = function(Hero){
 			if(document.activeElement?.getAttribute("type") != "checkbox") return;
 		}
 		if(e.code == "KeyR"){
-			window.client.openCustomSettings();
+			globalThis.CANR&&window.client.openCustomSettings();
 			//window.client.openLogger();
 		}else
 		if(e.code == "Escape"){
