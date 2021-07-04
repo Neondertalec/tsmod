@@ -73,6 +73,12 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.59`,
+				news:[
+					`Some bug fixes.`,
+				]
+			},
+			{
 				version:`1.1.58`,
 				news:[
 					`Some bug fixes.`,
@@ -471,10 +477,12 @@ window.vers = {
 }
 document.createElementP = function(name, args = null, fnc=null){
 	const element = document.createElement(name)
+	if(["input", "textarea"].includes(name))element.setAttribute("c-lock", "") 
 	if(args != null)Object.assign(element,args);
 	if(fnc) fnc(element);
 	return element;
 }
+
 window.vers.filllogp();
 
 new MutationObserver(function (m){
@@ -571,7 +579,7 @@ globalThis.tagDataEX = {};
 globalThis.tags = {
 	tags:{
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
-		'[YT]':['R0YqL', 'Strat', 'Mr.Danik', 'mRDDanik', 'DD1'],
+		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':['Zaxoosh'],
 		'[SCR]':['DepressionOwU'],
 		'[TS]': ['yIzaac😎👌',
@@ -2509,7 +2517,7 @@ globalThis.client = {
 					});
 					
 					popup.appendChild(document.createElementP("div", {className:"lay header"}, (lay)=>{
-						lay.innerHTML += `<label>Frinds & Notes</label>`;
+						lay.innerHTML += `<label>Friends & Notes</label>`;
 						lay.appendChild(document.createElementP("button", {innerHTML:"X"}, (btn)=>{
 							btn.addEventListener("click", ()=>{
 								window.client.openAllUserMetas(true);

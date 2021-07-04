@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.58
+// @version     1.1.59
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -69,7 +69,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.58",
+	v: "1.1.59",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -87,6 +87,12 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.59`,
+				news:[
+					`Some bug fixes.`,
+				]
+			},
 			{
 				version:`1.1.58`,
 				news:[
@@ -486,10 +492,12 @@ window.vers = {
 }
 document.createElementP = function(name, args = null, fnc=null){
 	const element = document.createElement(name)
+	if(["input", "textarea"].includes(name))element.setAttribute("c-lock", "") 
 	if(args != null)Object.assign(element,args);
 	if(fnc) fnc(element);
 	return element;
 }
+
 window.vers.filllogp();
 
 new MutationObserver(function (m){
@@ -586,7 +594,7 @@ globalThis.tagDataEX = {};
 globalThis.tags = {
 	tags:{
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
-		'[YT]':['R0YqL', 'Strat', 'Mr.Danik', 'mRDDanik', 'DD1'],
+		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':['Zaxoosh'],
 		'[SCR]':['DepressionOwU'],
 		'[TS]': ['yIzaac😎👌',
@@ -2524,7 +2532,7 @@ globalThis.client = {
 					});
 					
 					popup.appendChild(document.createElementP("div", {className:"lay header"}, (lay)=>{
-						lay.innerHTML += `<label>Frinds & Notes</label>`;
+						lay.innerHTML += `<label>Friends & Notes</label>`;
 						lay.appendChild(document.createElementP("button", {innerHTML:"X"}, (btn)=>{
 							btn.addEventListener("click", ()=>{
 								window.client.openAllUserMetas(true);
