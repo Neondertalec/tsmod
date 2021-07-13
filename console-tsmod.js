@@ -73,6 +73,12 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.60`,
+				news:[
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `ElFeyer`],
+				]
+			},
+			{
 				version:`1.1.59`,
 				news:[
 					`Some bug fixes.`,
@@ -609,6 +615,7 @@ globalThis.tags = {
 			'Frenzy',
 			'Mel',
 			'Strat',
+			'ElFeyer',
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight','Strat'],
 		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
@@ -625,6 +632,7 @@ globalThis.tags = {
 		"Zero〩": ['akane🦋'],
 		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
 		"DDBus": ['TTTruck'],
+		"ElFeyer": ['Teasah', '[ᴀᴄᴇ] Teasah'],
 	},
 	tagsData:{
 		'[custom]':{

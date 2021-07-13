@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.59
+// @version     1.1.60
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -69,7 +69,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.59",
+	v: "1.1.60",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -87,6 +87,12 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.60`,
+				news:[
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `ElFeyer`],
+				]
+			},
 			{
 				version:`1.1.59`,
 				news:[
@@ -624,6 +630,7 @@ globalThis.tags = {
 			'Frenzy',
 			'Mel',
 			'Strat',
+			'ElFeyer',
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight','Strat'],
 		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
@@ -640,6 +647,7 @@ globalThis.tags = {
 		"Zero〩": ['akane🦋'],
 		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
 		"DDBus": ['TTTruck'],
+		"ElFeyer": ['Teasah', '[ᴀᴄᴇ] Teasah'],
 	},
 	tagsData:{
 		'[custom]':{
