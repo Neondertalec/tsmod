@@ -36,7 +36,7 @@ window.customTags = [
 		names: ["R0YqL"],
 		color: "#009b77",
 		text: "[Roy]",
-		rainbow: false,
+		rainbow: true,
 	},
 	{
 		names: ["Pasemrus"],
@@ -48,6 +48,12 @@ window.customTags = [
 		names: ["thiccsucc"],
 		color: "#9D2005",
 		text: "[THICC]",
+		rainbow: false,
+	},
+	{
+		names: ["L0YqL"],
+		color: "#ff8700",
+		text: "[Capri-Sun]",
 		rainbow: false,
 	},
 ]
@@ -62,7 +68,7 @@ window.vers = {
 		example: `#f99261`,
 		cmd: `#aaa`,
 		scriptmsg: `#ffceb7`,
-		scripter: `#009eff`,
+		scripter: `#ff00bc`,
 	},
 
 	toVers:function(v){
@@ -72,6 +78,21 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.61`,
+				news:[
+					`In the Export/Import logs window when you click on the name a user card will appear instead of simpe logs.`,
+					[
+						`Eighth custom tags:`,
+						`${`[Capri-Sun]`.fontcolor("#ff8700")} L0YqL`,
+					],
+					[
+						`Recolored custom tags:`,
+						`<font class="rainbowText">[Roy]</font> R0YqL<br>`,
+						`${`[SCR]`.fontcolor(this.cl.scripter)} DepressionOwU`
+					]
+				],
+			},
 			{
 				version:`1.1.60`,
 				news:[
@@ -821,18 +842,18 @@ globalThis.tags = {
 		'[SCR]': {
 			priority:9,
 			chat:{
-				color:"#009eff",
+				color:"#ff00bc",
 				text:"[SCR]",
 				rainbow:false,
 			},
 			prefix:{
-				color:"#009eff",
+				color:"#ff00bc",
 				text:"[TS&Scripter]",
 			},
 			badge:{
-				bg:"#31b1ff",
-				border:"#0080ff",
-				textcolor:"#002a69",
+				bg:"#ff00bc",
+				border:"#ab007e",
+				textcolor:"#52003d",
 				text:"[SCR]",
 				rainbow:false,
 			},
@@ -967,6 +988,7 @@ globalThis.client = {
 		speed:null,
 		xp:null,
 		hero:null,
+		logsstor:null,
 	},
 
 	areaData:{
@@ -1342,7 +1364,7 @@ globalThis.client = {
 
 	genResult:function(name){
 		let format = window.client.format;//"{name} ;; {map} {area} ;; {time} ;; (0/2)";
-		let res, u = window.client.userlog[name];
+		let res, u = window.client.elem.logsstor[name];
 		if(u){
 			const list = [...u.travel, ...u.deaths].sort((a1,a2)=>{return a1[0]-a2[0]}),
 			time = window.client.getTimeDiff(name, u.logids[0], u.logids[1]),
@@ -1490,6 +1512,133 @@ globalThis.client = {
 				display:none!important;
 			}
 			`
+		}
+	},
+
+	openUcard: function(namee, pos, logs){
+		if(window.client.textCommandConsts.showUcard){
+			let HeroT, Hero, Level, Name, targetName;
+			window.z = targetName = namee;
+			if (client.state) {
+				for (let i in client.state.globalEntities) {
+					const element = client.state.globalEntities[i];
+	
+					//targetName = getAttrInParents(event.target,"ariaLabel");
+					
+					if (element.name == targetName) {
+						//window.z = element.name;
+						HeroT = element.heroType;
+						Hero = window.id2name(HeroT);
+						Level = element.level;
+						Name = element.name;
+						break;
+					}
+				}
+			} else {
+				Hero = "undefined"
+				Name = "undefined"
+			}
+	
+			client.count = 1;
+	
+			const name = targetName;
+	
+			let o = null;
+			if(client.state)for(var i in client.state.entities){
+				let obj = client.state.entities[i]
+				if(obj.name == window.z){
+					o = obj;//experience
+					break;
+				}
+			}
+			window.client.elem.logsstor = logs;
+			window.client.hideLogs();
+			window.removeFakes();
+			const elem = document.createElement("div");
+			elem.className = "chat-message-contextmenu fake";
+			elem.style = `top: ${pos[1]}px; right: ${pos[0]+"px"}; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
+			elem.id = "elem-"+name
+			elem.setAttribute("realname", name);
+			elem.innerHTML =
+			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
+			`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${pos[1]}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
+			`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
+			`<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>`+
+			`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
+			`<button id="close"class="bbtn"onClick="window.client.hideLogs();this.parentNode.remove()"title="Close the popup.">X</button>`+
+			`<div id="name"class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
+			`<ul style="display: table-cell;">`+
+				`<li style="display: table-cell;">`+
+					`<a href="/profile/${name}" target="_blank">Profile</a>`+
+					`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
+					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount ? o.winCount : logs[name].vp)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (logs[name].vp !== undefined ? logs[name].vp : "###") }</b></p>`+
+					`<p id="c1">Level: ${Level || -1}</p>`+
+					`<p id="c2">Speed: ${-1}</p>`+
+					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
+					`<div id="timecounter">`+
+					`<input c-lock id="tc-from" type="number" value="${window.client.getUserLogIds(name)[0]}" title="Users log id to start time counting from.">`+
+					`<input c-lock id="tc-to" type="number" value="${window.client.getUserLogIds(name)[1]}"title="End time users log id.">`+
+					`<p id="tc-result"></p>`+
+					`</div>`+
+				`</li>`+
+			`</ul>`;
+			if(document.getElementById('chat'))document.getElementById('chat').parentNode.parentNode.append(elem);
+			else document.body.append(elem)
+			window.client.elem.level = elem.querySelector("ul>li>p#c1");
+			window.client.elem.speed = elem.querySelector("ul>li>p#c2");
+			window.client.elem.xp = elem.querySelector("ul>li>p#c3");
+			window.client.elem.hero = elem.querySelector("ul>li>p>b#c4");
+			//window.client.refreshHeroOnUcard(name, ct2[0]);
+			window.r = elem;
+			elem.onClick = function(e) {
+				return e.stopPropagation()
+			}
+			window.makeDragable(elem, [elem]);
+	
+			window.client.elem.hero.addEventListener("click", ()=>{
+				window.client.toggleHeroList();
+			});
+	
+			const removcl = (el)=>{
+				el.addEventListener("click", (e)=>{
+					e.stopPropagation();
+				});
+				el.addEventListener("mousedown", (e)=>{
+					e.stopPropagation();
+				});
+			}
+			
+			removcl(window.client.elem.hero);
+			let btns = elem.querySelectorAll("button");
+			btns.forEach((btn)=>{
+				removcl(btn);
+			});
+	
+			const nameEmem = elem.querySelector("#name")
+			nameEmem.addEventListener("mousedown", (e)=>{e.stopPropagation();});
+			
+			nameEmem.addEventListener("click", (e)=>{
+				window.client.openUserMetas(getAttrInParents(e.target, "realname"));
+				e.stopPropagation();
+			});
+			
+			
+			const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
+			const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
+			const el3 = elem.querySelector("ul>li>#timecounter>#tc-result");
+	
+			const f = ()=>{
+	
+				if(el3){
+					window.client.getTimeDiff(name, el1.value, el2.value, el3);
+				}
+			}
+	
+			el1.addEventListener("input", f);
+			el2.addEventListener("input", f);
+			f();
+	
+			return false;
 		}
 	},
 
@@ -1870,7 +2019,7 @@ globalThis.client = {
 	timeDiffRes:[0, null],
 
 	getTimeDiff:function(name = "", t1 = 0, t2 = 0, res = null, customData = null){
-		const u = customData ? null : window.client.userlog[name];
+		const u = customData ? null : window.client.elem.logsstor[name];
 		if(u || customData){
 			if(!customData) u.logids = [t1,t2];
 			let list = customData ? customData : [...u.travel, ...u.deaths];
@@ -1946,7 +2095,7 @@ globalThis.client = {
 	},
 
 	getDeaths: function(name = ""){
-		const u = window.client.userlog[name];
+		const u = window.client.elem.logsstor[name];
 		if(u){
 			return u.totalDeaths;
 		}else{
@@ -2065,7 +2214,7 @@ globalThis.client = {
 	},
 
 	getUserLogIds:function(name){
-		const u = window.client.userlog[name];
+		const u = window.client.elem.logsstor[name];
 		if(u){
 			return u.logids;
 		}
@@ -2073,7 +2222,7 @@ globalThis.client = {
 	},
 
 	getUserHero:function(name, time){
-		const u = window.client.userlog[name];
+		const u = window.client.elem.logsstor[name];
 		if(u){
 			for(let i = u.heroes.length-1; i >= 0; i--){
 				let hd = u.heroes[i];
@@ -2234,7 +2383,7 @@ globalThis.client = {
 
 		if(window.client.elem.level != null){
 			try{
-				window.client.elem.level.innerText = `Level: ${window.client.opos[0].level} | Deaths: ${window.client.getDeaths(window.z)}`;
+				window.client.elem.level.innerText = `Level: ${window.client.opos[0].level || -1} | Deaths: ${window.client.getDeaths(window.z)}`;
 			}catch{
 				window.client.elem.level = null;
 			}
@@ -2247,8 +2396,8 @@ globalThis.client = {
 					window.client.opos[1] = {...window.client.opos[0]};
 				}
 
-				var dx = window.client.opos[0].x - window.client.opos[1].x;
-				var dy = window.client.opos[0].y - window.client.opos[1].y;
+				var dx = (window.client.opos[0].x || 0) - (window.client.opos[1].x || 0);
+				var dy = (window.client.opos[0].y || 0) - (window.client.opos[1].y || 0);
 				let diff1 = Math.abs(dx);
 				let diff2 = Math.abs(dy);
 
@@ -2376,7 +2525,7 @@ globalThis.client = {
 							p2.remove();
 						}
 
-						const o = window.client.showLog(keys[i], 100, false, false);
+						const o = window.client.openUcard(keys[i], [window.innerWidth/2 -100,window.innerHeight/2 -150], who == 1 ? window.client.userlog : window.client.userlog2)//window.client.showLog(keys[i], 100, false, false);
 						if(o && o[0]){
 							o[0].style.top = "50%";
 							o[0].style.right = "50%";
@@ -4012,126 +4161,7 @@ window.updateLeaderboard = () => {
 	
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
-			if(window.client.textCommandConsts.showUcard){
-				let HeroT, Hero, Level, Name, targetName;
-				if (client.state) {
-					for (let i in client.state.globalEntities) {
-						const element = client.state.globalEntities[i];
-
-						targetName = getAttrInParents(event.target,"ariaLabel");
-						
-						if (element.name == targetName) {
-							window.z = element.name;
-							HeroT = element.heroType;
-							Hero = window.id2name(HeroT);
-							Level = element.level;
-							Name = element.name;
-						}
-					}
-				} else {
-					Hero = "undefined"
-					Name = "undefined"
-				}
-
-				client.count = 1;
-
-				const name = targetName;
-
-				let o = null;
-				for(var i in client.state.entities){
-					let obj = client.state.entities[i]
-					if(obj.name == window.z){
-						o = obj;//experience
-						break;
-					}
-				}
-				window.client.hideLogs();
-				window.removeFakes();
-				const elem = document.createElement("div");
-				elem.className = "chat-message-contextmenu fake";
-				elem.style = `top: ${event.y}px; right: 20px; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
-				elem.id = "elem-"+name
-				elem.setAttribute("realname", name);
-				elem.innerHTML =
-				`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
-				`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${event.y}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
-				`<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>`+
-				`<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>`+
-				`<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>`+
-				`<button id="close"class="bbtn"onClick="window.client.hideLogs();this.parentNode.remove()"title="Close the popup.">X</button>`+
-				`<div id="name"class="chat-message-contextmenu-header" style="text-align:center;margin-top: 30px;">${name}</div>`+
-				`<ul style="display: table-cell;">`+
-					`<li style="display: table-cell;">`+
-						`<a href="/profile/${name}" target="_blank">Profile</a>`+
-						`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
-						`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount ? o.winCount : window.client.userlog[name].vp)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (window.client.userlog[name].vp !== undefined ? window.client.userlog[name].vp : "###") }</b></p>`+
-						`<p id="c1">Level: ${Level}</p>`+
-						`<p id="c2">ss: ${0}</p>`+
-						`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
-						`<div id="timecounter">`+
-						`<input c-lock id="tc-from" type="number" value="${window.client.getUserLogIds(name)[0]}" title="Users log id to start time counting from.">`+
-						`<input c-lock id="tc-to" type="number" value="${window.client.getUserLogIds(name)[1]}"title="End time users log id.">`+
-						`<p id="tc-result"></p>`+
-						`</div>`+
-					`</li>`+
-				`</ul>`;
-				document.getElementById('chat').parentNode.parentNode.append(elem);
-				window.client.elem.level = elem.querySelector("ul>li>p#c1");
-				window.client.elem.speed = elem.querySelector("ul>li>p#c2");
-				window.client.elem.xp = elem.querySelector("ul>li>p#c3");
-				window.client.elem.hero = elem.querySelector("ul>li>p>b#c4");
-				//window.client.refreshHeroOnUcard(name, ct2[0]);
-				window.r = elem;
-				elem.onClick = function(e) {
-					return e.stopPropagation()
-				}
-				window.makeDragable(elem, [elem]);
-
-				window.client.elem.hero.addEventListener("click", ()=>{
-					window.client.toggleHeroList();
-				});
-
-				const removcl = (el)=>{
-					el.addEventListener("click", (e)=>{
-						e.stopPropagation();
-					});
-					el.addEventListener("mousedown", (e)=>{
-						e.stopPropagation();
-					});
-				}
-				
-				removcl(window.client.elem.hero);
-				let btns = elem.querySelectorAll("button");
-				btns.forEach((btn)=>{
-					removcl(btn);
-				});
-
-				const nameEmem = elem.querySelector("#name")
-				nameEmem.addEventListener("mousedown", (e)=>{e.stopPropagation();});
-				
-				nameEmem.addEventListener("click", (e)=>{
-					window.client.openUserMetas(getAttrInParents(e.target, "realname"));
-					e.stopPropagation();
-				});
-				
-				
-				const el1 = elem.querySelector("ul>li>#timecounter>#tc-from");
-				const el2 = elem.querySelector("ul>li>#timecounter>#tc-to");
-				const el3 = elem.querySelector("ul>li>#timecounter>#tc-result");
-
-				const f = ()=>{
-
-					if(el3){
-						window.client.getTimeDiff(name, el1.value, el2.value, el3);
-					}
-				}
-
-				el1.addEventListener("input", f);
-				el2.addEventListener("input", f);
-				f();
-
-				return false;
-			}
+			window.client.openUcard(getAttrInParents(event.target,"ariaLabel"), [20,event.y], window.client.userlog);
 		};
 		names.style.cursor = "pointer";
 	}
