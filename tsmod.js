@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.61
+// @version     1.1.62
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -71,11 +71,23 @@ window.customTags = [
 		text: "[Capri-Sun]",
 		rainbow: false,
 	},
+	{
+		names: ["AWEN"],
+		color: "#12e612",
+		text: "[10$]",
+		rainbow: false,
+	},
+	{
+		names: ["NoAwen"],
+		color: "#12e612",
+		text: "[REALLY]",
+		rainbow: false,
+	},
 ]
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.61",
+	v: "1.1.62",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -93,6 +105,16 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.62`,
+				news:[
+					[
+						`Ninth custom tag:`,
+						`${`[10$]`.fontcolor("#12e612")} AWEN`,
+						`${`[REALLY]`.fontcolor("#12e612")} NoAwen`,
+					]
+				],
+			},
 			{
 				version:`1.1.61`,
 				news:[

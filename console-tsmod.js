@@ -56,6 +56,18 @@ window.customTags = [
 		text: "[Capri-Sun]",
 		rainbow: false,
 	},
+	{
+		names: ["AWEN"],
+		color: "#12e612",
+		text: "[10$]",
+		rainbow: false,
+	},
+	{
+		names: ["NoAwen"],
+		color: "#12e612",
+		text: "[REALLY]",
+		rainbow: false,
+	},
 ]
 
 window.vers = {
@@ -78,6 +90,16 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.62`,
+				news:[
+					[
+						`Ninth custom tag:`,
+						`${`[10$]`.fontcolor("#12e612")} AWEN`,
+						`${`[REALLY]`.fontcolor("#12e612")} NoAwen`,
+					]
+				],
+			},
 			{
 				version:`1.1.61`,
 				news:[
