@@ -91,6 +91,15 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.63`,
+				news:[
+					`For mods:<br>The mute command has more abilities now. The example of usage:<br><b>/mute <name> 1d 1s</b> - mutes for 1 day and 1 second<br>`+
+					`available duration letters: <b>s, m, h, d, w,</b> (russian keys<b>, с, м, ч, д, н</b>).<br>`+
+					`Note: you can use multiple same arguments e.g. <b>1s 1s 1h</b> will be the same as <b>2s 1h</b>.<br>`+
+					`${`<i>It works only if the player is currently in the server.</i>`.fontcolor(this.cl.cmd)}`,
+				],
+			},
+			{
 				version:`1.1.62`,
 				news:[
 					[
@@ -1823,6 +1832,83 @@ globalThis.client = {
 			return false;
 		}
 		return true;
+	},
+
+	checkMsgSend: function(value){
+		if(!value) return value;
+
+		let valueS = value.split(" ");
+		if(valueS[0] == "/mute" || valueS[0] == "/ipmute"){
+			let pref = valueS.splice(0, 1);
+			let tempval = valueS.join(" ");
+			let similarNames = [], theName = "";
+			for(let i in client.state.globalEntities){
+				if(tempval.startsWith(client.state.globalEntities[i].name + " ")){
+					similarNames.push(client.state.globalEntities[i].name);
+				}
+			}
+			if(similarNames.length == 0) return value;
+			if(similarNames.length == 1){
+				theName = similarNames[0];
+			}else{
+				theName = similarNames.sort((a,b)=>b.length - a.length)[0];
+			}
+
+			let times = tempval.substring(theName.length).split(" ");
+
+			let resTime = 0;
+			let passed = false;
+			for(let timeD of times){
+				let data = [+(timeD.substring(0,timeD.length-1)), timeD[timeD.length-1]];
+				
+				if(isNaN(data[0]))continue;
+				switch(data[1]){
+					case "с":
+					case "s":
+						resTime += data[0];
+						passed = true;
+						break;
+					case "м":
+					case "m":
+						resTime += data[0] * 60;
+						passed = true;
+						break;
+					case "ч":
+					case "h":
+						resTime += data[0] * 60 * 60;
+						passed = true;
+						break;
+					case "д":
+					case "d":
+						resTime += data[0] * 60 * 60 * 24;
+						passed = true;
+						break;
+					case "н":
+					case "w":
+						resTime += data[0] * 60 * 60 * 24 * 7;
+						passed = true;
+						break;
+				}
+			}
+			if(!passed) return value;
+			let end = "s";
+			resTime = Math.round(resTime);
+			if((resTime % 60) == 0 && resTime/60 != 0){
+				resTime /= 60;
+				end = "m";
+			}
+			if((resTime % 60) == 0 && resTime/60 != 0){
+				resTime /= 60;
+				end = "h";
+			}
+			if((resTime % 24) == 0 && resTime/24 != 0){
+				resTime /= 24;
+				end = "d";
+			}
+			return `${pref} ${theName} ${resTime}${end}`
+		}
+
+		return value;
 	},
 
 	sendSystemMessage: function(message = ""){
@@ -4362,7 +4448,7 @@ window.lastPrefix = {
 				tmp = tmp.replace('(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0)',
 				'((this.gameState.heroInfoCard.hidden && ((u.width == 48 && u.height == 48) || (u.width == 14 && u.height == 14) || (u.width == 82 && u.height == 40)))?false:(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0))')
 
-				tmp = tmp.replace('message:t,', 'message: window.client.checkMsg(t) ? t : void 0,');
+				tmp = tmp.replace('message:t,', 'message: window.client.checkMsg(t) ? (window.client.checkMsgSend(t)) : void 0,');
 				//tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
 				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
