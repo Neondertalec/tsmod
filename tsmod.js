@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.63
+// @version     1.1.64
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -87,7 +87,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.63",
+	v: "1.1.64",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -105,6 +105,14 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.64`,
+				news:[
+					`Added a new permanent badge for the people who won in the olympics:`+
+					`<br><br><image src="https://cdn.discordapp.com/attachments/617049086452957189/869889869827178516/olympics.png"></image>`,
+					`The ${window.vers.toVers("1.1.63")} update now works with the ban commands too.`
+				],
+			},
 			{
 				version:`1.1.63`,
 				news:[
@@ -651,6 +659,7 @@ globalThis.tagDataEX = {};
 
 globalThis.tags = {
 	tags:{
+		'[oly1]':['Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
 		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':['Zaxoosh'],
@@ -714,13 +723,25 @@ globalThis.tags = {
 			},
 		},
 		'[TW]':{
-			priority:99,
+			priority:50,
 			noOlnTag: true,
 			badge:{
 				bg:"#ffa390",
 				border:"#bd7869",
 				textcolor:"#7d493f",
 				text:"[TW]",
+				rainbow:false,
+			},
+		},
+		'[oly1]':{
+			priority:60,
+			noOlnTag: true,
+			badge:{
+				bg:"#cedf48",
+				border:"#8e9a31",
+				textcolor:"#484e1f",
+				text:"[Olympic]",
+				subText:"[1st season]",
 				rainbow:false,
 			},
 		},
@@ -1853,7 +1874,7 @@ globalThis.client = {
 		if(!value) return value;
 
 		let valueS = value.split(" ");
-		if(valueS[0] == "/mute" || valueS[0] == "/ipmute"){
+		if(["/mute", "/ipmute", "/ban", "/ipban"].includes(valueS[0])){
 			let pref = valueS.splice(0, 1);
 			let tempval = valueS.join(" ");
 			let similarNames = [], theName = "";
@@ -2108,6 +2129,9 @@ globalThis.client = {
 						})
 						e.appendChild(badge);
 					}
+				}
+				if(e.childElementCount > 6){
+					e.className = "badgeslay small";
 				}
 			});
 			popup.appendChild(badgesLay);
@@ -3876,6 +3900,18 @@ window.addEventListener('DOMContentLoaded', e=>{
 						animation-timing-function: linear;`:``
 						}
 					}`
+					if(tagData.badge.subText){
+						newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]::after{
+							content:"${tagData.badge.subText}";
+							color: ${tagData.badge.textcolor};
+							${tagData.badge.rainbow?`
+							animation-name: rainbowBadgeSubTextkf;
+							animation-duration: 10s;
+							animation-iteration-count: infinite;
+							animation-timing-function: linear;`:``
+							}
+						}`
+					}
 				}
 			}
 		}
@@ -3900,6 +3936,15 @@ window.addEventListener('DOMContentLoaded', e=>{
 		}
 	}
 	newihtml +=`
+	.usermetas > .badgeslay > .badge::after{
+		position: absolute;
+		top: 13px;
+		font-size: 8px;
+		text-align: center;
+		width: 100%;
+		left: 0px;
+	}
+
 	#chat-window span[arialabel^="Guest"]::before{
 		content: "[guest]";
 		margin-right: 4px;
@@ -3921,6 +3966,13 @@ window.addEventListener('DOMContentLoaded', e=>{
 		50%   {color: hsl(180, 100%, 13%); border-color: hsl(180, 100%, 33%); background-color: hsl(180, 100%, 50%);}
 		75%   {color: hsl(270, 100%, 13%); border-color: hsl(270, 100%, 33%); background-color: hsl(270, 100%, 50%);}
 		100%  {color: hsl(360, 100%, 13%); border-color: hsl(360, 100%, 33%); background-color: hsl(360, 100%, 50%);}
+	}
+	@keyframes rainbowBadgeSubTextkf {
+		0%    {color: hsl(0, 100%, 13%);}
+		25%   {color: hsl(90, 100%, 13%);}
+		50%   {color: hsl(180, 100%, 13%);}
+		75%   {color: hsl(270, 100%, 13%);}
+		100%  {color: hsl(360, 100%, 13%);}
 	}
 	
 	.rainbowText {
@@ -4024,9 +4076,11 @@ window.addEventListener('DOMContentLoaded', e=>{
 	.usermetas > .badgeslay{
 		width: 300px;
 		height: 135px;
+		overflow-y: auto;
 	}
 
 	.usermetas > .badgeslay > .badge{
+		position: relative;	
 		float: left;
 		font-size: 13px;
 		font-weight: bold;
@@ -4038,6 +4092,11 @@ window.addEventListener('DOMContentLoaded', e=>{
 		text-align: center;
 		border: solid 4px #000;
 		border-radius: 12px;
+	}
+
+	.usermetas > .badgeslay.small > .badge{
+		margin-bottom: 0;
+		margin-right: 0;
 	}
 
 	.allmetas *::-webkit-scrollbar-thumb, /*scrollbar thingie*/
