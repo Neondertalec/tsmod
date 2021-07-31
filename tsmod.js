@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.64
+// @version     1.1.65
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -87,7 +87,7 @@ window.customTags = [
 
 window.vers = {
 	chlogMut: null,
-	v: "1.1.64",
+	v: "1.1.65",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -105,6 +105,13 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.65`,
+				news:[
+					`Removed ${`TS`.fontcolor(this.cl.ts)} from Creazy`,
+					[`Added new ${`TS`.fontcolor(this.cl.ts)}:`, `TimiT`, `Ventinari`]
+				],
+			},
 			{
 				version:`1.1.64`,
 				news:[
@@ -665,7 +672,7 @@ globalThis.tags = {
 		'[ST]':['Zaxoosh'],
 		'[SCR]':['DepressionOwU'],
 		'[TS]': ['yIzaac😎👌',
-			'Creazy',
+			//'Creazy',
 			'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
@@ -692,8 +699,10 @@ globalThis.tags = {
 			'Mel',
 			'Strat',
 			'ElFeyer',
+			'TimiT',
+			'Ventinari',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight','Strat'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'CrEoP', 'Strat'],
 		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 		'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
@@ -701,7 +710,7 @@ globalThis.tags = {
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
 	},
 	alts:{
-		"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
+		//"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
 		//"Exscord": [',DSG,', 'Дракончик)))'],
 		"piger": ['noPiger'],
 		"DEFA": ['ZaLo', 'notdefa'],
@@ -709,6 +718,7 @@ globalThis.tags = {
 		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
 		"DDBus": ['TTTruck'],
 		"ElFeyer": ['Teasah', '[ᴀᴄᴇ] Teasah'],
+		"Ventinari":['maxdebekker', 'Crystal✓','Cjayy','Walkers']
 	},
 	tagsData:{
 		'[custom]':{
