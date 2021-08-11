@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.66
+// @version     1.1.67
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -24,70 +24,97 @@ console.groupCollapsed("what happened between loading")
 console.log("...")
 window.customTags = [
 	{
+		names: ["DepressionOwU"],
+		color: "#ff00bc",
+		text: "[SCR]",
+		rainbow: false,
+		prior:1,
+		lock:false,
+	},
+	{
 		names: ["Gianni"],
 		color: "#009b77",
 		text: "[evader]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["Invi"],
 		color: "#51dddd",
 		text: "[Invi]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["LightY"],
 		color: "#f19dba",
 		text: "[litijo]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["Jayyyyyyyyyyyyyy", "GuеstZunolo"/*thats me, not jay lol*/],
 		color: "#f00",
 		text: "[Dep's BFF]",
 		rainbow: true,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["R0YqL"],
 		color: "#009b77",
 		text: "[Roy]",
 		rainbow: true,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["Pasemrus"],
 		color: "#51dddd",
 		text: "[Air]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["thiccsucc"],
 		color: "#9D2005",
 		text: "[THICC]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["L0YqL"],
 		color: "#ff8700",
 		text: "[Capri-Sun]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["AWEN"],
 		color: "#12e612",
 		text: "[10$]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 	{
 		names: ["NoAwen"],
 		color: "#12e612",
 		text: "[REALLY]",
 		rainbow: false,
+		prior:1,
+		lock:false,
 	},
 ]
 
 window.vers = {
-	chlogMut: null,
-	v: "1.1.66",
+	v: "1.1.67",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -105,6 +132,21 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.67`,
+				news:[
+					[
+						`Tags are now done in a different way. Now there is an ability to have multiple tags.<br>`+
+						`Some tags now:`,
+						`${`[TS]`.fontcolor(this.cl.ts)} <font class="rainbowText">[Roy]</font> R0YqL`,
+						`${`[TO]`.fontcolor(this.cl.to)} ${`[SCR]`.fontcolor(this.cl.scripter)} DepressionOwU`,
+						`${`[TO]`.fontcolor(this.cl.to)} <font class="rainbowText">[Dep's BFF]</font> Jayyyyyyyyyyyyyy`,
+						`[BREAK POINT]`,
+						`${`<i>For people with custom tag scripts: The old tags are still supported.</i>`.fontcolor(this.cl.cmd)}`,
+					],
+					`The change logs are now a one-piece thing, editing the css wont make other stuff go off if you do it correctly.`
+				],
+			},
 			{
 				version:`1.1.66`,
 				news:[
@@ -570,6 +612,34 @@ window.vers = {
 		
 		return newData;
 	},
+
+	chlog:[null,null],
+	swi: function(who){
+		this.chlog[0] = this.chlog[0] || document.querySelector(".changelog")
+		this.chlog[1] = this.chlog[1] || document.querySelector(".ts-changelog")
+		
+		if(this.chlog[1].innerHTML == ""){
+			this.chlog[1].innerHTML = `<div class="changelog-header">Changelog</div>`;
+			const arr = window.vers.changeLog;
+			for(let i = 0; i < arr.length; i++){
+				this.chlog[1].innerHTML += window.vers.genLog(arr[i].version, arr[i].news);
+			}
+		}
+
+		if(!this.chlog[0])return void (console.warn(".changelog not found"));
+		if(!this.chlog[1])return void (console.warn(".ts-changelog not found"));
+		
+		let l = ["ev", "ts"]
+		this.chlog.forEach((e,i)=>{
+			if(who != l[i]){
+				e.classList.contains("hidden")||
+				e.classList.add("hidden")
+			}else{
+				e.classList.contains("hidden")&&
+				e.classList.remove("hidden")
+			}
+		});
+	}
 	/*color: function(text, color){
 		return `<aa style="${color}">${text}</aa>`;
 	}*/
@@ -584,6 +654,26 @@ document.createElementP = function(name, args = null, fnc=null){
 
 window.vers.filllogp();
 
+globalThis.CacheTs = class CacheTs{
+	_data = {};
+	
+	setVal(key, val){
+		return this._data[key] = val;
+	}
+
+	getVal(key, def = undefined){
+		return this._data[key] ?? def;
+	}
+
+	delVal(key){
+		if(key in this._data) delete this._data[key];
+	}
+
+	hasVal(key){
+		return key in this._data;
+	}
+}
+
 new MutationObserver(function (m){
 	if(document.querySelector(".leaderboard-line.Central-Core-Dull")){
 		window.updateLeaderboard();
@@ -591,91 +681,16 @@ new MutationObserver(function (m){
 	}
 }).observe(document, {childList: true, subtree: true});
 
-window.vers.chlogMut = new MutationObserver(function (m) {
-	const chlog = document.querySelector('.changelog');
-	
-	
-	if (chlog && !document.getElementById("tsm-chlog")) {
-		const newEl = document.createElement("div");
-		newEl.id = "tsm-chlog";
-		chlog.parentNode.appendChild(newEl);
-		
-		const btn1 = document.createElement("button");
-		const btn2 = document.createElement("button");
-
-		btn1.innerText = "Evades.io"; btn2.innerText = "TS Mod";
-		btn1.style.height = btn2.style.height = "24px";
-		btn1.style.width = btn2.style.width = "50%";
-
-		btn1.style.backgroundColor = btn2.style.backgroundColor = "antiquewhite";
-		btn1.style.border = btn2.style.border = "solid 2px #000";
-		btn1.style.borderRadius = btn2.style.borderRadius = "6px";
-		
-		btn1.addEventListener("click", (e)=>{
-			newEl.classList.contains("sellected")&&
-			newEl.classList.remove("sellected")
-		});
-		btn2.addEventListener("click", (e)=>{
-			newEl.classList.contains("sellected")||
-			newEl.classList.add("sellected")
-		});
-
-		newEl.appendChild(btn1);
-		newEl.appendChild(btn2);
-		
-		const alog = document.createElement("div");
-		alog.style.width = "300px";
-		alog.style.height = "250px";
-		alog.style.overflow = "auto";
-
-		alog.innerHTML = `<div class="changelog-header">Changelog</div>`;
-		const arr = window.vers.changeLog;
-		for(let i = 0; i < arr.length; i++){
-			alog.innerHTML += window.vers.genLog(arr[i].version, arr[i].news);
-		}
-		newEl.appendChild(alog);
-		//newEl.appendChild(chlog);
-		
-		newEl.style.float = "left";
-		newEl.style.width = "300px";
-		newEl.style.height = "24px";//"274px";
-		newEl.style.position = "absolute";
-		newEl.style.left = "50%";
-		newEl.style.transform = "translate(-500px, -24px)";
-		newEl.style.border = "1px solid #585858";
-		newEl.style.borderRadius = "5px";
-		newEl.style.color = "#fff";
-		newEl.style.backgroundColor = "#222";
-		
-		newEl.style.overflow = "hidden";
-
-		/*chlog.style.position = "inherit";
-		chlog.style.left = "0";
-		chlog.style.transform = "translate(0,0)";*/
-
-		//chlog.style.backgroundColor = '#db1512';
-		
-		if(newEl.previousElementSibling)
-		newEl.parentNode.insertBefore(newEl, newEl.previousElementSibling);
-		
-		//window.vers.chlogMut.disconnect();
-	}else
-	if(!chlog){
-		if(document.getElementById("tsm-chlog")){
-			document.getElementById("tsm-chlog").remove();
-			window.vers.chlogMut.disconnect();
-		}
-	}
-});
-window.vers.chlogMut.observe(document, {childList: true, subtree: true});
-
-
 window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
 
-globalThis.tagsEX = {};
-globalThis.tagDataEX = {};
+globalThis.tagsEX = globalThis.tagsEX ?? {};
+globalThis.tagDataEX = globalThis.tagsEX ?? {};
+
+globalThis.tagsEX = {...globalThis.tagsEX,...{'[SCR]':['DepressionOwU'],}}
+globalThis.tagDataEX = {...globalThis.tagDataEX,...{'[SCR]': {presudo:"[TO&Scripter]", color:"#ff00bc"},}};
 
 globalThis.tags = {
+	chatTags: new globalThis.CacheTs(),
 	tags:{
 		'[oly1]':['Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
@@ -930,20 +945,23 @@ globalThis.tags = {
 		},
 		'[SCR]': {
 			priority:9,
-			chat:{
-				color:"#ff00bc",
-				text:"[SCR]",
-				rainbow:false,
-			},
-			prefix:{
-				color:"#ff00bc",
-				text:"[TS&Scripter]",
-			},
+			noOlnTag: true,
+			cantH: true,
 			badge:{
 				bg:"#ff00bc",
 				border:"#ab007e",
 				textcolor:"#52003d",
 				text:"[SCR]",
+				rainbow:false,
+			},
+		},
+		'[guest]': {
+			priority:-1,
+			noOlnTag: true,
+			cantH: true,
+			chat:{
+				color:"#91b800",
+				text:"[guest]",
 				rainbow:false,
 			},
 		},
@@ -967,7 +985,7 @@ globalThis.tags = {
 
 	getUserHighestTagByType: function(utags, type){
 		for(let t of utags.reverse()){
-			if(tags.tagsData[t][type]) return t;
+			if(!tags.tagsData[t].cantH && tags.tagsData[t][type]) return t;
 		}
 		return null
 	},
@@ -994,19 +1012,62 @@ globalThis.tags = {
 			}
 		}
 		console.log("finished");
+	},
+
+	init:function(){
+		this.calcOldTags();
+	},
+
+	getChatTag:function(c,e,l,i, name){
+		if(this.chatTags.hasVal(name)){
+			return this.chatTags.getVal(name);
+		}else{
+			let code = `e.default.createElement("span",null`;
+			if(name.startsWith("Guest")){
+				let tagData = window.tags.tagsData["[guest]"];
+				code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow?"rainbowText":""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`
+			}else{
+				if(l) code += `,e.default.createElement("span",{className:i},l," ")`;
+			
+				let customs = [],lock = false;
+			
+				for(let tagdata of window.customTags){
+					for(let tname of tagdata.names){
+						if(tname == name){
+							customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow?"rainbowText":""}", style:{color: "${tagdata.color}"}},"${tagdata.text}"," ")`]);
+							if(tagdata.lock) lock = true;
+							break;
+						}
+					}
+				}
+				customs = customs.sort((v1,v2)=>v1[0].prior - v2[0].prior)
+			
+				if(!lock) tagSearch: for(let tag in window.tags.tagsData){
+					let tagData = window.tags.tagsData[tag];
+					{//chat
+						if(tagData.chat){
+							for(let i in window.tags.oldTags[tag]){
+								if(window.tags.oldTags[tag][i] == name){
+									code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow?"rainbowText":""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`
+									break tagSearch;
+								}
+							}
+						}
+					}
+				}
+				for(let str of customs)code += str[1];
+			}
+			code += `,c)`;
+			return this.chatTags.setVal(name, code);
+		}
 	}
 }
-window.tags.calcOldTags();
+window.tags.init();
 
 globalThis.getLocal = (key, def)=>{
 	let res = localStorage.getItem(key)
 	return res !== null? res : def;
 }
-
-/*
-window.secondsFormat = (time, m=true) =>{
-	return	`${m?(time/60>>0)+"m ":""}`+ `${time%60}s`
-};*/
 
 window.secondsFormat = (time, m=true, t=0) =>{
 	
@@ -2464,8 +2525,8 @@ globalThis.client = {
 				window.client.customLog(i, 6, "travel", false);
 			}
 		}
-		if(newpt.length > 0){
 
+		if(newpt.length > 0){
 			globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
 				players:newpt,
 				count:uc,
@@ -2997,6 +3058,16 @@ globalThis.client = {
 		return false
 	},
 
+	init: function(){
+		globalThis.client.events.addEventListener(globalThis.client.events.events.playerCountChange, (e)=>{
+			if(e.action == "left"){
+				for(let player of e.players){
+					globalThis.tags.chatTags.delVal(player.name);
+				}
+			}
+		})
+	},
+
 	showClasses: getLocal("ts-showClasses", "false") == "true",
 
 	autoMode: false,
@@ -3004,6 +3075,8 @@ globalThis.client = {
 	count: 0,
 	load: false,
 };
+
+globalThis.client.init();
 
 HTMLElement.prototype.removeChild2 = HTMLElement.prototype.removeChild;
 HTMLElement.prototype.removeChild = function(e, e2){
@@ -3216,6 +3289,8 @@ window.addEventListener('DOMContentLoaded', e=>{
 	let styles = document.createElement('style');
 	let newihtml = `
 	body{overflow-x:hidden;}
+	.hidden{display:none;}
+	
 	#version-warning{
 		position: absolute;
 		top: 0;
@@ -3244,26 +3319,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 	#version-warning > .v-nv + div{
 		color: forestgreen;
 	}
-	/*#tsm-chlog*/
-	
-	#tsm-chlog{
-		float: left;
-		width: 300px;
-		height: 24px;
-		position: absolute;
-		left: 50%;
-		transform: translate(-500px, -24px);
-		border: 1px solid rgb(88, 88, 88);
-		border-radius: 5px;
-		color: rgb(255, 255, 255);
-		background-color: rgb(34, 34, 34);
-		overflow: hidden;
-	}
-
-	#tsm-chlog.sellected{
-		height: 274px!important;
-	}
-	
 
 	/*otherrrrrrr*/
 	.settings {
@@ -3863,30 +3918,18 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 	.logger-users > #holder::-webkit-scrollbar-thumb{
 		background: rgb(183 183 183)!important;
-	}`
+	}
+	
+	.rainbowText{
+		animation-name: rainbowTextkf;
+		animation-duration: 20s;
+		animation-iteration-count: infinite;
+	}
+	`
+
 	if(window.tags){
 		for(let tag in window.tags.tagsData){
 			let tagData = window.tags.tagsData[tag];
-			{//chat
-				if(tagData.chat){
-					let newarr = [];
-					for(let i in window.tags.oldTags[tag]){
-						newarr.push('#chat-window span[arialabel="'+ window.tags.oldTags[tag][i] +'"]::before')
-					}
-					newihtml += newarr.join(",");
-					newihtml += `{
-						content: "${tagData.chat.text}";
-						margin-right: 4px;
-						color: ${tagData.chat.color};
-						${tagData.chat.rainbow?
-							`animation-name: rainbowTextkf;
-							animation-duration: 20s;
-							animation-iteration-count: infinite;`:
-							``
-						}
-					}`
-				}
-			}
 			{//lb
 				if(tagData.lb){
 					let newarr = [];
@@ -3938,25 +3981,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 			}
 		}
 	}
-	if(window.customTags){
-		for(let tagdata of window.customTags){
-			let newarr = [];
-			for(let tname of tagdata.names){
-				newarr.push('#chat-window span[arialabel="'+ tname +'"]::before')
-			}
-			newihtml += newarr.join(",") + `{
-				content: "${tagdata.text}"!important;
-				margin-right: 4px;
-				color: ${tagdata.color}${!tagdata.rainbow?`!important`:``};
-				${tagdata.rainbow?
-					`animation-name: rainbowTextkf;
-					animation-duration: 20s;
-					animation-iteration-count: infinite;`:
-					``
-				}
-			}`
-		}
-	}
 	newihtml +=`
 	.usermetas > .badgeslay > .badge::after{
 		position: absolute;
@@ -3966,13 +3990,6 @@ window.addEventListener('DOMContentLoaded', e=>{
 		width: 100%;
 		left: 0px;
 	}
-
-	#chat-window span[arialabel^="Guest"]::before{
-		content: "[guest]";
-		margin-right: 4px;
-		color: #91b800;
-	}
-
 	
 	@keyframes rainbowTextkf {
 		0%   {color: hsl(0, 100%, 50%);}
@@ -4305,6 +4322,46 @@ window.addEventListener('DOMContentLoaded', e=>{
 		left: 5px;
     	top: 4px;
 	}
+
+	/*CHANGELOGS*/
+	#changelogs {
+		float: left;
+		width: 300px;
+		height: 275px;
+		position: relative;
+		left: 50%;
+		transform: translate(-500px);
+		border: 1px solid #585858;
+		border-radius: 5px;
+		color: #fff;
+	}
+
+	#chlbuttons{
+		width: 100%;
+   		height: 24px;
+	}
+
+	#chlbuttons > button{
+		width: 50%;
+   		height: 24px;
+		background: antiquewhite;
+		border: solid 2px #000;
+		border-radius: 6px;
+	}
+
+	.ts-changelog,
+	.changelog {
+		float: left;
+		width: 300px;
+		height: 250px;
+		position: relative;
+		left: 0;
+		transform: translate(0, 0);
+		overflow: auto;
+		border: 1px solid #585858;
+		border-radius: 5px;
+		color: #fff;
+	}
 	`;
 	window.client.recalcUserMetas();
 	styles.innerHTML = newihtml;
@@ -4523,12 +4580,15 @@ new MutationObserver(function(mutations) {
 
 				tmp = tmp.replace('null!==this.gameState&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))', 'null!==this.gameState&& !(document.activeElement.getAttributeNames().includes("c-lock"))&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))');
 
+				
 				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:('+
 				'globalThis.client.events.emit(globalThis.client.events.events.chatMessage, {'+
 					'name:s,'+
 					'content:a,'+
 					'privs:l,'+
 				'}),s)')
+				tmp = tmp.replace('className:"chat-message"', 'className:"chat-message", ariaLabel:s')
+
 
 				tmp = tmp.replace('"leaderboard-name"','"leaderboard-name",ariaLabel:this.props.player.name');
 
@@ -4562,7 +4622,23 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
 
 				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
+				
+				tmp = tmp.replace('null!==l&&(c=e.default.createElement("span",null,e.default.createElement("span",{className:i},l," "),c)',
+				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,s))')
 
+				tmp = tmp.replace(
+					'return e.default.createElement("div",{className:"changelog"',
+					'return e.default.createElement("div",{id:"changelogs"},'+
+					'e.default.createElement("div",{id:"chlbuttons"},'+
+					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ev")}}, "Evades.io"),'+
+					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ts")}}, "TS Mod")'+
+					'),'+
+					'e.default.createElement("div",{className:"ts-changelog hidden"}),'+
+					'e.default.createElement("div",{className:"changelog"'
+				)
+				tmp = tmp.replace('d."))))','d.")))) )')
+				
+				//tmp = tmp.replace('','')
 				// неработающий маркер
 				new MutationObserver(function (mutations) {
 					if (document.getElementsByClassName('quick-play-button')[0]) {
