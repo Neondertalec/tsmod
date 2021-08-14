@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.68
+// @version     1.1.69
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,7 +123,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.68",
+	v: "1.1.69",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -141,6 +141,12 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.69`,
+				news:[
+					`A bugfix :/`
+				],
+			},
 			{
 				version:`1.1.68`,
 				news:[
@@ -3150,7 +3156,7 @@ window.replaces = {
             t.textAlign="right"
             t.lineWidth = 3;
 			t.font = 'bold ' + e.default.font(13);
-            t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#70" : "#700";
+            t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#770" : "#700";
             t.fillStyle = window.client.pingNfps.fps >= 28 ? "#0f0" : window.client.pingNfps.fps >= 20 ? "#ff0" : "#f00";
 			t.strokeText("fps: " + window.client.pingNfps.fps, 1260, 640);
 			t.fillText("fps: " + window.client.pingNfps.fps, 1260, 640);

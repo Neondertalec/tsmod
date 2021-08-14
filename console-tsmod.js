@@ -1,4 +1,3 @@
-
 globalThis.temp1 = undefined;
 globalThis.temp2 = undefined;
 globalThis.temp3 = undefined;
@@ -127,6 +126,12 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.69`,
+				news:[
+					`A bugfix :/`
+				],
+			},
 			{
 				version:`1.1.68`,
 				news:[
@@ -3136,7 +3141,7 @@ window.replaces = {
             t.textAlign="right"
             t.lineWidth = 3;
 			t.font = 'bold ' + e.default.font(13);
-            t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#70" : "#700";
+            t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#770" : "#700";
             t.fillStyle = window.client.pingNfps.fps >= 28 ? "#0f0" : window.client.pingNfps.fps >= 20 ? "#ff0" : "#f00";
 			t.strokeText("fps: " + window.client.pingNfps.fps, 1260, 640);
 			t.fillText("fps: " + window.client.pingNfps.fps, 1260, 640);
