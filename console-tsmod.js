@@ -10,6 +10,14 @@ console.groupCollapsed("what happened between loading")
 console.log("...")
 window.customTags = [
 	{
+		names: [],
+		color: "#FFA390",
+		text: "[TW]",
+		rainbow: false,
+		prior:0,
+		lock:false,
+	},
+	{
 		names: ["DepressionOwU"],
 		color: "#ff00bc",
 		text: "[SCR]",
@@ -54,6 +62,7 @@ window.customTags = [
 		color: "#009b77",
 		text: "[Roy]",
 		rainbow: true,
+		rglow:true,
 		prior:1,
 		lock:false,
 	},
@@ -118,6 +127,21 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.68`,
+				news:[
+					`FPS and ping??<br>`+
+					`${`<i>Note: fps is updating every second, Ping is updating when YOU send a message.</i>`.fontcolor(this.cl.cmd)}`,
+					[
+						`1 new command (# for help)`,
+						`${`#togglefps`.fontcolor(this.cl.cmd)}`,
+						`[BREAK POINT]`,
+						`This command toggles ping and fps. It was also added to the ${`R -> Commands.`.fontcolor(this.cl.cmd)}`
+					],
+					`${`[TW]`.fontcolor(`#FFA390`)} tag is now remade to the new way too. It will now be possible to see someone like:<br>`+
+					`${`[TO]`.fontcolor(this.cl.to)} ${`[TW]`.fontcolor(`#FFA390`)} ${`[Hu]`.fontcolor(`#2FA390`)} Cool Guy.`
+				],
+			},
 			{
 				version:`1.1.67`,
 				news:[
@@ -526,26 +550,10 @@ window.vers = {
 	check: function(){
 		const d = this.getm();
 		if(d.tw){
-			let customNames = window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[]);
-			let names = d.tw.filter((e)=>!customNames.includes(e));
+			let names = d.tw;
 	
-	
-			let styles = document.createElement('style');
-	
-			let newihtml = "";
-			let newarr = [];
 			globalThis.tags.tags["[TW]"] = names;
-			for(let tname of names){
-				newarr.push('#chat-window span[arialabel="'+ tname +'"]::before')
-			}
-			newihtml += newarr.join(",") + `{
-				content: "[TW]"!important;
-				margin-right: 4px;
-				color: #FFA390!important;
-			}`
-				
-			styles.innerHTML = newihtml;
-			document.head.appendChild(styles);
+			globalThis.customTags[0].names = names;
 		}
 
 		if(this.checkVer(this.v,d.v)){
@@ -685,7 +693,7 @@ globalThis.tags = {
 		'[SCR]':['DepressionOwU'],
 		'[TS]': ['yIzaac😎👌',
 			//'Creazy',
-			'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', 'Damasus', '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
+			'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
 			//'Exscord',
@@ -1020,7 +1028,7 @@ globalThis.tags = {
 				for(let tagdata of window.customTags){
 					for(let tname of tagdata.names){
 						if(tname == name){
-							customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow?"rainbowText":""}", style:{color: "${tagdata.color}"}},"${tagdata.text}"," ")`]);
+							customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow?("rainbowText" + (tagdata.rglow ? " rainbowTextGlow" : "")):""}", style:{color: "${tagdata.color}"}},"${tagdata.text}"," ")`]);
 							if(tagdata.lock) lock = true;
 							break;
 						}
@@ -1125,6 +1133,24 @@ globalThis.client = {
 		xp:null,
 		hero:null,
 		logsstor:null,
+	},
+
+	pingNfps:{
+		ping:0,
+		fps:0,
+		sendTime:0,
+		lastFpsTime:0,
+		frames:0,
+
+		frame: function(){
+			this.frames++;
+			let d, now = Date.now();
+			if((d = now - this.lastFpsTime) > 1000){
+				this.fps = Math.round(this.frames * (1000-(d % 1000)) * 0.001);
+                this.frames = 0;
+				this.lastFpsTime = now
+			}
+		}
 	},
 
 	areaData:{
@@ -1475,6 +1501,7 @@ globalThis.client = {
 		showUcard: getLocal("ts-showUcard", "true") == "true",
 		timerReal: (temp1 = getLocal("ts-timerReal", "1"), temp1 == "true" ? 1 : temp1 == "false"? 2 : +temp1),
 		lbTags: getLocal("ts-lbTags", "true") == "true",
+		togglefps: getLocal("ts-togglefps", "true") == "true",
 		
 	},
 	grb:{
@@ -1849,10 +1876,11 @@ globalThis.client = {
 				`${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>`+
 				`${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>`+
 				`${window.client.editChatInput(false, `{prefix}toggletimer`)} - changes the timer (if on - timer shows real time. if off - timer shows the time that will be shown on the death screen.).<br>`+
+				`${window.client.editChatInput(false, `{prefix}togglefps`)} - toggles fps and ping.<br>`+
 				`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
 				`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
 				`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
-				`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`
+				`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`;
 
 				if(window.client.textCommandConstsE.length > 0){
 					sysText += `<br>CUSTOM COMMANDS<br><br>`;
@@ -1893,6 +1921,10 @@ globalThis.client = {
 				localStorage.setItem("ts-showUcard", window.client.textCommandConsts.showUcard = !window.client.textCommandConsts.showUcard);
 				window.client.toggleUcard(window.client.textCommandConsts.showUcard);
 				window.client.sendSystemMessage(`User card is now turned ${["off","on"][+window.client.textCommandConsts.showUcard]}`);
+			}else
+			if([p+"togglefps"].includes(messageS[0])){
+				localStorage.setItem("ts-togglefps", window.client.textCommandConsts.togglefps = !window.client.textCommandConsts.togglefps);
+				window.client.sendSystemMessage(`User card is now turned ${["off","on"][+window.client.textCommandConsts.togglefps]}`);
 			}else
 			if([p+"banned"].includes(messageS[0])){
 				if(messageS.length > 1){
@@ -2012,7 +2044,7 @@ globalThis.client = {
 			}
 			return `${pref} ${theName} ${resTime}${end}`
 		}
-
+		window.client.pingNfps.sendTime = window.client.pingNfps.sendTime == 0 ? Date.now() : window.client.pingNfps.sendTime;
 		return value;
 	},
 
@@ -2451,7 +2483,7 @@ globalThis.client = {
 	},
 
     drBefore: function(e, t) {
-		
+		window.client.pingNfps.frame();
 		let namesA = [];
 		let namesB = [];
 
@@ -2988,6 +3020,7 @@ globalThis.client = {
 						["bool", "User LB tags", "lbTags", "ts-lbTags", (r)=>{window.client.toggleLbTags(r);}],
 						["bool", "LB users count", "showUIACnt", "ts-showUIACnt", ()=>{window.client.areaData.updateLb();}],
 						["bool", "User card", "showUcard", "ts-showUcard", (r)=>{window.client.toggleUcard(r);}],
+						["bool", "Show fps and ping", "togglefps", "ts-togglefps", ()=>{}],
 						["option", "Timer:",[
 							["Real time", "1"],
 							["Ingame time", "2"],
@@ -3052,6 +3085,15 @@ globalThis.client = {
 				}
 			}
 		})
+
+		globalThis.client.events.addEventListener(globalThis.client.events.events.chatMessage, (e)=>{
+			if(e.name == window.client.main.name){
+				if(window.client.pingNfps.sendTime != 0){
+					window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
+					window.client.pingNfps.sendTime = 0;
+				};
+			}
+		})
 	},
 
 	showClasses: getLocal("ts-showClasses", "false") == "true",
@@ -3088,17 +3130,27 @@ window.replaces = {
 			t.fillText(secs, l, 80);
 
 		}
+		let olw = t.lineWidth, fis = t.strokeStyle, strs =t.fillStyle;
 
-		t.font = 'bold ' + e.default.font(17);
-		const txt = (client.script && "Script: enabled") ||
-		(client.autoMode && "Automode: enabled") ||
-		"";
-		t.strokeText(txt, l+550, 715);
-		if (client.autoMode && client.script) {
-			t.strokeText("Automode: enabled", l+550, 690);
-			t.fillText("Automode: enabled", l+550, 690);
+		if(window.client.textCommandConsts.togglefps && client.state){
+            t.textAlign="right"
+            t.lineWidth = 3;
+			t.font = 'bold ' + e.default.font(13);
+            t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#70" : "#700";
+            t.fillStyle = window.client.pingNfps.fps >= 28 ? "#0f0" : window.client.pingNfps.fps >= 20 ? "#ff0" : "#f00";
+			t.strokeText("fps: " + window.client.pingNfps.fps, 1260, 640);
+			t.fillText("fps: " + window.client.pingNfps.fps, 1260, 640);
+            
+			t.strokeStyle = window.client.pingNfps.ping <= 115 ? "#060" : window.client.pingNfps.ping <= 210 ? "#770" : "#700";
+            t.fillStyle = window.client.pingNfps.ping <= 115 ? "#0f0" : window.client.pingNfps.ping <= 210 ? "#ff0" : "#f00";
+
+            t.strokeText("ping: " + window.client.pingNfps.ping, 1260, 670);
+			t.fillText("ping: " + window.client.pingNfps.ping, 1260, 670);
 		}
-		t.fillText(txt, l+550, 715);
+		t.lineWidth = olw;
+		t.textAlign="center";
+        t.strokeStyle = fis;
+        t.fillStyle = strs;
 		t.font = 'bold ' + e.default.font(35);
 	},
 	id4: function () {
@@ -3984,6 +4036,14 @@ window.getHeroColor = function(Hero){
 		100% {color: hsl(360, 100%, 50%);}
 	}
 
+	@keyframes rainbowTextkfGlow {
+		0%   {color: hsl(0, 100%, 50%); text-shadow: 0 0 4px hsl(0, 100%, 50%);}
+		25%   {color: hsl(90, 100%, 50%); text-shadow: 0 0 4px hsl(90, 100%, 50%);}
+		50%   {color: hsl(180, 100%, 50%); text-shadow: 0 0 4px hsl(180, 100%, 50%);}
+		75%   {color: hsl(270, 100%, 50%); text-shadow: 0 0 4px hsl(270, 100%, 50%);}
+		100% {color: hsl(360, 100%, 50%); text-shadow: 0 0 4px hsl(360, 100%, 50%);}
+	}
+
 	@keyframes rainbowBadgekf {
 		0%    {color: hsl(0, 100%, 13%); border-color: hsl(0, 100%, 33%); background-color: hsl(0, 100%, 50%);}
 		25%   {color: hsl(90, 100%, 13%); border-color: hsl(90, 100%, 33%); background-color: hsl(90, 100%, 50%);}
@@ -4004,6 +4064,10 @@ window.getHeroColor = function(Hero){
 		animation-name: rainbowTextkf;
 		animation-duration: 20s;
 		animation-iteration-count: infinite;
+	}
+
+	.rainbowTextGlow {
+		animation-name: rainbowTextkfGlow!important;
 	}
 	/*THE USERMETAS---------------------------------------*/
 
