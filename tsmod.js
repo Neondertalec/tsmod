@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.69
+// @version     1.1.70
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,7 +123,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.69",
+	v: "1.1.70",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -141,6 +141,20 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.70`,
+				news:[
+					`Removed ${`TO`.fontcolor(this.cl.to)} from CrEoP.`,
+					[
+						`New VP colors in the usercard:`,
+						`${`### / Not found`.fontcolor(`#aaa`)}`,
+						`${`0-74`.fontcolor(`#ff0000`)}`,
+						`${`75-499`.fontcolor(`#00ff00`)}`,
+						`${`500-19'999`.fontcolor(`#0095ff`)}`,
+						`<font class="rainbowText">20'000 and more</font>`,
+					],
+				],
+			},
 			{
 				version:`1.1.69`,
 				news:[
@@ -743,7 +757,7 @@ globalThis.tags = {
 			'Ventinari',
 			'Lumaz',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'CrEoP', 'Strat', 'piger', 'DepressionOwU'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', 'piger', 'DepressionOwU'],
 		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
 		'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
@@ -1742,6 +1756,7 @@ globalThis.client = {
 			elem.style = `top: ${pos[1]}px; right: ${pos[0]+"px"}; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
 			elem.id = "elem-"+name
 			elem.setAttribute("realname", name);
+			const vpcolor = window.getVpColor(o?.winCount ? o.winCount : logs[name].vp);
 			elem.innerHTML =
 			`<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>`+
 			`<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${pos[1]}, window.client.openLogger(false))"title="Open logs popup.">L</button>`+
@@ -1754,7 +1769,7 @@ globalThis.client = {
 				`<li style="display: table-cell;">`+
 					`<a href="/profile/${name}" target="_blank">Profile</a>`+
 					`<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT)? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>`+
-					`<p id="c0">VP: <b style="color:${window.getVpColor(o?.winCount ? o.winCount : logs[name].vp)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (logs[name].vp !== undefined ? logs[name].vp : "###") }</b></p>`+
+					`<p id="c0">VP: <b ${vpcolor == "rainbow" ? `class="rainbowText" style="` : `style="color:${vpcolor};`}text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (logs[name].vp !== undefined ? logs[name].vp : "###") }</b></p>`+
 					`<p id="c1">Level: ${Level || -1}</p>`+
 					`<p id="c2">Speed: ${-1}</p>`+
 					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
@@ -3281,8 +3296,9 @@ window.normalizeArea = (area)=>{
 window.getVpColor = (vp)=>{
 	if(typeof vp == "number")
 	return vp < 75 ? "#ff0000" :
-			//vp == 75? "#ffff00" :
-			"#00ff00"
+			vp < 500 ? "#00ff00" :
+			vp < 20000 ? "#0095ff" :
+			"rainbow"
 	else return "#aaa";
 }
 
