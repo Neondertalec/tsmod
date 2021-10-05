@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.71
+// @version     1.1.72
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,7 +123,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.71",
+	v: "1.1.72",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -141,6 +141,17 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.72`,
+				news:[
+					`Fixed leaderboard being thin when showing heroes is enabled.`,
+					[`New promotion and demotions.`,
+						`${`[Mod]`.fontcolor("#e67e22")} Pasemrus`,
+						`${`<strike>[Jr. Mod]</strike>`.fontcolor(this.cl.jrm)} piger`,
+						`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} AWEN`,
+					],
+				],
+			},
 			{
 				version:`1.1.71`,
 				news:[
@@ -737,7 +748,7 @@ globalThis.tags = {
 			'1Phoenix1',
 			'DepressionOwU',
 			//'Exscord',
-			'piger',
+			/*'piger',*/
 			//'DEFA', 'ZaLo', 'notdefa',
 			'R0YqL',
 			'Nickchm',
@@ -763,9 +774,9 @@ globalThis.tags = {
 			'Ventinari',
 			'Lumaz',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', 'piger', 'DepressionOwU'],
-		'[Jr. Mod]': ['Gazebr', 'CrEoP', 'Ram', 'piger', 'LightY', 'asdfasdfasdf1234', 'Pasemrus', 'thiccsucc'],
-		'[Mod]': ['AWEN','Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU'],
+		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc'],
+		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
 		'[H. Mod]': ['Exoriz', 'extirpater'],
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
@@ -773,7 +784,7 @@ globalThis.tags = {
 	alts:{
 		//"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
 		//"Exscord": [',DSG,', 'Дракончик)))'],
-		"piger": ['noPiger'],
+		//"piger": ['noPiger'],
 		"DEFA": ['ZaLo', 'notdefa'],
 		"Zero〩": ['akane🦋'],
 		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
@@ -4573,6 +4584,9 @@ window.loadGame = () => {
 	window.client.toggleUcard(window.client.textCommandConsts.showUcard);
 	let e;
 	document.head.appendChild((e = document.createElement("style"),e.innerHTML = `html,body{overflow: hidden!important;}`,e))
+	if(globalThis.client.showClasses){
+		document.getElementById("leaderboard").ariaLabel = "fat"
+	}
 }
 
 window.getTag = (name)=>{
