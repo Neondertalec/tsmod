@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.72
+// @version     1.1.73
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,7 +123,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.72",
+	v: "1.1.73",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -141,6 +141,18 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.73`,
+				news:[
+					[`New promotions for ${`[TO]`.fontcolor(this.cl.to)}:`,
+						`${`[TS]`.fontcolor(this.cl.ts)} Nickchm`,
+						`[BREAK POINT]`,
+						`<i>fAtKiD became a ${`[TO]`.fontcolor(this.cl.to)} too but no tag for him.. yet..</i>`
+					],
+					`New command ${`#autodc`.fontcolor(this.cl.cmd)}, also added in to the R -> Commands.<br>`+
+					`The command allows you to automatically disconnect on F5 / Ctrl + R instead of being supposed to type /dc in to the chat.`
+				],
+			},
 			{
 				version:`1.1.72`,
 				news:[
@@ -774,7 +786,7 @@ globalThis.tags = {
 			'Ventinari',
 			'Lumaz',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc'],
 		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
@@ -1553,6 +1565,7 @@ globalThis.client = {
 		timerReal: (temp1 = getLocal("ts-timerReal", "1"), temp1 == "true" ? 1 : temp1 == "false"? 2 : +temp1),
 		lbTags: getLocal("ts-lbTags", "true") == "true",
 		togglefps: getLocal("ts-togglefps", "true") == "true",
+		autodc: getLocal("ts-autodc", "false") == "true",
 		
 	},
 	grb:{
@@ -1932,7 +1945,8 @@ globalThis.client = {
 				`${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>`+
 				`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
 				`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
-				`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`;
+				`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`+
+				`${window.client.editChatInput(false, `{prefix}autodc`)} - toggle automatic disconnection on F5/CTRL+R.<br>`;
 
 				if(window.client.textCommandConstsE.length > 0){
 					sysText += `<br>CUSTOM COMMANDS<br><br>`;
@@ -1954,6 +1968,10 @@ globalThis.client = {
 			if([p+"toggletag"].includes(messageS[0])){
 				localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
 				window.client.sendSystemMessage(`User tags are now turned ${["off","on"][+window.client.textCommandConsts.showTag]}`);
+			}else
+			if([p+"autodc"].includes(messageS[0])){
+				localStorage.setItem("ts-autodc", window.client.textCommandConsts.autodc = !window.client.textCommandConsts.autodc);
+				window.client.sendSystemMessage(`autodc is now turned ${["off","on"][+window.client.textCommandConsts.autodc]}`);
 			}else
 			if([p+"togglelbtags"].includes(messageS[0])){
 				localStorage.setItem("ts-lbTags", window.client.textCommandConsts.lbTags = !window.client.textCommandConsts.lbTags);
@@ -2101,7 +2119,7 @@ globalThis.client = {
 	},
 
 	sendSystemMessage: function(message = ""){
-		let chat = window.client.chat.parentNode ? window.client.chat : (window.client.chat = document.getElementById("chat-window"));
+		let chat = window.client.chat?.parentNode ? window.client.chat : (window.client.chat = document.getElementById("chat-window"));
 		if(chat){
 			if(message != ""){
 				chat.innerHTML = chat.innerHTML+
@@ -3078,6 +3096,7 @@ globalThis.client = {
 							["Ingame time", "2"],
 							["None", "3"]
 						],"timerReal", "ts-timerReal", ()=>{}],
+						["bool", "Automatic disconnect", "autodc", "ts-autodc", ()=>{}],
 					]
 					let i = 0;
 					popup.appendChild(document.createElementP("div", {className:"lay header"}, (lay)=>{
@@ -4474,6 +4493,12 @@ window.addEventListener('DOMContentLoaded', e=>{
 	document.head.appendChild(styles);
 
 	document.addEventListener("keydown", (e)=>{
+		if(client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && client.load){
+            client.state.chatMessages.push("/dc");
+            e.preventDefault();
+            setTimeout(()=>{document.location.reload();},150);
+            return;
+        }
 		if(document.activeElement.hasAttribute("c-lock")||document.activeElement.localName === "input"){
 			if(document.activeElement?.getAttribute("type") != "checkbox") return;
 		}
