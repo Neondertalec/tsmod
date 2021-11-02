@@ -127,6 +127,13 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.74`,
+				news:[
+					`fAtKiD got his ${`[TO]`.fontcolor(this.cl.to)} tag.`,
+					`Removed ${`[TS]`.fontcolor(this.cl.ts)} from Ventinari.`
+				],
+			},
+			{
 				version:`1.1.73`,
 				news:[
 					[`New promotions for ${`[TO]`.fontcolor(this.cl.to)}:`,
@@ -768,10 +775,11 @@ globalThis.tags = {
 			'Strat',
 			'ElFeyer',
 			'TimiT',
-			'Ventinari',
+			//'Ventinari',
 			'Lumaz',
+			'fAtKiD',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc'],
 		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
@@ -779,9 +787,9 @@ globalThis.tags = {
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
 	},
 	alts:{
-		//"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
-		//"Exscord": [',DSG,', 'Дракончик)))'],
-		//"piger": ['noPiger'],
+		"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
+		"Exscord": [',DSG,', 'Дракончик)))'],
+		"piger": ['noPiger'],
 		"DEFA": ['ZaLo', 'notdefa'],
 		"Zero〩": ['akane🦋'],
 		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
