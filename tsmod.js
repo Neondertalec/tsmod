@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.74
+// @version     1.1.75
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,7 +123,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.74",
+	v: "1.1.75",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -141,6 +141,15 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.75`,
+				news:[
+					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,
+						`nexxyst`,
+					],
+					`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} Exscord is back.`,
+				],
+			},
 			{
 				version:`1.1.74`,
 				news:[
@@ -766,7 +775,7 @@ globalThis.tags = {
 			'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
-			//'Exscord',
+			'Exscord',
 			/*'piger',*/
 			//'DEFA', 'ZaLo', 'notdefa',
 			'R0YqL',
@@ -793,9 +802,10 @@ globalThis.tags = {
 			//'Ventinari',
 			'Lumaz',
 			'fAtKiD',
+			'nexxyst',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
-		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
+		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc', 'Exscord'],
 		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
 		'[Sr. Mod]': ['Jackal'],
 		'[H. Mod]': ['Exoriz', 'extirpater'],
