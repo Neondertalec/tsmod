@@ -113,6 +113,8 @@ window.vers = {
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
 		jrm:`#f1c40f`,
+		sm:`#ff6b5b`,
+		hm:`#f03333`,
 		example: `#f99261`,
 		cmd: `#aaa`,
 		scriptmsg: `#ffceb7`,
@@ -126,6 +128,18 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.76`,
+				news:[
+					[`New promotions for ${`[Jr. Mod]`.fontcolor(this.cl.jrm)}:`,
+						`nosok`,
+						`${`[TO]`.fontcolor(this.cl.to)} DepressionOwU`,
+						`${`[TO]`.fontcolor(this.cl.to)} Nickchm`,
+						`${`[TS]`.fontcolor(this.cl.ts)} Zade`
+					],
+					`Congratulations to <br>${`[Sr. Mod]`.fontcolor(this.cl.sm)} Jackal with his promotion to ${`[H. Mod]`.fontcolor(this.cl.hm)}!`,
+				],
+			},
 			{
 				version:`1.1.75`,
 				news:[
@@ -757,7 +771,7 @@ globalThis.tags = {
 		'[SCR]':['DepressionOwU'],
 		'[TS]': ['yIzaac😎👌',
 			//'Creazy',
-			'Aries', 'goldy', /*'drippyk',*/ 'SANDWICH', /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
+			'Aries', 'goldy', /*'drippyk',*/ /*'SANDWICH',*/ /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
 			'Exscord',
@@ -789,11 +803,11 @@ globalThis.tags = {
 			'fAtKiD',
 			'nexxyst',
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
-		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc', 'Exscord'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
+		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc', 'Exscord', 'nosok', 'DepressionOwU', 'Nickchm','Zade'],
 		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
-		'[Sr. Mod]': ['Jackal'],
-		'[H. Mod]': ['Exoriz', 'extirpater'],
+		'[Sr. Mod]': [],
+		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
 	},
 	alts:{
