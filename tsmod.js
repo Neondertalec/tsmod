@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.76
+// @version     1.1.77
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,11 +123,12 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.76",
+	v: "1.1.77",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
 		jrm:`#f1c40f`,
+		mod:`#e67e22`,
 		sm:`#ff6b5b`,
 		hm:`#f03333`,
 		example: `#f99261`,
@@ -143,6 +144,18 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.77`,
+				news:[
+					[`New promotion for ${`[Jr. Mod]`.fontcolor(this.cl.jrm)}:`,
+						`${`[YouTuber]`.fontcolor("#2accac")} R0YqL`
+					],
+					[`New promotion for ${`[Mod]`.fontcolor(this.cl.mod)}:`,
+						`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} LightY`
+					],
+					`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} Exscord got demoted.`,
+				],
+			},
 			{
 				version:`1.1.76`,
 				news:[
@@ -789,7 +802,7 @@ globalThis.tags = {
 			'Aries', 'goldy', /*'drippyk',*/ /*'SANDWICH',*/ /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
-			'Exscord',
+			/*'Exscord'*/,
 			/*'piger',*/
 			//'DEFA', 'ZaLo', 'notdefa',
 			'R0YqL',
@@ -819,8 +832,8 @@ globalThis.tags = {
 			'nexxyst',
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
-		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ 'LightY', 'asdfasdfasdf1234', 'thiccsucc', 'Exscord', 'nosok', 'DepressionOwU', 'Nickchm','Zade'],
-		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝'],
+		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', 'thiccsucc', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
+		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY'],
 		'[Sr. Mod]': [],
 		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
