@@ -130,6 +130,15 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.78`,
+				news:[
+					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,
+						`Koraiii`,
+						`๖ۣۜCorrupt 🆉`,
+					],
+				],
+			},
+			{
 				version:`1.1.77`,
 				news:[
 					[`New promotion for ${`[Jr. Mod]`.fontcolor(this.cl.jrm)}:`,
@@ -815,6 +824,8 @@ globalThis.tags = {
 			'Lumaz',
 			'fAtKiD',
 			'nexxyst',
+			`Koraiii`,
+			`๖ۣۜCorrupt 🆉`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', 'thiccsucc', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
