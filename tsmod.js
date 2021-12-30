@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.78
+// @version     1.1.79
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -123,7 +123,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.78",
+	v: "1.1.79",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -144,6 +144,17 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.79`,
+				news:[
+					[`New promotions for ${`[TO]`.fontcolor(this.cl.to)}:`,
+						`${`[TS]`.fontcolor(this.cl.ts)} nexxyst`,
+					],
+					`In profile page you can now see the VP graph!<br>`+
+					`${`<i>Actually something new?</i>`.fontcolor(this.cl.cmd)}`,
+					
+				],
+			},
 			{
 				version:`1.1.78`,
 				news:[
@@ -841,9 +852,9 @@ globalThis.tags = {
 			`Koraiii`,
 			`๖ۣۜCorrupt 🆉`,
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', 'Strat', /*'piger',*/ 'DepressionOwU', 'Nickchm','fAtKiD'],
-		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', 'thiccsucc', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
-		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
+		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
+		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY', 'thiccsucc'],
 		'[Sr. Mod]': [],
 		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
@@ -1175,6 +1186,115 @@ globalThis.tags = {
 	}
 }
 window.tags.init();
+
+globalThis.profiler = {
+	profilestats:null,
+	lib: null,
+	libl: false,
+	graph: {
+		el: null,
+		graph:null,
+	},
+	showGraph: function(){
+		if(this.lib == null){
+			this.lib = document.createElement("script");
+			this.lib.src = "https://canvasjs.com/assets/script/canvasjs.min.js";
+			document.head.appendChild(this.lib);
+			console.log("lib added");
+			this.lib.onload = ()=>{this.libl = true;this.displayGraph();console.log("l")}
+		}
+		if(!this.libl)return;
+		this.displayGraph();
+		console.log(this.profilestats);
+	},
+	displayGraph: function(){
+		if(!this.libl)return;
+		if(!this.graph.el){
+			this.graph.el = document.createElementP("div", {className: "graphw"}, (e)=>{
+				e.onclick = ()=>{
+					this.hideGrapth();
+				}
+				e.innerHTML = `<div id="chartContainer" style="height: 370px; width: 80%;"></div>`;
+				e.children[0].onclick = (e)=>{e.stopPropagation()};
+				document.body.appendChild(e);
+			});
+		}
+
+		if(this.graph.graph == null) this.createGraph();
+		console.log("LOOK!")
+		this.graph.graph.render();
+	},
+	hideGrapth: function(){
+		if(this.graph.graph){
+			this.graph.graph.destroy();
+			this.graph.graph = null;
+		}
+		if(this.graph.el){
+			this.graph.el.remove();
+			this.graph.el = null;
+		}
+	},
+	createGraph: function(){
+		let loadedData = this.profilestats;
+
+		let points = [];
+        let cw = parseInt(document.querySelector(".profile-week-name").innerHTML.slice(5));
+        let player = this.profilestats.username + ` (${this.profilestats.stats.highest_area_achieved_counter})`;
+        let fd = [];
+        for(let i in loadedData.stats.week_record){
+            let cd = loadedData.stats.week_record[i];
+            if(loadedData.stats.week_record[i]){
+                let ii = parseInt(i);
+                let nd = {
+                    x:ii,
+                    y: cd.wins,
+                }
+                
+                if(!loadedData.stats.week_record[ii-1] && !fd.includes(ii-1)){
+                    
+                    points.push({
+                        x:ii-1,
+                        y: 0,
+                    })
+                }
+
+                if(cd.finish != null){
+                    nd.markerType = "cross";
+                    //nd.indexLabel = cd.finish;
+                    nd.markerColor = cd.finish == "gold"? "gold" : cd.finish == "silver"? "gray" : "brown"; 
+                }
+                points.push(nd)
+
+                if(!loadedData.stats.week_record[ii+1] && !fd.includes(ii+1) && ii < cw){
+                    points.push({
+                        x:ii+1,
+                        y: 0,
+                    })
+                }
+            }
+        }
+
+		this.graph.graph = new CanvasJS.Chart("chartContainer", {
+            theme: "dark2",
+            zoomEnabled: true,
+            exportEnabled: true,
+            backgroundColor: "#222",
+            title:{
+                text: "VP of " + player,
+            },
+            axisY:{
+                tickColor: '#444',
+                gridColor: "#444",
+            },
+            data: [{        
+                type: "line",
+                color: "orange",
+                indexLabelFontSize: 16,
+                dataPoints: points
+            }]
+        });
+	}
+}
 
 globalThis.getLocal = (key, def)=>{
 	let res = localStorage.getItem(key)
@@ -3359,12 +3479,14 @@ const maps = {
 	"Haunted Halls": 		"HaHa",
 	"Quiet Quarry": 		"QQ",
 	"Frozen Fjord": 		"FF",
+	"Frozen Fjord Hard": 	"FFH",
 	"Ominous Occult": 		"OO",
 	"Restless Ridge": 		"RR",
 	"Toxic Territory": 		"TT",
 	"Magnetic Monopole": 	"MM2",
 	"Stellar Square": 		"SS",
 	"Assorted Alcove": 		"AA",
+	"Assorted Alcove Hard": "AAH",
 	"Burning Bunker": 		"BB",
 }
 
@@ -4541,6 +4663,41 @@ window.addEventListener('DOMContentLoaded', e=>{
 		border-radius: 5px;
 		color: #fff;
 	}
+
+
+
+	.graphw{
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		background: #00000088;
+	}
+	
+	.graphw > #chartContainer{
+		height: 370px;
+		width: 100%;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.subtitle-profile>div>b>button{
+		margin-left: 20px;
+		position: relative;
+		top: -7px;
+		font-size: 20px;
+		font-family: Verdana,Arial,Times,serif;
+		background-color: #222;
+		border: solid 2px #5a3c00;
+		color: #ffa900;
+	}
+	.subtitle-profile>div>b>button:hover{
+		background-color: #333;
+		border: solid 2px #885b00;
+		color: #ffc249;
+	}
 	`;
 	window.client.recalcUserMetas();
 	styles.innerHTML = newihtml;
@@ -4856,6 +5013,13 @@ new MutationObserver(function(mutations) {
 						this.disconnect();
 					}
 				}).observe(document, {childList: true, subtree: true});
+
+
+				//ppp
+				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.profilestats = this.state;')
+				tmp = tmp.replace(/(,e\\.default\\.createElement\\("b",null,this\\.state\\.username\\)\\),)/gm,
+				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username, e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph")))),')
+
 
 				eval(tmp);
 				console.groupEnd()
