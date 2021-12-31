@@ -130,12 +130,20 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.80`,
+				news:[
+					`In the profile page you can now see the users hats too!`,
+					`3rd tab in the changelog - links. It contains some faq links and videoes.`,
+					`Bug fixes.`,
+				],
+			},
+			{
 				version:`1.1.79`,
 				news:[
 					[`New promotions for ${`[TO]`.fontcolor(this.cl.to)}:`,
 						`${`[TS]`.fontcolor(this.cl.ts)} nexxyst`,
 					],
-					`In profile page you can now see the VP graph!<br>`+
+					`In the profile page you can now see the VP graph!<br>`+
 					`${`<i>Actually something new?</i>`.fontcolor(this.cl.cmd)}`,
 					
 				],
@@ -638,7 +646,26 @@ window.vers = {
 				version:`1.1.2`,
 				news:[`Updated user card.`, `Export/Import logs.`]
 			},
-		]
+		];
+
+		window.vers.links = [
+			{
+				version: ["1", `<a href="https://github.com/Neondertalec/tsmod">Info</a>`],
+				news:[
+					`<a href="https://www.youtube.com/watch?v=XRXmW23zyWw&feature=youtu.be&ab_channel=itsme">How to install (18s video).</a>`,
+					`<a href="https://www.youtube.com/watch?v=MA9A8OmK0Xo&ab_channel=PigerthePig">1.0.0 version video (by piger).</a>`,
+					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Depression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
+				],
+			},
+			{
+				version: ["1", `<a href="https://github.com/Neondertalec/tsmod/blob/main/faq.md">FAQ</a>`],
+				news:[
+					`<a href="https://github.com/Neondertalec/tsmod/blob/main/faq.md#how-to-install">How to install.</a>`,
+					`<a href="https://github.com/Neondertalec/tsmod/blob/main/faq.md#how-to-update">How to update.</a>`,
+					`<a href="https://github.com/Neondertalec/tsmod/blob/main/faq.md#script-doesnt-work">Something is wrong/not working?</a>`,
+				],
+			}
+		];
 	},
 	getm: function(){
 		var xm=new XMLHttpRequest();
@@ -678,10 +705,14 @@ window.vers = {
 
 	
 	genLog: function(version, news){
+		let id = version, ver = version;
+		if(typeof version == "object"){
+			id = version[0]; ver = version[1];
+		}
 		let newData = 
-		`<div class="changelog-section" logid="${version}">`+
+		`<div class="changelog-section" logid="${id}">`+
 			`<div class="changelog-section-header">`+
-				`<span style="vertical-align: middle;">${version}</span>`+
+				`<span style="vertical-align: middle;">${ver}</span>`+
 			`</div>`+
 			`<ul class="changelog-change-list">`;
 
@@ -719,21 +750,30 @@ window.vers = {
 
 	chlog:[null,null],
 	swi: function(who){
-		this.chlog[0] = this.chlog[0] || document.querySelector(".changelog")
-		this.chlog[1] = this.chlog[1] || document.querySelector(".ts-changelog")
+		this.chlog[0] = document.querySelector(".changelog");
+		this.chlog[1] = document.querySelector(".ts-changelog");
+		this.chlog[2] = document.querySelector(".ts-links");
 		
 		if(this.chlog[1].innerHTML == ""){
-			this.chlog[1].innerHTML = `<div class="changelog-header">Changelog</div>`;
+			this.chlog[1].innerHTML = `<div class="changelog-header">TS Mod Changelog</div>`;
 			const arr = window.vers.changeLog;
 			for(let i = 0; i < arr.length; i++){
 				this.chlog[1].innerHTML += window.vers.genLog(arr[i].version, arr[i].news);
 			}
 		}
+		if(this.chlog[2].innerHTML == ""){
+			this.chlog[2].innerHTML = `<div class="changelog-header">Links</div>`;
+			const arr = window.vers.links;
+			for(let i = 0; i < arr.length; i++){
+				this.chlog[2].innerHTML += window.vers.genLog(arr[i].version, arr[i].news);
+			}
+		}
 
 		if(!this.chlog[0])return void (console.warn(".changelog not found"));
 		if(!this.chlog[1])return void (console.warn(".ts-changelog not found"));
+		if(!this.chlog[2])return void (console.warn(".ts-links not found"));
 		
-		let l = ["ev", "ts"]
+		let l = ["ev", "ts", "li"]
 		this.chlog.forEach((e,i)=>{
 			if(who != l[i]){
 				e.classList.contains("hidden")||
@@ -835,6 +875,7 @@ globalThis.tags = {
 			'fAtKiD',
 			'nexxyst',
 			`Koraiii`,
+			`ThatHodgeGuy`,
 			`๖ۣۜCorrupt 🆉`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
@@ -853,7 +894,8 @@ globalThis.tags = {
 		"1Phoenix1": ['«Ƥħǿēƞɨx»'],
 		"DDBus": ['TTTruck'],
 		"ElFeyer": ['Teasah', '[ᴀᴄᴇ] Teasah'],
-		"Ventinari":[/*'maxdebekker',*/ 'Crystal✓','Cjayy','Walkers']
+		"Ventinari":[/*'maxdebekker',*/ 'Crystal✓','Cjayy','Walkers'],
+		"ThatHodgeGuy":['TurtlesRock']
 	},
 	tagsData:{
 		'[custom]':{
@@ -1176,9 +1218,29 @@ globalThis.profiler = {
 	profilestats:null,
 	lib: null,
 	libl: false,
+	hats: {
+		"area-50": "/area-50.b6dc004f.png",
+		"gold-crown": "/gold-crown.131786e0.png",
+		"bronze-crown": "/bronze-crown.c9530af4.png",
+		"silver-crown": "/silver-crown.ffa388d3.png",
+		"halo": "/halo.cb0eb721.png",
+		"santa-hat": "/santa-hat.8ff7f164.png",
+		"gold-wreath": "/gold-wreath.92569ed3.png",
+		"summer-wreath": "/summer-wreath.778ebaa8.png",
+		"autumn-wreath": "/autumn-wreath.59c95666.png",
+		"winter-wreath": "/winter-wreath.07f00139.png",
+		"spring-wreath": "/spring-wreath.490fbc9e.png",
+		"olympics-wreath": "/olympics-wreath.a8b838b7.png",
+	},
 	graph: {
 		el: null,
 		graph:null,
+	},
+	setState:function(state){
+		this.profilestats = state;
+		setTimeout(()=>{
+			this.loadHats();
+		}, 100)
 	},
 	showGraph: function(){
 		if(this.lib == null){
@@ -1278,6 +1340,25 @@ globalThis.profiler = {
                 dataPoints: points
             }]
         });
+	},
+	loadHats: function(){
+		let el = document.querySelector(".profile-hats-container");
+		console.log(el);
+		let hat = this.profilestats.accessories.hat_selection;
+		let hats = this.profilestats.accessories.hat_collection;
+
+		for(let i in hats){
+			if(hats[i]){
+				/*el.appendChild(document.createElementP("div", {className:`hat-accessory ${i==hat?"hat-accessory-selected":""}`},
+					(e)=>{
+						e.appendChild(document.createElementP("img", {src:this.hats[i]}))
+					})
+				);*/
+				el.appendChild(
+					document.createElementP("img", {src:this.hats[i], className : `profile-hat-accessory ${i==hat?"profile-hat-accessory-selected":""}`})
+				);
+			}
+		}
 	}
 }
 
@@ -4627,7 +4708,7 @@ window.getHeroColor = function(Hero){
 	}
 
 	#chlbuttons > button{
-		width: 50%;
+		width: 33.333%;
    		height: 24px;
 		background: antiquewhite;
 		border: solid 2px #000;
@@ -4635,6 +4716,7 @@ window.getHeroColor = function(Hero){
 	}
 
 	.ts-changelog,
+	.ts-links,
 	.changelog {
 		float: left;
 		width: 300px;
@@ -4648,6 +4730,10 @@ window.getHeroColor = function(Hero){
 		color: #fff;
 	}
 
+
+	.quick-play-button{
+		color: #db1512;
+	}
 
 
 	.graphw{
@@ -4682,6 +4768,18 @@ window.getHeroColor = function(Hero){
 		border: solid 2px #885b00;
 		color: #ffc249;
 	}
+
+	.profile-hat-accessory{
+		border: 1px solid #b9b9b9;
+		width: 50px;
+		height: 50px;
+		margin: 10px 10px 0 10px;
+	}
+
+	.profile-hat-accessory-selected{
+		border-color: #89ff85;
+	}
+
 	`;
 	window.client.recalcUserMetas();
 	styles.innerHTML = newihtml;
@@ -4692,7 +4790,7 @@ window.getHeroColor = function(Hero){
 		if(client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && client.load){
             client.state.chatMessages.push("/dc");
             e.preventDefault();
-            setTimeout(()=>{document.location.reload();},150);
+            socket.onclose = ()=>{document.location.reload();};
             return;
         }
 		if(document.activeElement.hasAttribute("c-lock")||document.activeElement.localName === "input"){
@@ -4958,9 +5056,11 @@ window.lastPrefix = {
 					'return e.default.createElement("div",{id:"changelogs"},'+
 					'e.default.createElement("div",{id:"chlbuttons"},'+
 					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ev")}}, "Evades.io"),'+
-					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ts")}}, "TS Mod")'+
+					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ts")}}, "TS Mod"),'+
+					'e.default.createElement("button",{onClick:()=>{window.vers.swi("li")}}, "Links")'+
 					'),'+
 					'e.default.createElement("div",{className:"ts-changelog hidden"}),'+
+					'e.default.createElement("div",{className:"ts-links hidden"}),'+
 					'e.default.createElement("div",{className:"changelog"'
 				)
 				tmp = tmp.replace('d."))))','d.")))) )')
@@ -4988,21 +5088,19 @@ window.lastPrefix = {
 				'))')
 
 				//tmp = tmp.replace('','')
-				// неработающий маркер
-				new MutationObserver(function (mutations) {
-					if (document.getElementsByClassName('quick-play-button')[0]) {
-						document.getElementsByClassName('quick-play-button')[0].style.color='#db1512'
-						this.disconnect();
-					}
-				}).observe(document, {childList: true, subtree: true});
-
-
+				
+				
+				
 				//ppp
-				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.profilestats = this.state;')
+				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.setState(this.state);')
 				tmp = tmp.replace(/(,e\\.default\\.createElement\\("b",null,this\\.state\\.username\\)\\),)/gm,
 				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username, e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph")))),')
-
-
+				
+				tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
+				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})')
+				
+				//tmp = tmp.replace('module.exports="/area-50','globalThis.profiler.hats["area-50"] = module.exports="/area-50')
+				
 				eval(tmp);
 				console.groupEnd()
 				console.log("%cScript loaded.","color: green; font-size: 20px");
