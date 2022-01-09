@@ -83,9 +83,10 @@ window.customTags = [
 	},
 	{
 		names: ["L0YqL"],
-		color: "#ff8700",
-		text: "[Capri-Sun]",
-		rainbow: false,
+		color: "#009b77",
+		text: "[Loy]",
+		rainbow: true,
+		rglow:true,
 		prior:1,
 		lock:false,
 	},
@@ -101,6 +102,14 @@ window.customTags = [
 		names: ["NoAwen"],
 		color: "#12e612",
 		text: "[REALLY]",
+		rainbow: false,
+		prior:1,
+		lock:false,
+	},
+	{
+		names: ["Vikenti"],
+		color: "#B026FF",
+		text: "[wap cat]",
 		rainbow: false,
 		prior:1,
 		lock:false,
@@ -129,6 +138,21 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.81`,
+				news:[
+					`Removed ${`[TS]`.fontcolor(this.cl.ts)} from ThatHodgeGuy.`,
+					[
+						`Tenth custom tag:`,
+						`${`[Capri-Sun]`.fontcolor("#B026FF")} Vikenti`
+					],
+					[
+						`Recolored custom tags:`,
+						`<font class="rainbowText">[Loy]</font> L0YqL<br>`
+					],
+					`Bug fixes.`,
+				],
+			},
 			{
 				version:`1.1.80`,
 				news:[
@@ -825,7 +849,7 @@ new MutationObserver(function (m){
 	}
 }).observe(document, {childList: true, subtree: true});
 
-window.blaclist = ["oxymoron1", "GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD"];
+window.blaclist = ["GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD", "Creazy", "creæzy", "【𝟔𝟗】ᴄʀᴇᴀᴢʏ", "wre4th", "CrEaZy‏‏‎ ‎", "Strat", "Zwaze"];
 
 globalThis.tagsEX = globalThis.tagsEX ?? {};
 globalThis.tagDataEX = globalThis.tagsEX ?? {};
@@ -875,8 +899,9 @@ globalThis.tags = {
 			'fAtKiD',
 			'nexxyst',
 			`Koraiii`,
-			`ThatHodgeGuy`,
+			//`ThatHodgeGuy`,
 			`๖ۣۜCorrupt 🆉`,
+			`Asylum`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
@@ -4054,16 +4079,21 @@ window.getHeroColor = function(Hero){
 
 	.areaPopup,
 	.herolist{
-		width:500px;
-		height:400px;
+		width: 500px;
+		height: 400px;
 		max-height: 50%;
-		position:absolute;
-		left:50%;
-		top:50%;
+		position: absolute;
+		left: 50%;
+		top: 50%;
 		transform: translate(-50%, -50%);
 		background-color: #000000aa;
 		z-index: 10;
 		overflow-y: scroll;
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		justify-content: center;
 	}
 
 	.herolist > .block{
@@ -4399,6 +4429,7 @@ window.getHeroColor = function(Hero){
 		overflow: hidden;
 		border-radius: 10px;
 		border: solid 1px #000;
+		z-index:11;
 	}
 
 	.usermetas > .header{
