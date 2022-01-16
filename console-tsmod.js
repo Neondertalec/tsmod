@@ -93,8 +93,9 @@ window.customTags = [
 	{
 		names: ["AWEN"],
 		color: "#12e612",
-		text: "[10$]",
-		rainbow: false,
+		text: "[buster]",
+		rainbow: true,
+		rglow:true,
 		prior:1,
 		lock:false,
 	},
@@ -112,6 +113,23 @@ window.customTags = [
 		text: "[wap cat]",
 		rainbow: false,
 		prior:1,
+		lock:false,
+	},
+	{
+		names: ["haha0201"],
+		color: "#c01fed",
+		text: "[h",
+		join: true,
+		rainbow: false,
+		prior:1,
+		lock:false,
+	},
+	{
+		names: ["haha0201"],
+		color: "#25e8be",
+		text: "u]",
+		rainbow: false,
+		prior:2,
 		lock:false,
 	},
 ]
@@ -138,6 +156,23 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.82`,
+				news:[
+					[
+						`Eleventh custom tag:`,
+						`${`[h`.fontcolor("#c01fed")}${`u]`.fontcolor("#25e8be")} haha0201`
+					],
+					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,
+						`Raqzv`,
+					],
+					[
+						`Recolored custom tag:`,
+						`<font class="rainbowText">[buster]</font> AWEN<br>`
+					],
+					`Bug fixes.`,
+				],
+			},
 			{
 				version:`1.1.81`,
 				news:[
@@ -902,6 +937,7 @@ globalThis.tags = {
 			//`ThatHodgeGuy`,
 			`๖ۣۜCorrupt 🆉`,
 			`Asylum`,
+			`Raqzv`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
@@ -4819,10 +4855,11 @@ window.getHeroColor = function(Hero){
 
 	document.addEventListener("keydown", (e)=>{
 		if(client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && client.load){
-            client.state.chatMessages.push("/dc");
+            if(client.state && client.state.chatMessages)client.state.chatMessages.push("/dc");
             e.preventDefault();
-            socket.onclose = ()=>{document.location.reload();};
-            return;
+			if(socket) socket.onclose = ()=>{document.location.reload();};
+            else document.location.reload();
+			return;
         }
 		if(document.activeElement.hasAttribute("c-lock")||document.activeElement.localName === "input"){
 			if(document.activeElement?.getAttribute("type") != "checkbox") return;
@@ -5118,6 +5155,20 @@ window.lastPrefix = {
 				'}))'+
 				'))')
 
+
+				tmp = tmp.replace('"Mute"),','"Mute"),'
+				+'  a && e.default.createElement("li", {'
+				+'	className: "chat-message-contextitem-selectable chat-message-moderate",'
+				+'	onClick: function() {'
+				+'	let chat = document.getElementById("chat-input"); chat.value = "/mute "+ t.props.message.sender + " ";'
+				+'	t.hide(); chat.focus(); chat.selectionStart = chat.selectionEnd = 10000;'
+				+'		return undefined;'
+				+'	}'
+				+'}, "Mute Copy"),'
+				)
+				
+				
+				tmp = tmp.replace('return t.props.onMute(t.props.message)','let r = t.props.onMute(t.props.message);console.log(r); return r')
 				//tmp = tmp.replace('','')
 				
 				
