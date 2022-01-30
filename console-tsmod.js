@@ -157,6 +157,15 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.83`,
+				news:[
+					[`New promotion for ${`[TS]`.fontcolor(this.cl.ts)}:`,
+						`Lann`,
+					],
+					`Bug fixes.`,
+				],
+			},
+			{
 				version:`1.1.82`,
 				news:[
 					[
@@ -938,6 +947,8 @@ globalThis.tags = {
 			`๖ۣۜCorrupt 🆉`,
 			`Asylum`,
 			`Raqzv`,
+			`ʕっ•ᴥ•ʔっ`,
+			`Lann`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
@@ -1245,7 +1256,7 @@ globalThis.tags = {
 				for(let tagdata of window.customTags){
 					for(let tname of tagdata.names){
 						if(tname == name){
-							customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow?("rainbowText" + (tagdata.rglow ? " rainbowTextGlow" : "")):""}", style:{color: "${tagdata.color}"}},"${tagdata.text}"," ")`]);
+							customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow?("rainbowText" + (tagdata.rglow ? " rainbowTextGlow" : "")):""}", style:{color: "${tagdata.color}"}},"${tagdata.text}",${tagdata.join?`""` : `" "`})`]);
 							if(tagdata.lock) lock = true;
 							break;
 						}
@@ -4546,18 +4557,22 @@ window.getHeroColor = function(Hero){
 	}
 
 	.usermetas > .badgeslay{
-		width: 300px;
+		width: auto;
 		height: 135px;
 		overflow-y: auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		align-content: flex-start;
 	}
 
 	.usermetas > .badgeslay > .badge{
 		position: relative;	
-		float: left;
 		font-size: 13px;
 		font-weight: bold;
 		width: 80px;
-   		margin: 6px;
+   		margin-top: 6px;
+		margin-bottom: 6px;
 		height: 37px;
 		line-height: 34px;
 		background: lemonchiffon;

@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.82
+// @version     1.1.83
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -150,7 +150,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.82",
+	v: "1.1.83",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -171,6 +171,15 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.83`,
+				news:[
+					[`New promotion for ${`[TS]`.fontcolor(this.cl.ts)}:`,
+						`Lann`,
+					],
+					`Bug fixes.`,
+				],
+			},
 			{
 				version:`1.1.82`,
 				news:[
@@ -953,6 +962,8 @@ globalThis.tags = {
 			`๖ۣۜCorrupt 🆉`,
 			`Asylum`,
 			`Raqzv`,
+			`ʕっ•ᴥ•ʔっ`,
+			`Lann`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
@@ -4562,18 +4573,22 @@ window.addEventListener('DOMContentLoaded', e=>{
 	}
 
 	.usermetas > .badgeslay{
-		width: 300px;
+		width: auto;
 		height: 135px;
 		overflow-y: auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		align-content: flex-start;
 	}
 
 	.usermetas > .badgeslay > .badge{
 		position: relative;	
-		float: left;
 		font-size: 13px;
 		font-weight: bold;
 		width: 80px;
-   		margin: 6px;
+   		margin-top: 6px;
+		margin-bottom: 6px;
 		height: 37px;
 		line-height: 34px;
 		background: lemonchiffon;
