@@ -157,6 +157,22 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.84`,
+				news:[
+					[`New promotion for ${`[TS]`.fontcolor(this.cl.ts)}:`,
+						`CZheng`,
+					],
+					[`New command ${`#arealb`.fontcolor(this.cl.cmd)}.<br>`+
+					`By using the command you will see a leaderboard in the chat in this format:<br>`+
+					`Name ;; Level ;; XP ;; Hero<br>`+
+					`You can sort it by typing ${`#arealb arg`.fontcolor(this.cl.cmd)} where arg is:`,
+					`area`,
+					`xp`,
+					`hero`,
+					`name`],
+				],
+			},
+			{
 				version:`1.1.83`,
 				news:[
 					[`New promotion for ${`[TS]`.fontcolor(this.cl.ts)}:`,
@@ -905,13 +921,14 @@ globalThis.tags = {
 	chatTags: new globalThis.CacheTs(),
 	tags:{
 		'[oly1]':['Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
+		'[oly2]':['Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
 		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':['Zaxoosh'],
 		'[SCR]':['DepressionOwU'],
 		'[TS]': ['yIzaac😎👌',
 			//'Creazy',
-			'Aries', 'goldy', /*'drippyk',*/ /*'SANDWICH',*/ /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
+			'Aries', /*'goldy',*/ /*'drippyk',*/ /*'SANDWICH',*/ /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
 			/*'Exscord'*/,
@@ -949,6 +966,7 @@ globalThis.tags = {
 			`Raqzv`,
 			`ʕっ•ᴥ•ʔっ`,
 			`Lann`,
+			`CZheng`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
 		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
@@ -1001,6 +1019,30 @@ globalThis.tags = {
 				textcolor:"#484e1f",
 				text:"[Olympic]",
 				subText:"[1st season]",
+				rainbow:false,
+			},
+		},
+		'[oly2]':{
+			priority:61,
+			noOlnTag: true,
+			badge:{
+				bg:"#cedf48",
+				border:"#8e9a31",
+				textcolor:"#484e1f",
+				text:"[Olympic]",
+				subText:"[2nd season]",
+				rainbow:false,
+			},
+		},
+		'[oly3]':{
+			priority:62,
+			noOlnTag: true,
+			badge:{
+				bg:"#cedf48",
+				border:"#8e9a31",
+				textcolor:"#484e1f",
+				text:"[Olympic]",
+				subText:"[3rd season]",
 				rainbow:false,
 			},
 		},
@@ -1879,6 +1921,7 @@ globalThis.client = {
 		lbTags: getLocal("ts-lbTags", "true") == "true",
 		togglefps: getLocal("ts-togglefps", "true") == "true",
 		autodc: getLocal("ts-autodc", "false") == "true",
+		//ssxp: getLocal("ts-ssxp", "false") == "true",
 		
 	},
 	grb:{
@@ -2238,6 +2281,10 @@ globalThis.client = {
 		return newText;
 	},
 
+	/*toggleExtendLb: function(){
+		globalThis.client.extendLb = globalThis.client.textCommandConsts.ssxp;// || smth
+	},*/
+
 	checkMsg: function(value){
 		if(!value) return;
 		let p = window.client.textCommandConsts.prefix;
@@ -2259,7 +2306,9 @@ globalThis.client = {
 				`${window.getTag(window.client.main.name)!=""? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>`:""}`+
 				`${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>`+
 				`${window.client.editChatInput(false, `{prefix}setformat`)} - changes the format of the generated run results.<br>`+
-				`${window.client.editChatInput(false, `{prefix}autodc`)} - toggle automatic disconnection on F5/CTRL+R.<br>`;
+				`${window.client.editChatInput(false, `{prefix}autodc`)} - toggle automatic disconnection on F5/CTRL+R.<br>`+
+				`${window.client.editChatInput(false, `{prefix}arealb`)} - send a message (for you only) with a simple leaderboard<br>`;
+				//`${window.client.editChatInput(false, `{prefix}ssxp`)} - toggle SS leaderboard between XP and Level.<br>`;
 
 				if(window.client.textCommandConstsE.length > 0){
 					sysText += `<br>CUSTOM COMMANDS<br><br>`;
@@ -2286,6 +2335,11 @@ globalThis.client = {
 				localStorage.setItem("ts-autodc", window.client.textCommandConsts.autodc = !window.client.textCommandConsts.autodc);
 				window.client.sendSystemMessage(`autodc is now turned ${["off","on"][+window.client.textCommandConsts.autodc]}`);
 			}else
+			/*if([p+"ssxp"].includes(messageS[0])){
+				localStorage.setItem("ts-ssxp", window.client.textCommandConsts.ssxp = !window.client.textCommandConsts.ssxp);
+				window.client.sendSystemMessage(`ssxp is now turned ${["off","on"][+window.client.textCommandConsts.ssxp]}`);
+				window.client.toggleExtendLb();
+			}else*/
 			if([p+"togglelbtags"].includes(messageS[0])){
 				localStorage.setItem("ts-lbTags", window.client.textCommandConsts.lbTags = !window.client.textCommandConsts.lbTags);
 				window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
@@ -2338,7 +2392,20 @@ globalThis.client = {
 				newFromat = newFromat.join(" ");
 				localStorage.setItem("ts-resFormat", window.client.format = newFromat);
 				window.client.sendSystemMessage(`Newformat is setd to "${newFromat}"`);
-			}else{
+			}else
+			if([p+"arealb"].includes(messageS[0])){
+				let sort = (e1, e2)=> 0;
+				if(messageS[1] == "xp") sort = (e1, e2)=>e2.experience - e1.experience;
+				if(messageS[1] == "area") sort = (e1, e2)=>e2.areaNumber - e1.areaNumber;
+				if(messageS[1] == "name") sort = (e1, e2)=>e1.name > e2.name ? 1 : -1;
+				if(messageS[1] == "hero") sort = (e1, e2)=>e1.heroType - e2.heroType;
+
+				client.sendSystemMessage(`${globalThis.client.main.regionName} ${globalThis.client.main.areaName}<br>`+
+				Object.values(globalThis.client.state.entities).filter(e=>e.entityType == 0)
+				.sort(sort)
+				.map(e=>`${e.name} ;; ${e.level} LVL ;; ${e.experience} XP ;; ${id2name(e.heroType)}`).join("<br>"))
+			}
+			else{
 
 				if(window.client.textCommandConstsE.length > 0){
 					for(let cmd of window.client.textCommandConstsE){
@@ -3410,6 +3477,7 @@ globalThis.client = {
 							["None", "3"]
 						],"timerReal", "ts-timerReal", ()=>{}],
 						["bool", "Automatic disconnect", "autodc", "ts-autodc", ()=>{}],
+						//["bool", "SS leaderboard shows xp", "ssxp", "ts-ssxp", ()=>{window.client.toggleExtendLb()}],
 					]
 					let i = 0;
 					popup.appendChild(document.createElementP("div", {className:"lay header"}, (lay)=>{
@@ -3480,6 +3548,7 @@ globalThis.client = {
 		})
 
 		window.client.elem.logsstor = window.client.userlog;
+		//window.client.toggleExtendLb();
 	},
 
 	showClasses: getLocal("ts-showClasses", "false") == "true",
@@ -5183,10 +5252,15 @@ window.lastPrefix = {
 				)
 				
 				
-				tmp = tmp.replace('return t.props.onMute(t.props.message)','let r = t.props.onMute(t.props.message);console.log(r); return r')
+				//tmp = tmp.replace('var s=Object.values(e);','var s=Object.values(e);if(globalThis.client.extendLb)Object.values(globalThis.client.state?.entities || []).forEach((v)=>{let ii;if(v.entityType == 0 && (ii=s.findIndex(vv=>vv.name == v.name))){console.log(ii.name,ii);s[ii]={...s[ii],...v}} });')
+				
+				//tmp = tmp.replace('var n,a;','var n,a,kk=(globalThis.client.textCommandConsts.ssxp && e.xp)?"experience":"level";');
+				//tmp = tmp.replace('n=e.level,a=t.level','n=e[kk],a=t[kk]');
+				//tmp = tmp.replace('||i.victoryArea!==u.victoryArea','|| i.victoryArea !== u.victoryArea|| (i.experience!==undefined && i.experience !== u.experience)');
+				//tmp = tmp.replace('n?u.level','n?u[(globalThis.client.textCommandConsts.ssxp && u.experience !== undefined)?"experience":"level"]');
+				//tmp = tmp.replace('victoryArea:i.victoryArea','victoryArea:i.victoryArea,experience:(i.experience)');
+				
 				//tmp = tmp.replace('','')
-				
-				
 				
 				//ppp
 				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.setState(this.state);')
@@ -5205,5 +5279,6 @@ window.lastPrefix = {
 			`;
 			elem.innerHTML = newInnerHTML;
 			document.body.appendChild(elem);
+			this.disconnect();
 		}
 	}
