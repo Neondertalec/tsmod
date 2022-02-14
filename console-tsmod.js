@@ -5168,7 +5168,7 @@ window.lastPrefix = {
 				
 				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:('+
 				'globalThis.client.events.emit(globalThis.client.events.events.chatMessage, {'+
-					'name:s,'+
+					'name:r,'+
 					'content:a,'+
 					'privs:l,'+
 				'}),s)')

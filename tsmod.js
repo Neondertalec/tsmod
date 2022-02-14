@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.85
+// @version     1.1.86
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -5186,7 +5186,7 @@ new MutationObserver(function(mutations) {
 				
 				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:('+
 				'globalThis.client.events.emit(globalThis.client.events.events.chatMessage, {'+
-					'name:s,'+
+					'name:r,'+
 					'content:a,'+
 					'privs:l,'+
 				'}),s)')
