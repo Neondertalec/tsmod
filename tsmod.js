@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.84
+// @version     1.1.85
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -150,7 +150,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.84",
+	v: "1.1.85",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -171,6 +171,13 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.85`,
+				news:[
+					`Fixed the chat that was breaking the game.`,
+					`Added a badge to Evades Olympics winners.`
+				],
+			},
 			{
 				version:`1.1.84`,
 				news:[
@@ -937,6 +944,7 @@ globalThis.tags = {
 	tags:{
 		'[oly1]':['Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
 		'[oly2]':['Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
+		'[oly3]':['Vikenti', '546000', 'Defa', 'AWEN', 'DD1', '4chаn.org', 'tтеуmlI', 'R0YqL', 'Zxynn', 'nosok'],
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
 		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':['Zaxoosh'],
@@ -3302,40 +3310,40 @@ globalThis.client = {
 					window.client.openCustomSettings(true);
 				});
 
+				let genButton = (popup, btnn, btnt, click)=>{
+					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
+						lay.appendChild(document.createElementP("button",{className:btnn,innerHTML:btnt},(el)=>{
+							el.addEventListener("click", click);
+						}));
+					}));
+				}
+
 				backpan.appendChild(document.createElementP("div",{className:"customSettings"},(popup)=>{
 					popup.addEventListener("click", (e)=>{
 						e.stopPropagation();
 					});
-					
-					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
-						lay.appendChild(document.createElementP("button",{className:"Logger",innerHTML:"Logger"},(el)=>{
-							el.addEventListener("click", (e)=>{
-								window.client.openCustomSettings(true);
-								window.client.openLogger();
-								e.stopPropagation();
-							});
-						}));
-					}));
 
-					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
-						lay.appendChild(document.createElementP("button",{className:"Commands",innerHTML:"Commands"},(el)=>{
-							el.addEventListener("click", (e)=>{
-								window.client.openCustomSettings(true);
-								window.client.openCustomCommands();
-								e.stopPropagation();
-							});
-						}));
-					}));
+					genButton(popup, "Logger", "Logger", (e)=>{
+						window.client.openCustomSettings(true);
+						window.client.openLogger();
+						e.stopPropagation();
+					})
 					
-					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
-						lay.appendChild(document.createElementP("button",{className:"FriendsNNotes",innerHTML:"Friends & Notes"},(el)=>{
-							el.addEventListener("click", (e)=>{
-								window.client.openCustomSettings(true);
-								window.client.openAllUserMetas();
-								e.stopPropagation();
-							});
-						}));
-					}));
+					genButton(popup, "Commands", "Commands", (e)=>{
+						window.client.openCustomSettings(true);
+						window.client.openCustomCommands();
+						e.stopPropagation();
+					})
+
+					genButton(popup, "FriendsNNotes", "Friends & Notes", (e)=>{
+						window.client.openCustomSettings(true);
+						window.client.openAllUserMetas();
+						e.stopPropagation();
+					})
+
+					for(let btnn of (globalThis.RBtns || [])){
+						genButton(popup, btnn[0], btnn[1], btnn[2])
+					}
 
 					popup.appendChild(document.createElementP("div",{className:"lay"},(lay)=>{
 						let mapToOpen = "Central Core";
@@ -5219,7 +5227,7 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
 				
 				tmp = tmp.replace('null!==l&&(c=e.default.createElement("span",null,e.default.createElement("span",{className:i},l," "),c)',
-				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,s))')
+				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,r))')
 
 				tmp = tmp.replace(
 					'return e.default.createElement("div",{className:"changelog"',
