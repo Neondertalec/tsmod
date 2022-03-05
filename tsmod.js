@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.86
+// @version     1.1.87
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -33,10 +33,46 @@ window.customTags = [
 	},
 	{
 		names: ["DepressionOwU"],
-		color: "#ff00bc",
-		text: "[SCR]",
+		color: "#767676",
+		text: "[",
 		rainbow: false,
+		join: true,
 		prior:1,
+		lock:false,
+	},
+	{
+		names: ["DepressionOwU"],
+		color: "#ff0000",
+		text: "S",
+		rainbow: false,
+		join: true,
+		prior:2,
+		lock:false,
+	},
+	{
+		names: ["DepressionOwU"],
+		color: "#00ff14",
+		text: "C",
+		rainbow: false,
+		join: true,
+		prior:3,
+		lock:false,
+	},
+	{
+		names: ["DepressionOwU"],
+		color: "#0095ff",
+		text: "R",
+		rainbow: false,
+		join: true,
+		prior:4,
+		lock:false,
+	},
+	{
+		names: ["DepressionOwU"],
+		color: "#767676",
+		text: "]",
+		rainbow: false,
+		prior:5,
 		lock:false,
 	},
 	{
@@ -150,7 +186,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.85",
+	v: "1.1.86",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -171,6 +207,16 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.86`,
+				news:[
+					[`New promotion for ${`[TS]`.fontcolor(this.cl.ts)}:`,	
+						`trevr`,
+						'Ventinari',
+						`Ashton94949`,
+					]
+				],
+			},
 			{
 				version:`1.1.85`,
 				news:[
@@ -978,7 +1024,6 @@ globalThis.tags = {
 			'Strat',
 			'ElFeyer',
 			'TimiT',
-			//'Ventinari',
 			'Lumaz',
 			'fAtKiD',
 			'nexxyst',
@@ -990,9 +1035,12 @@ globalThis.tags = {
 			`ʕっ•ᴥ•ʔっ`,
 			`Lann`,
 			`CZheng`,
+			`trevr`,
+			'Ventinari',
+			`Ashton94949`,
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
-		'[Jr. Mod]': ['AWEN', 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
+		'[Jr. Mod]': [/*'AWEN'*/, 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
 		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY', 'thiccsucc'],
 		'[Sr. Mod]': [],
 		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
