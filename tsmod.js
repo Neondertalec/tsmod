@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.87
+// @version     1.1.88
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -186,7 +186,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.86",
+	v: "1.1.87",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -208,9 +208,29 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.87`,
+				news:[
+					`${`Glob`.fontcolor(`#14a300`)}, ${`Magon`.fontcolor(`#ff005d`)}, ${`Ignis`.fontcolor(`#cd501f`)} and`+
+					` ${`Burning Bunker Hard`.fontcolor(`#e01b1b`)}, ${`Magnetic Monopole Hard`.fontcolor(`#bf00ff`)}, ${`Toxic Territory Hard`.fontcolor(`#5c5c5c`)}, ${`Restless Ridge Hard`.fontcolor(`#a88b64`)},`+
+					` are now displayed properly in the user card and logs.`,
+					
+					[`New promotions for ${`[Mod]`.fontcolor(this.cl.mod)}:`,	
+						`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} Nickchm`,
+						`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} nosok`,
+						`Vikenti`
+					],
+
+					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,	
+						`${`[Mod]`.fontcolor(this.cl.mod)} nosok`,
+						`jester`,
+						`546000`
+					]
+				],
+			},
+			{
 				version:`1.1.86`,
 				news:[
-					[`New promotion for ${`[TS]`.fontcolor(this.cl.ts)}:`,	
+					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,	
 						`trevr`,
 						'Ventinari',
 						`Ashton94949`,
@@ -1023,7 +1043,7 @@ globalThis.tags = {
 			'Mel',
 			'Strat',
 			'ElFeyer',
-			'TimiT',
+			//'TimiT',
 			'Lumaz',
 			'fAtKiD',
 			'nexxyst',
@@ -1038,10 +1058,13 @@ globalThis.tags = {
 			`trevr`,
 			'Ventinari',
 			`Ashton94949`,
+			`jester`,
+			`nosok`,
+			`546000`
 		],
 		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
-		'[Jr. Mod]': [/*'AWEN'*/, 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'nosok', 'DepressionOwU', 'Nickchm','Zade', 'R0YqL'],
-		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY', 'thiccsucc'],
+		'[Jr. Mod]': [/*'AWEN'*/, 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'DepressionOwU','Zade', 'R0YqL'],
+		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY', 'thiccsucc', 'Vikenti', 'nosok', 'Nickchm'],
 		'[Sr. Mod]': [],
 		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
@@ -1980,7 +2003,7 @@ globalThis.client = {
 	chat:null,
 	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
-	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]")),
+	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]")),
 	textCommandConstsE:[],
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
@@ -2120,7 +2143,7 @@ globalThis.client = {
 			e.stopPropagation();
 		});
 
-		for(let i = 0; i < 19; i++){
+		for(let i = 0; i < 22; i++){
 			let hero = window.id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
@@ -3737,35 +3760,42 @@ globalThis.id2name = (id)=>{
 	'Jotunn',
 	'Candy',
 	'Mirage',
-	'Boldrock'
+	'Boldrock',
+	'Glob',
+	'Magno',
+	'Ignis',
 	][id];
 }
 
 const maps = {
-	"Central Core": 		"CC",
-	"Central Core Hard": 	"CCH",
-	"Vicious Valley": 		"VV",
-	"Vicious Valley Hard": 	"VVH",
-	"Elite Expanse": 		"EE",
-	"Wacky Wonderland": 	"WW",
-	"Glacial Gorge": 		"GG",
-	"Glacial Gorge Hard": 	"GGH",
-	"Dangerous District": 	"DD",
-	"Peculiar Pyramid": 	"PP",
-	"Monumental Migration": "MM",
-	"Humongous Hollow": 	"HuHo",
-	"Haunted Halls": 		"HaHa",
-	"Quiet Quarry": 		"QQ",
-	"Frozen Fjord": 		"FF",
-	"Frozen Fjord Hard": 	"FFH",
-	"Ominous Occult": 		"OO",
-	"Restless Ridge": 		"RR",
-	"Toxic Territory": 		"TT",
-	"Magnetic Monopole": 	"MM2",
-	"Stellar Square": 		"SS",
-	"Assorted Alcove": 		"AA",
-	"Assorted Alcove Hard": "AAH",
-	"Burning Bunker": 		"BB",
+	"Central Core": 		  "CC",
+	"Central Core Hard": 	  "CCH",
+	"Vicious Valley": 		  "VV",
+	"Vicious Valley Hard": 	  "VVH",
+	"Elite Expanse": 		  "EE",
+	"Wacky Wonderland": 	  "WW",
+	"Glacial Gorge": 		  "GG",
+	"Glacial Gorge Hard": 	  "GGH",
+	"Dangerous District": 	  "DD",
+	"Peculiar Pyramid": 	  "PP",
+	"Monumental Migration":   "MM",
+	"Humongous Hollow": 	  "HuHo",
+	"Haunted Halls": 		  "HaHa",
+	"Quiet Quarry": 		  "QQ",
+	"Frozen Fjord": 		  "FF",
+	"Frozen Fjord Hard": 	  "FFH",
+	"Ominous Occult": 		  "OO",
+	"Restless Ridge": 		  "RR",
+	"Toxic Territory": 		  "TT",
+	"Magnetic Monopole": 	  "MM2",
+	"Stellar Square": 		  "SS",
+	"Assorted Alcove": 		  "AA",
+	"Assorted Alcove Hard":   "AAH",
+	"Burning Bunker": 		  "BB",
+	"Burning Bunker Hard": 	  "BBH",
+	"Magnetic Monopole Hard": "MM2H",
+	"Toxic Territory Hard":   "TTH",
+	"Restless Ridge Hard":   "RRH",
 }
 
 window.getShortName = (map)=>{
@@ -3845,6 +3875,12 @@ window.getHeroColor = function(Hero){
 			return "#020fa2";
 		case "Boldrock":
 			return "#a18446";
+		case "Glob":
+			return "#14a300";
+		case "Magno":
+			return "#ff005d";
+		case "Ignis":
+			return "#cd501f";
 	}
 	return "white";
 }
