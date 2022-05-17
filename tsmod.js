@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.89
+// @version     1.1.90
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -183,6 +183,14 @@ window.customTags = [
 		prior:2,
 		lock:false,
 	},
+	{
+		names: ["nosok"],
+		color: "#25e8be",
+		text: "🤡",
+		rainbow: false,
+		prior:1,
+		lock:false,
+	},
 ]
 
 window.vers = {
@@ -222,7 +230,11 @@ window.vers = {
 						`4chan.org`,
 						`Dinonuggy`,
 						`BJG`
-					]
+					],
+					[
+						`Twelfth custom tag:`,
+						`${`[Mod]`.fontcolor(this.cl.mod)} 🤡 nosok`
+					],
 				],
 			},
 			{
@@ -1491,6 +1503,14 @@ globalThis.profiler = {
 		"winter-wreath": "/winter-wreath.07f00139.png",
 		"spring-wreath": "/spring-wreath.490fbc9e.png",
 		"olympics-wreath": "/olympics-wreath.a8b838b7.png",
+
+		"blue-flames": "/blue-flames.3beec8e5.png",
+		"blue-santa-hat": "/blue-santa-hat.9e42565d.png",
+		"flames": "/flames.b3703c82.png",
+		"orbit-ring": "/orbit-ring.53e4adb3.png",
+		"stars": "/stars.1958914c.png",
+		"sticky-coat": "/sticky-coat.1412b8a0.png",
+		"toxic-coat": "/toxic-coat.a27cd6c9.png",
 	},
 	graph: {
 		el: null,
