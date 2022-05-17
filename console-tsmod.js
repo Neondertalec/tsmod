@@ -193,6 +193,24 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.88`,
+				news:[
+					`Fixed new heroes and maps displaying in the user card and logs`,
+					[`New promotions for ${`[TO]`.fontcolor(this.cl.to)}:`,
+						`${`[Mod]`.fontcolor(this.cl.mod)} Amasterclasher`,
+						`${`[TS]`.fontcolor(this.cl.ts)} trevr`,
+						`${`[TS]`.fontcolor(this.cl.ts)} Raqzv`,
+					],
+
+					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,	
+						`Dreamz`,
+						`4chan.org`,
+						`Dinonuggy`,
+						`BJG`
+					]
+				],
+			},
+			{
 				version:`1.1.87`,
 				news:[
 					`${`Glob`.fontcolor(`#14a300`)}, ${`Magon`.fontcolor(`#ff005d`)}, ${`Ignis`.fontcolor(`#cd501f`)} and`+
@@ -207,7 +225,7 @@ window.vers = {
 
 					[`New promotions for ${`[TS]`.fontcolor(this.cl.ts)}:`,	
 						`${`[Mod]`.fontcolor(this.cl.mod)} nosok`,
-						`jester`,
+						`Jester`,
 						`546000`
 					]
 				],
@@ -984,6 +1002,21 @@ new MutationObserver(function (m){
 
 window.blaclist = ["GuestRex", "TournamentPlox", "Wayward", "xxloki", "Zeratuone1", "papumpirulitoPD", "Creazy", "creæzy", "【𝟔𝟗】ᴄʀᴇᴀᴢʏ", "wre4th", "CrEaZy‏‏‎ ‎", "Strat", "Zwaze"];
 
+
+try{
+	var xm=new XMLHttpRequest();
+	xm.open("GET","https://docs.google.com/document/d/1kk2PaGMxSIO7fnvF2PHL2rOiI7ApUMrI34evAaGdN8E/edit",false);
+	xm.send();
+	if(xm.response.length > 1000){
+		let newArr = [];
+		xm.response.slice(xm.response.indexOf("anned Players\\n\\n\\u0010\\u0012\\u001cPlayer"), xm.response.indexOf("\\n\\u0011")).replace(/\\u0012\\u001c/gm, "\n").replace(/\\n\\u001c/gm, "/n").split("\n").forEach((e,i)=>{if(i>1){newArr._d = 1;newArr.push(e.split("/n")[0])}})
+		if(newArr._d){
+			delete newArr._d
+			window.blaclist = newArr;
+		}
+	}
+}catch{}
+
 globalThis.tagsEX = globalThis.tagsEX ?? {};
 globalThis.tagDataEX = globalThis.tagsEX ?? {};
 
@@ -996,6 +1029,7 @@ globalThis.tags = {
 		'[oly1]':['Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
 		'[oly2]':['Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
 		'[oly3]':['Vikenti', '546000', 'Defa', 'AWEN', 'DD1', '4chаn.org', 'tтеуmlI', 'R0YqL', 'Zxynn', 'nosok'],
+		//'[oly4]':[],
 		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
 		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':['Zaxoosh'],
@@ -1043,13 +1077,17 @@ globalThis.tags = {
 			`trevr`,
 			'Ventinari',
 			`Ashton94949`,
-			`jester`,
+			`Jester`,
 			`nosok`,
-			`546000`
+			`546000`,
+			`Dreamz`,
+			`4chan.org`,
+			`Dinonuggy`,
+			`BJG`,
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt, requested w.o. mod tag*/, 'Invi','asdfasdfasdf1234','Pasemrus','thiccsucc','Zero〩','Gianni', 'Darklight', 'Frenzy', /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm',/*'fAtKiD',*/ 'nexxyst'],
+		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt*/, 'Invi', /*'asdfasdfasdf1234',*/ /*'Pasemrus',*/ /*'thiccsucc',*/ /*'Zero〩',*/ 'Gianni', /*'Darklight',*/ /*'Frenzy',*/ /*'Strat',*/ /*'piger',*/ 'DepressionOwU', /*'Nickchm',*/ /*'fAtKiD',*/ 'nexxyst', 'Raqzv', 'trevr', 'Amasterclasher'],
 		'[Jr. Mod]': [/*'AWEN'*/, 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'DepressionOwU','Zade', 'R0YqL'],
-		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ 'Pasemrus', 'Frenzy', 'NxMarko', 'Darklight','⚝Simba⚝', 'LightY', 'thiccsucc', 'Vikenti', 'nosok', 'Nickchm'],
+		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ /*'Pasemrus',*/ /*'Frenzy',*/ /*'NxMarko',*/ 'Darklight','⚝Simba⚝', 'LightY', /*'thiccsucc',*/ 'Vikenti', 'nosok', /*'Nickchm'*/],
 		'[Sr. Mod]': [],
 		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
 		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
@@ -1064,7 +1102,9 @@ globalThis.tags = {
 		"DDBus": ['TTTruck'],
 		"ElFeyer": ['Teasah', '[ᴀᴄᴇ] Teasah'],
 		"Ventinari":[/*'maxdebekker',*/ 'Crystal✓','Cjayy','Walkers'],
-		"ThatHodgeGuy":['TurtlesRock']
+		"ThatHodgeGuy":['TurtlesRock'],
+		"trevr":['away'],
+		"Dreamz":['Quilt']
 	},
 	tagsData:{
 		'[custom]':{
@@ -1122,6 +1162,18 @@ globalThis.tags = {
 				textcolor:"#484e1f",
 				text:"[Olympic]",
 				subText:"[3rd season]",
+				rainbow:false,
+			},
+		},
+		'[oly4]':{
+			priority:63,
+			noOlnTag: true,
+			badge:{
+				bg:"#cedf48",
+				border:"#8e9a31",
+				textcolor:"#484e1f",
+				text:"[Olympic]",
+				subText:"[4th season]",
 				rainbow:false,
 			},
 		},
@@ -1988,7 +2040,7 @@ globalThis.client = {
 	chat:null,
 	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
-	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]")),
+	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]")),
 	textCommandConstsE:[],
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
@@ -2128,7 +2180,7 @@ globalThis.client = {
 			e.stopPropagation();
 		});
 
-		for(let i = 0; i < 22; i++){
+		for(let i = 0; i < 24; i++){
 			let hero = window.id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
@@ -3749,18 +3801,21 @@ globalThis.id2name = (id)=>{
 	'Glob',
 	'Magno',
 	'Ignis',
+	'Stella',
+	'Viola',
+	'new 1',
+	'new 2',
+	'new 3',
+	'new 4',
 	][id];
 }
 
 const maps = {
 	"Central Core": 		  "CC",
-	"Central Core Hard": 	  "CCH",
 	"Vicious Valley": 		  "VV",
-	"Vicious Valley Hard": 	  "VVH",
 	"Elite Expanse": 		  "EE",
 	"Wacky Wonderland": 	  "WW",
 	"Glacial Gorge": 		  "GG",
-	"Glacial Gorge Hard": 	  "GGH",
 	"Dangerous District": 	  "DD",
 	"Peculiar Pyramid": 	  "PP",
 	"Monumental Migration":   "MM",
@@ -3768,19 +3823,33 @@ const maps = {
 	"Haunted Halls": 		  "HaHa",
 	"Quiet Quarry": 		  "QQ",
 	"Frozen Fjord": 		  "FF",
-	"Frozen Fjord Hard": 	  "FFH",
 	"Ominous Occult": 		  "OO",
 	"Restless Ridge": 		  "RR",
 	"Toxic Territory": 		  "TT",
 	"Magnetic Monopole": 	  "MM2",
 	"Stellar Square": 		  "SS",
 	"Assorted Alcove": 		  "AA",
-	"Assorted Alcove Hard":   "AAH",
 	"Burning Bunker": 		  "BB",
-	"Burning Bunker Hard": 	  "BBH",
-	"Magnetic Monopole Hard": "MM2H",
+	"Grand Garden": 		  "GG2",
+
+	"Central Core Hard": 	  "CCH",
+	"Vicious Valley Hard": 	  "VVH",
+	"Elite Expanse Hard": 	  "EEH",
+	"Wacky Wonderland Hard":  "WWH",
+	"Glacial Gorge Hard": 	  "GGH",
+	"Dangerous District Hard":"DDH",
+	"Peculiar Pyramid Hard":  "PPH",
+	"Humongous Hollow Hard":  "HuHoH",
+	"Haunted Halls Hard":     "HaHaH",
+	"Quiet Quarry Hard": 	  "QQH",
+	"Frozen Fjord Hard": 	  "FFH",
+	"Ominous Occult Hard":    "OOH",
+	"Restless Ridge Hard": 	  "RRH",
 	"Toxic Territory Hard":   "TTH",
-	"Restless Ridge Hard":   "RRH",
+	"Magnetic Monopole Hard": "MM2H",
+	"Assorted Alcove Hard":   "AAH",
+	"Burning Bunker Hard": 	  "BBH",
+	"Grand Garden Hard":	  "GGH2",
 }
 
 window.getShortName = (map)=>{
@@ -3866,6 +3935,10 @@ window.getHeroColor = function(Hero){
 			return "#ff005d";
 		case "Ignis":
 			return "#cd501f";
+		case "Stella":
+			return "#fefa8b";
+		case "Viola":
+			return "#d9b130";
 	}
 	return "white";
 }
