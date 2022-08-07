@@ -176,6 +176,22 @@ window.customTags = [
 		prior:1,
 		lock:false,
 	},
+	{
+		names: ["koraiii"],
+		color: "#fff",
+		text: "[Kyng]",
+		rainbow: true,
+		prior:1,
+		lock:false,
+	},
+	{
+		names: ["trevr", "away"],
+		color: "#fff",
+		text: "[oop]",
+		rainbow: true,
+		prior:1,
+		lock:false,
+	},
 ]
 
 window.vers = {
@@ -200,6 +216,24 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.89`,
+				news:[
+					`Some fixes.`,
+					`Some Updates with the new pormotions (late).`,
+					[
+						`Thirteenth and fourteenth custom tags:`,
+						`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} <font class="rainbowText">[Kyng]</font> koraiii`,
+						`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} <font class="rainbowText">[oop]</font> trevr`,
+					],
+					`Removed TS and TO tags from display.<br>`+
+					`<details><summary>Reasons:</summary><ul>`+
+					`<li>Left TO</li>`+
+					`<li>Hard To manage unlike moderator tags</li>`+
+					`<li>Requested by Piger</li>`+
+					`</ul></details>`
+				],
+			},
 			{
 				version:`1.1.88`,
 				news:[
@@ -858,7 +892,13 @@ window.vers = {
 		var xm=new XMLHttpRequest();
 		xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
 		xm.send();
-		return JSON.parse(xm.response);
+		let data = JSON.parse(xm.response);
+		if(data["ol-tw"]){
+			xm.open("GET",data["ol-tw"],false);
+			xm.send();
+			data.tw = JSON.parse(xm.response).tw;
+		}
+		return data;
 	},
 	
 	checkVer: function(v1, v2){
@@ -1034,25 +1074,25 @@ globalThis.tagDataEX = globalThis.tagsEX ?? {};
 
 globalThis.tagsEX = {...globalThis.tagsEX,...{'[SCR]':['DepressionOwU'],}}
 globalThis.tagDataEX = {...globalThis.tagDataEX,...{'[SCR]': {presudo:"[TO&Scripter]", color:"#ff00bc"},}};
-
+const atwne = "atwnebissatwnebiss";
 globalThis.tags = {
 	chatTags: new globalThis.CacheTs(),
 	tags:{
-		'[oly1]':['Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
-		'[oly2]':['Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
-		'[oly3]':['Vikenti', '546000', 'Defa', 'AWEN', 'DD1', '4chаn.org', 'tтеуmlI', 'R0YqL', 'Zxynn', 'nosok'],
-		//'[oly4]':[],
-		'[custom]': ['DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
-		'[YT]':['R0YqL', 'Strat', 'mRDDanik', 'DD1'],
-		'[ST]':['Zaxoosh'],
-		'[SCR]':['DepressionOwU'],
-		'[TS]': ['yIzaac😎👌',
+		'[oly1]':[atwne,'Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
+		'[oly2]':[atwne,'Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
+		'[oly3]':[atwne,'Vikenti', '546000', 'Defa', 'AWEN', 'DD1', '4chаn.org', 'tтеуmlI', 'R0YqL', 'Zxynn', 'nosok'],
+		'[oly4]':[atwne,"Ventinari", 'Ndaverr', 'Tetar', 'Bluemonkey14', '9jd8fn48fnf8rnr', 'PotatoNuke', 'lindsay', 'Koraiii', 'BJG', 'Harmony556'],
+		'[custom]': [atwne,'DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
+		'[YT]':[atwne,'R0YqL', 'Strat', 'mRDDanik', 'DD1'],
+		'[ST]':[atwne,'Zaxoosh'],
+		'[SCR]':[atwne,'DepressionOwU'],
+		'[TS]': [atwne,'yIzaac😎👌',
 			//'Creazy',
 			'Aries', /*'goldy',*/ /*'drippyk',*/ /*'SANDWICH',*/ /*'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /*'prod1gy',*/ 'Zade',
 			'1Phoenix1',
 			'DepressionOwU',
 			/*'Exscord'*/,
-			/*'piger',*/
+			'piger',
 			//'DEFA', 'ZaLo', 'notdefa',
 			'R0YqL',
 			'Nickchm',
@@ -1097,12 +1137,12 @@ globalThis.tags = {
 			`Dinonuggy`,
 			`BJG`,
 		],
-		'[TO]': ['Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt*/, 'Invi', /*'asdfasdfasdf1234',*/ /*'Pasemrus',*/ /*'thiccsucc',*/ /*'Zero〩',*/ 'Gianni', /*'Darklight',*/ /*'Frenzy',*/ /*'Strat',*/ /*'piger',*/ 'DepressionOwU', /*'Nickchm',*/ /*'fAtKiD',*/ 'nexxyst', 'Raqzv', 'trevr', 'Amasterclasher'],
-		'[Jr. Mod]': [/*'AWEN'*/, 'Gazebr', 'CrEoP', 'Ram', /*'piger',*/ /*'LightY'*/, 'asdfasdfasdf1234', /*'Exscord'*/, 'DepressionOwU','Zade', 'R0YqL'],
-		'[Mod]': ['Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ /*'Pasemrus',*/ /*'Frenzy',*/ /*'NxMarko',*/ 'Darklight','⚝Simba⚝', 'LightY', /*'thiccsucc',*/ 'Vikenti', 'nosok', /*'Nickchm'*/],
-		'[Sr. Mod]': [],
-		'[H. Mod]': ['Exoriz', 'extirpater', 'Jackal'],
-		'[Dev]': ['Stovoy', 'MiceLee', 'DDBus']
+		'[TO]': [atwne,'Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt*/, 'Invi', /*'asdfasdfasdf1234',*/ /*'Pasemrus',*/ /*'thiccsucc',*/ /*'Zero〩',*/ 'Gianni', /*'Darklight',*/ /*'Frenzy',*/ /*'Strat',*/ 'piger', 'DepressionOwU', /*'Nickchm',*/ /*'fAtKiD',*/ /*'nexxyst',*/ 'Raqzv', 'trevr', 'Amasterclasher'],
+		'[Jr. Mod]': [atwne,'AWEN', 'Gazebr', 'CrEoP', 'Ram', 'piger', /*'LightY',*/ /*'Exscord',*/ /*'Zade',*/ 'Raqzv', 'trevr', 'koraiii'],
+		'[Mod]': [atwne,'Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ /*'Pasemrus',*/ /*'Frenzy',*/ /*'NxMarko',*/ 'Darklight','⚝Simba⚝', 'LightY', /*'thiccsucc',*/ 'Vikenti', 'nosok', /*'Nickchm'*/'DepressionOwU', 'asdfasdfasdf1234', 'R0YqL'],
+		'[Sr. Mod]': [atwne],
+		'[H. Mod]': [atwne,'Exoriz', 'extirpater', 'Jackal'],
+		'[Dev]': [atwne,'Stovoy', 'MiceLee', 'DDBus']
 	},
 	alts:{
 		"Creazy": ['Wre4th','CrEaZy','creæzy','【𝟔𝟗】ᴄʀᴇᴀᴢʏ'],
@@ -1189,6 +1229,18 @@ globalThis.tags = {
 				rainbow:false,
 			},
 		},
+		'[oly5]':{
+			priority:64,
+			noOlnTag: true,
+			badge:{
+				bg:"#cedf48",
+				border:"#8e9a31",
+				textcolor:"#484e1f",
+				text:"[Olympic]",
+				subText:"[5th season]",
+				rainbow:false,
+			},
+		},
 		'[YT]': {
 			priority:0,
 			prefix:{
@@ -1204,7 +1256,7 @@ globalThis.tags = {
 			},
 		},
 		'[ST]': {
-			priority:11,
+			priority:1,
 			prefix:{
 				color:"#a258ea",
 				text:"[Streamer]",
@@ -1422,6 +1474,8 @@ globalThis.tags = {
 	},
 
 	init:function(){
+		this.tags["[TO]"] = [];
+		this.tags["[TS]"] = [];
 		this.calcOldTags();
 	},
 
@@ -1488,7 +1542,7 @@ globalThis.profiler = {
 		"winter-wreath": "/winter-wreath.07f00139.png",
 		"spring-wreath": "/spring-wreath.490fbc9e.png",
 		"olympics-wreath": "/olympics-wreath.a8b838b7.png",
-		
+
 		"blue-flames": "/blue-flames.3beec8e5.png",
 		"blue-santa-hat": "/blue-santa-hat.9e42565d.png",
 		"flames": "/flames.b3703c82.png",
