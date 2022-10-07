@@ -1678,7 +1678,7 @@ globalThis.client = {
 				});
 
 				client.imgs.tileOgSrc = client.imgs.obj["maps/tiles"].src;
-
+				client.imgs.changeTile();
 			},0)
 		},
 
