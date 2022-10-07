@@ -1,4 +1,182 @@
 {
-  "v": "1.1.89",
-  "tw": [""]
+  "v": "1.1.90",
+  "tw": [""],
+  "tags": [
+    {
+      "names": ["DepressionOwU"],
+      "color": "#767676",
+      "text": "[",
+      "rainbow": false,
+      "join": true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["DepressionOwU"],
+      "color": "#ff0000",
+      "text": "S",
+      "rainbow": false,
+      "join": true,
+      "prior":2,
+      "lock":false
+    },
+    {
+      "names": ["DepressionOwU"],
+      "color": "#00ff14",
+      "text": "C",
+      "rainbow": false,
+      "join": true,
+      "prior":3,
+      "lock":false
+    },
+    {
+      "names": ["DepressionOwU"],
+      "color": "#0095ff",
+      "text": "R",
+      "rainbow": false,
+      "join": true,
+      "prior":4,
+      "lock":false
+    },
+    {
+      "names": ["DepressionOwU"],
+      "color": "#767676",
+      "text": "]",
+      "rainbow": false,
+      "prior":5,
+      "lock":false
+    },
+    {
+      "names": ["Gianni"],
+      "color": "#009b77",
+      "text": "[evader]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["Invi"],
+      "color": "#51dddd",
+      "text": "[Invi]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["LightY"],
+      "color": "#f19dba",
+      "text": "[litijo]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["Jayyyyyyyyyyyyyy", "GuеstZunolo"],
+      "color": "#f00",
+      "text": "[Dep's BFF]",
+      "rainbow": true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["R0YqL"],
+      "color": "#009b77",
+      "text": "[Roy]",
+      "rainbow": true,
+      "rglow":true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["Pasemrus"],
+      "color": "#51dddd",
+      "text": "[Air]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["thiccsucc"],
+      "color": "#9D2005",
+      "text": "[THICC]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["L0YqL"],
+      "color": "#009b77",
+      "text": "[Loy]",
+      "rainbow": true,
+      "rglow":true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["AWEN"],
+      "color": "#12e612",
+      "text": "[buster]",
+      "rainbow": true,
+      "rglow":true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["NoAwen"],
+      "color": "#12e612",
+      "text": "[REALLY]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["Vikenti"],
+      "color": "#B026FF",
+      "text": "[wap cat]",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["haha0201"],
+      "color": "#c01fed",
+      "text": "[h",
+      "join": true,
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["haha0201"],
+      "color": "#25e8be",
+      "text": "u]",
+      "rainbow": false,
+      "prior":2,
+      "lock":false
+    },
+    {
+      "names": ["nosok"],
+      "color": "#25e8be",
+      "text": "🤡",
+      "rainbow": false,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["koraiii"],
+      "color": "#fff",
+      "text": "[Kyng]",
+      "rainbow": true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["President"],
+      "color": "#0a009f",
+      "text": "[oop]",
+      "rainbow": true,
+      "prior":1,
+      "lock":false
+    }
+  ]
 }

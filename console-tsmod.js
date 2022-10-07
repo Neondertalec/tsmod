@@ -16,182 +16,6 @@ window.customTags = [
 		prior:0,
 		lock:false,
 	},
-	{
-		names: ["DepressionOwU"],
-		color: "#767676",
-		text: "[",
-		rainbow: false,
-		join: true,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["DepressionOwU"],
-		color: "#ff0000",
-		text: "S",
-		rainbow: false,
-		join: true,
-		prior:2,
-		lock:false,
-	},
-	{
-		names: ["DepressionOwU"],
-		color: "#00ff14",
-		text: "C",
-		rainbow: false,
-		join: true,
-		prior:3,
-		lock:false,
-	},
-	{
-		names: ["DepressionOwU"],
-		color: "#0095ff",
-		text: "R",
-		rainbow: false,
-		join: true,
-		prior:4,
-		lock:false,
-	},
-	{
-		names: ["DepressionOwU"],
-		color: "#767676",
-		text: "]",
-		rainbow: false,
-		prior:5,
-		lock:false,
-	},
-	{
-		names: ["Gianni"],
-		color: "#009b77",
-		text: "[evader]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["Invi"],
-		color: "#51dddd",
-		text: "[Invi]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["LightY"],
-		color: "#f19dba",
-		text: "[litijo]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["Jayyyyyyyyyyyyyy", "GuеstZunolo"/*thats me, not jay lol*/],
-		color: "#f00",
-		text: "[Dep's BFF]",
-		rainbow: true,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["R0YqL"],
-		color: "#009b77",
-		text: "[Roy]",
-		rainbow: true,
-		rglow:true,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["Pasemrus"],
-		color: "#51dddd",
-		text: "[Air]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["thiccsucc"],
-		color: "#9D2005",
-		text: "[THICC]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["L0YqL"],
-		color: "#009b77",
-		text: "[Loy]",
-		rainbow: true,
-		rglow:true,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["AWEN"],
-		color: "#12e612",
-		text: "[buster]",
-		rainbow: true,
-		rglow:true,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["NoAwen"],
-		color: "#12e612",
-		text: "[REALLY]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["Vikenti"],
-		color: "#B026FF",
-		text: "[wap cat]",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["haha0201"],
-		color: "#c01fed",
-		text: "[h",
-		join: true,
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["haha0201"],
-		color: "#25e8be",
-		text: "u]",
-		rainbow: false,
-		prior:2,
-		lock:false,
-	},
-	{
-		names: ["nosok"],
-		color: "#25e8be",
-		text: "🤡",
-		rainbow: false,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["koraiii"],
-		color: "#fff",
-		text: "[Kyng]",
-		rainbow: true,
-		prior:1,
-		lock:false,
-	},
-	{
-		names: ["trevr", "away"],
-		color: "#fff",
-		text: "[oop]",
-		rainbow: true,
-		prior:1,
-		lock:false,
-	},
 ]
 
 window.vers = {
@@ -216,6 +40,17 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.90`,
+				news:[
+					`Some fixes.`,
+					[`New promotions for ${`[Mod]`.fontcolor(this.cl.mod)}:`,
+					`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} Raqzv`,
+					`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} trevr`,
+					],
+					`You can now toggle tiles on/off.<br><i>${`Reentering the area is required`.fontcolor(this.cl.cmd)}</i>`,
+				],
+			},
 			{
 				version:`1.1.89`,
 				news:[
@@ -889,16 +724,25 @@ window.vers = {
 		];
 	},
 	getm: function(){
-		var xm=new XMLHttpRequest();
-		xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
-		xm.send();
-		let data = JSON.parse(xm.response);
-		if(data["ol-tw"]){
-			xm.open("GET",data["ol-tw"],false);
+		try{
+			var xm=new XMLHttpRequest();
+			xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/meta.json",false);
 			xm.send();
-			data.tw = JSON.parse(xm.response).tw;
-		}
-		return data;
+			let data = JSON.parse(xm.response);
+
+			if(data["ol-tw"]){
+				xm.open("GET",data["ol-tw"],false);
+				xm.send();
+				data.tw = JSON.parse(xm.response).tw;
+			}
+			if(data["ol-tags"]){
+				xm.open("GET",data["ol-tags"],false);
+				xm.send();
+				data.tags = [...(data.tags || []), ...JSON.parse(xm.response).tags];
+			}
+
+			return data;
+		}catch(e){console.error("failed to load meta!", e)}
 	},
 	
 	checkVer: function(v1, v2){
@@ -918,6 +762,22 @@ window.vers = {
 	
 			globalThis.tags.tags["[TW]"] = names;
 			globalThis.customTags[0].names = names;
+		}
+		if(d.tags){
+			try{
+				for(let i in d.tags){
+					let ntag = d.tags[i];
+					globalThis.customTags.push({
+						names: [...ntag.names],
+						color: ntag.color || "#ff0000",
+						text: ntag.text || "[?]",
+						rainbow: !!ntag.rainbow,
+						join: !!ntag.join,
+						prior: ntag.prior || 0,
+						lock: !!ntag.lock,
+					});
+				}
+			}catch(e){console.error(e)}
 		}
 
 		if(this.checkVer(this.v,d.v)){
@@ -1081,7 +941,8 @@ globalThis.tags = {
 		'[oly1]':[atwne,'Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
 		'[oly2]':[atwne,'Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
 		'[oly3]':[atwne,'Vikenti', '546000', 'Defa', 'AWEN', 'DD1', '4chаn.org', 'tтеуmlI', 'R0YqL', 'Zxynn', 'nosok'],
-		'[oly4]':[atwne,"Ventinari", 'Ndaverr', 'Tetar', 'Bluemonkey14', '9jd8fn48fnf8rnr', 'PotatoNuke', 'lindsay', 'Koraiii', 'BJG', 'Harmony556'],
+		'[oly4]':[atwne,'Ventinari', 'Ndaverr', 'Tetar', 'Bluemonkey14', '9jd8fn48fnf8rnr', 'PotatoNuke', 'lindsay', 'Koraiii', 'BJG', 'Harmony556'],
+		'[oly5]':[atwne,'BOTSLAYER', 'Strat', 'Dreamz', 'Harmony556', 'AngelNarwall', 'Ventinari', 'BJG', 'lindsay', 'Koraiii', 'eagle45'],
 		'[custom]': [atwne,'DepressionOwU', ...window.customTags.reduce(function(vv,ii){vv.push(...ii.names);return vv},[])],
 		'[YT]':[atwne,'R0YqL', 'Strat', 'mRDDanik', 'DD1'],
 		'[ST]':[atwne,'Zaxoosh'],
@@ -1137,9 +998,12 @@ globalThis.tags = {
 			`Dinonuggy`,
 			`BJG`,
 		],
-		'[TO]': [atwne,'Jayyyyyyyyyyyyyy', 'AWEN', 'Stov'/*awenalt*/, 'Invi', /*'asdfasdfasdf1234',*/ /*'Pasemrus',*/ /*'thiccsucc',*/ /*'Zero〩',*/ 'Gianni', /*'Darklight',*/ /*'Frenzy',*/ /*'Strat',*/ 'piger', 'DepressionOwU', /*'Nickchm',*/ /*'fAtKiD',*/ /*'nexxyst',*/ 'Raqzv', 'trevr', 'Amasterclasher'],
-		'[Jr. Mod]': [atwne,'AWEN', 'Gazebr', 'CrEoP', 'Ram', 'piger', /*'LightY',*/ /*'Exscord',*/ /*'Zade',*/ 'Raqzv', 'trevr', 'koraiii'],
-		'[Mod]': [atwne,'Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ /*'Pasemrus',*/ /*'Frenzy',*/ /*'NxMarko',*/ 'Darklight','⚝Simba⚝', 'LightY', /*'thiccsucc',*/ 'Vikenti', 'nosok', /*'Nickchm'*/'DepressionOwU', 'asdfasdfasdf1234', 'R0YqL'],
+		
+		'[Wreath Perms]': [atwne, 'Exoriz', 'Jackal', 'Invi', 'Gianni', 'LightY', 'Amasterclasher'],
+		
+		'[TO]': [atwne,'Jayyyyyyyyyyyyyy', /*'AWEN',*/ /*'Invi',*/ /*'asdfasdfasdf1234',*/ /*'Pasemrus',*/ /*'thiccsucc',*/ /*'Zero〩',*/ 'Gianni', 'Darklight', /*'Frenzy',*/ /*'Strat',*/ /*'piger',*/ 'DepressionOwU', 'Nickchm', /*'fAtKiD',*/ /*'nexxyst',*/ 'Raqzv', 'trevr', /*'Amasterclasher',*/ 'Vikenti'],
+		'[Jr. Mod]': [atwne,'AWEN', 'Gazebr', 'CrEoP', 'Ram', 'piger', /*'LightY',*/ /*'Exscord',*/ /*'Zade',*/ 'koraiii'],
+		'[Mod]': [atwne,'Invi','Amasterclasher', 'Mel', 'Gianni', 'Zero〩', '1Phoenix1', /*'Rc',*/ /*'Pasemrus',*/ /*'Frenzy',*/ /*'NxMarko',*/ 'Darklight','⚝Simba⚝', 'LightY', /*'thiccsucc',*/ 'Vikenti', 'nosok', 'Nickchm', 'DepressionOwU', 'asdfasdfasdf1234', 'R0YqL', 'Raqzv', 'trevr'],
 		'[Sr. Mod]': [atwne],
 		'[H. Mod]': [atwne,'Exoriz', 'extirpater', 'Jackal'],
 		'[Dev]': [atwne,'Stovoy', 'MiceLee', 'DDBus']
@@ -1167,6 +1031,18 @@ globalThis.tags = {
 				border:"#000",
 				textcolor:"#000",
 				text:"[Custom]",
+				rainbow:true,
+			},
+		},
+		'[Wreath Perms]':{
+			priority:101,
+			noOlnTag: true,
+			badge:{
+				bg:"#000",
+				border:"#000",
+				textcolor:"#000",
+				text:"[Wreath]",
+				subText:"Permissions",
 				rainbow:true,
 			},
 		},
@@ -1474,7 +1350,7 @@ globalThis.tags = {
 	},
 
 	init:function(){
-		this.tags["[TO]"] = [];
+		//this.tags["[TO]"] = [];
 		this.tags["[TS]"] = [];
 		this.calcOldTags();
 	},
@@ -1771,8 +1647,29 @@ globalThis.client = {
 			if((d = now - this.lastFpsTime) > 1000){
 				this.fps = Math.round(this.frames * (1000-(d % 1000)) * 0.001);
                 this.frames = 0;
-				this.lastFpsTime = now
+				this.lastFpsTime = now;
 			}
+		}
+	},
+
+	imgs:{
+		obj:{},
+		retreived: ()=>{
+			setTimeout(()=>{
+				console.log("ret");
+
+				Object.keys(client.imgs.obj).filter(e=>e.startsWith("hats/")).forEach(e=>{
+					globalThis.profiler.hats[e.replace("hats/", "")] = client.imgs.obj[e].src;
+				});
+
+				client.imgs.tileOgSrc = client.imgs.obj["maps/tiles"].src;
+
+			},0)
+		},
+
+		tileOgSrc:"",
+		changeTile: ()=>{
+			client.imgs.obj["maps/tiles"].src = client.textCommandConsts.notiles ? "https://u.cubeupload.com/Ravelfett/tiles5e12c370.jpg" : client.imgs.tileOgSrc;
 		}
 	},
 
@@ -2118,6 +2015,7 @@ globalThis.client = {
 	textCommandConstsE:[],
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
+		notiles: getLocal("ts-notiles", "false") == "true",
 		showTag: getLocal("ts-showTag", "false") == "true",
 		bannedType: +getLocal("ts-bannedType", "0"),
 		showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
@@ -3671,6 +3569,7 @@ globalThis.client = {
 					});
 
 					const cmdStruct=[
+						["bool", "Disable tiles", "notiles", "ts-notiles", ()=>{window.client.imgs.changeTile()}],
 						["bool", "User tags", "showTag", "ts-showTag", ()=>{}],
 						["bool", "User LB tags", "lbTags", "ts-lbTags", (r)=>{window.client.toggleLbTags(r);}],
 						["bool", "LB users count", "showUIACnt", "ts-showUIACnt", ()=>{window.client.areaData.updateLb();}],
@@ -3836,6 +3735,30 @@ window.replaces = {
 								document.getElementById("leaderboard").ariaLabel = ""
 							}
 							setTimeout(window.createNewLeaderboard, 1);
+						}
+					}
+				)
+			)
+		);
+	},
+	id5: function () {
+		return this.default.createElement(
+			"label",
+			{htmlFor: "disableTiles"},
+			this.default.createElement(
+				"div",
+				{className: "settings-setting"},
+				"Disable Tiles",
+				this.default.createElement(
+					"input",
+					{
+						type: "checkbox",
+						className: "settings-checkbox",
+						id: "disableTiles",
+						checked: client.textCommandConsts.notiles,
+						onChange: function (e) {
+							localStorage.setItem("ts-notiles", client.textCommandConsts.notiles = !client.textCommandConsts.notiles);
+							window.client.imgs.changeTile();	
 						}
 					}
 				)
@@ -4057,11 +3980,11 @@ window.getHeroColor = function(Hero){
 	/*otherrrrrrr*/
 	.settings {
 		position: absolute;
-		top: 30%;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		width: 250px;
-		height: 380px;
+		height: 410px;
 		background-color: #000E;
 		border-radius: 5px;
 		color: #fff;
@@ -5382,7 +5305,7 @@ window.lastPrefix = {
 				//id: 4
 				tmp = tmp.replace(
 					'ck:this.cancel.bind(this)}),',
-					'ck:this.cancel.bind(this)}),replaces.id4.call(e),'
+					'ck:this.cancel.bind(this)}),replaces.id4.call(e),replaces.id5.call(e),'
 				);
 
 				//Таймеры
@@ -5509,6 +5432,8 @@ window.lastPrefix = {
 				tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
 				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})')
 				
+				tmp = tmp.replace('var u={},n=!1;', 'var u={},n=!1;client.imgs.obj = u;client.imgs.retreived();');
+
 				//tmp = tmp.replace('module.exports="/area-50','globalThis.profiler.hats["area-50"] = module.exports="/area-50')
 				
 				eval(tmp);
