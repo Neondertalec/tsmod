@@ -171,9 +171,17 @@
       "lock":false
     },
     {
-      "names": ["President"],
+      "names": ["trevr"],
       "color": "#0a009f",
-      "text": "[oop]",
+      "text": "[President]",
+      "rainbow": true,
+      "prior":1,
+      "lock":false
+    },
+    {
+      "names": ["Creatuve"],
+      "color": "#ff8800",
+      "text": "[хочу рп]",
       "rainbow": true,
       "prior":1,
       "lock":false
