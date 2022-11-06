@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.92
+// @version     1.1.93
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -34,7 +34,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.90",
+	v: "1.1.91",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -55,6 +55,14 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.91`,
+				news:[
+					`Some fixes.`,
+					`In the profile page you can now see users <b>Highest Areas Achieved!</b>`,
+					`In the Hall of Fame you can search users by their name!`,
+				],
+			},
 			{
 				version:`1.1.90`,
 				news:[
@@ -1446,6 +1454,34 @@ globalThis.profiler = {
 		el: null,
 		graph:null,
 	},
+	initHOF:function(){
+		setTimeout(()=>{
+			let hof = document.querySelector(".hall-of-fame-search");
+			if(hof) hof.onclick = ()=>{
+				if(hof.innerHTML == "🔎"){
+					let searchBar; hof.appendChild(searchBar = document.createElementP("input", {className: "searchLB"}, (e)=>{
+						e.onclick = (e)=>{e.stopPropagation()};
+						e.placeholder = globalThis.client.accountName || "";
+						e.addEventListener("blur", ()=>{hof.innerHTML = "🔎"});
+						e.addEventListener("keyup", (evt)=>{
+							if (evt.key === "Enter") {
+								let targetEl = document.querySelector(`.hall-of-fame-player[arialabel='${(e.value || e.placeholder).toLocaleLowerCase()}']`);
+								if(targetEl){
+									targetEl.scrollIntoView();
+									hof.innerHTML = "🔎"
+								}
+							}else
+							if(evt.key === "Escape"){
+								hof.innerHTML = "🔎"
+							}
+						})
+					}));
+					searchBar.focus();
+				}
+			}
+
+		}, 100)
+	},
 	setState:function(state){
 		this.profilestats = state;
 		setTimeout(()=>{
@@ -1458,11 +1494,10 @@ globalThis.profiler = {
 			this.lib.src = "https://canvasjs.com/assets/script/canvasjs.min.js";
 			document.head.appendChild(this.lib);
 			console.log("lib added");
-			this.lib.onload = ()=>{this.libl = true;this.displayGraph();console.log("l")}
+			this.lib.onload = ()=>{this.libl = true;this.displayGraph();}
 		}
 		if(!this.libl)return;
 		this.displayGraph();
-		console.log(this.profilestats);
 	},
 	displayGraph: function(){
 		if(!this.libl)return;
@@ -1478,7 +1513,6 @@ globalThis.profiler = {
 		}
 
 		if(this.graph.graph == null) this.createGraph();
-		console.log("LOOK!")
 		this.graph.graph.render();
 	},
 	hideGrapth: function(){
@@ -1553,7 +1587,6 @@ globalThis.profiler = {
 	},
 	loadHats: function(){
 		let el = document.querySelector(".profile-hats-container");
-		console.log(el);
 		let hat = this.profilestats.accessories.hat_selection;
 		let hats = this.profilestats.accessories.hat_collection;
 
@@ -1569,6 +1602,40 @@ globalThis.profiler = {
 				);
 			}
 		}
+	},
+	areas: {
+		el: null,
+	},
+	showAreas(){
+		if(this.areas.el){
+			this.areas.el.remove();
+			this.areas.el = null;
+			return;
+		}
+		let areas = this.profilestats.stats.highest_area_achieved;
+		this.areas.el = 
+		document.createElementP("div", {className: "areasw"}, (container)=>{
+			container.onclick = ()=>{
+				this.areas.el.remove();
+				this.areas.el = null;
+			}
+			container.appendChild(document.createElementP("div", {className: "hero-select-highest-area-achieved-content"}, (layout)=>{
+				layout.style.display = "block";
+				layout.onclick = (e)=>{e.stopPropagation()};
+				
+				layout.appendChild(document.createElementP("div", {className: "stats-of"}, (el)=>{
+					el.innerText = this.profilestats.username;
+				}));
+				
+				for(let i in areas){
+					if(i == "Transforming Turbidity" || i == "Stellar Square")continue;
+					layout.appendChild(document.createElementP("div", {className: i.replace(" ","-")}, (el)=>{
+						el.innerText = `${i}: ${areas[i]}`;
+					}));
+				}
+			}))
+		})
+		document.body.appendChild(this.areas.el);
 	}
 }
 
@@ -1671,8 +1738,6 @@ globalThis.client = {
 		obj:{},
 		retreived: ()=>{
 			setTimeout(()=>{
-				console.log("ret");
-
 				Object.keys(client.imgs.obj).filter(e=>e.startsWith("hats/")).forEach(e=>{
 					globalThis.profiler.hats[e.replace("hats/", "")] = client.imgs.obj[e].src;
 				});
@@ -2026,7 +2091,7 @@ globalThis.client = {
 	chat:null,
 	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
-	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]")),
+	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]")),
 	textCommandConstsE:[],
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
@@ -2167,7 +2232,7 @@ globalThis.client = {
 			e.stopPropagation();
 		});
 
-		for(let i = 0; i < 24; i++){
+		for(let i = 0; i < 25; i++){
 			let hero = window.id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
@@ -3514,7 +3579,6 @@ globalThis.client = {
 					popup.appendChild(document.createElementP("div", {className:"lay"}, (lay)=>{
 						input = lay.appendChild(document.createElementP("input", {className:"search"}, (el)=>{
 							el.addEventListener("input", ()=>{
-								console.log("changes to", input.value)
 								research();
 							});
 						}));
@@ -3815,6 +3879,7 @@ globalThis.id2name = (id)=>{
 	'Ignis',
 	'Stella',
 	'Viola',
+	'Mortuus',
 	'new 1',
 	'new 2',
 	'new 3',
@@ -3843,6 +3908,7 @@ const maps = {
 	"Assorted Alcove": 		  "AA",
 	"Burning Bunker": 		  "BB",
 	"Grand Garden": 		  "GG2",
+	"Mysterious Mansion":	  "MM3",
 
 	"Central Core Hard": 	  "CCH",
 	"Vicious Valley Hard": 	  "VVH",
@@ -3862,6 +3928,7 @@ const maps = {
 	"Assorted Alcove Hard":   "AAH",
 	"Burning Bunker Hard": 	  "BBH",
 	"Grand Garden Hard":	  "GGH2",
+	"Mysterious Mansion Hard":"MM3H",
 }
 
 window.getShortName = (map)=>{
@@ -3951,6 +4018,8 @@ window.getHeroColor = function(Hero){
 			return "#fefa8b";
 		case "Viola":
 			return "#d9b130";
+		case "Mortuus":
+			return "#7fb332";
 	}
 	return "white";
 }
@@ -5065,6 +5134,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 	}
 
 
+	.areasw,
 	.graphw{
 		width: 100%;
 		height: 100%;
@@ -5072,7 +5142,25 @@ window.addEventListener('DOMContentLoaded', e=>{
 		top: 0;
 		background: #00000088;
 	}
+
+	.areasw .stats-of{
+		text-decoration: underline;
+		color: #aaa;
+		margin-bottom: 10px;
+	}
 	
+	.areasw > .hero-select-highest-area-achieved-content{
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		max-height: 85%;
+		overflow-y:auto;
+		background: #333;
+		padding: 10px;
+		border-radius: 5px;
+	}
+
 	.graphw > #chartContainer{
 		height: 370px;
 		width: 100%;
@@ -5107,6 +5195,23 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 	.profile-hat-accessory-selected{
 		border-color: #89ff85;
+	}
+
+	.hall-of-fame-search{
+		float: right;
+		width: 30px;
+		height: 30px;
+		margin: 0;
+		padding: 0;
+		background: #333;
+		border: solid 2px #111;
+	}
+
+	.hall-of-fame-search .searchLB{
+		background: #111;
+		border: solid 2px #444;
+		color: orange;
+		border-radius: 5px;
 	}
 
 	`;
@@ -5440,12 +5545,19 @@ new MutationObserver(function(mutations) {
 				//tmp = tmp.replace('n?u.level','n?u[(globalThis.client.textCommandConsts.ssxp && u.experience !== undefined)?"experience":"level"]');
 				//tmp = tmp.replace('victoryArea:i.victoryArea','victoryArea:i.victoryArea,experience:(i.experience)');
 				
+				tmp = tmp.replace('"hall-of-fame-player "+l','"hall-of-fame-player "+l, ariaLabel: n.toLocaleLowerCase()')
+				tmp = tmp.replace('name:this.state.name','name:globalThis.client.accountName=this.state.name')
+				tmp = tmp.replace('name:t.username,isGuest:!1,','name:globalThis.client.accountName = t.username,isGuest:!1,')
+				tmp = tmp.replace('key:"onLogout",value:function(){','key:"onLogout",value:function(){globalThis.client.accountName = "";')
+				
+				tmp = tmp.replace('"Hall of Fame"),','"Hall of Fame", (globalThis.profiler.initHOF(), e.default.createElement("button", {className: "hall-of-fame-search"}, "🔎"))),')
+
 				//tmp = tmp.replace('','')
 				
 				//ppp
 				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.setState(this.state);')
 				tmp = tmp.replace(/(,e\\.default\\.createElement\\("b",null,this\\.state\\.username\\)\\),)/gm,
-				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username, e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph")))),')
+				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username, e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph"), e.default.createElement("button",{onClick:()=>{globalThis.profiler.showAreas()}},"Areas")))),')
 				
 				tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
 				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})')
