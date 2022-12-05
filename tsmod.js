@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.93
+// @version     1.1.94
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -34,7 +34,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.91",
+	v: "1.1.92",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -55,6 +55,12 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.92`,
+				news:[
+					`Some fixes.`,
+				],
+			},
 			{
 				version:`1.1.91`,
 				news:[
@@ -5486,7 +5492,7 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
 				
 				tmp = tmp.replace('null!==l&&(c=e.default.createElement("span",null,e.default.createElement("span",{className:i},l," "),c)',
-				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,r))')
+				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,s))')
 
 				tmp = tmp.replace(
 					'return e.default.createElement("div",{className:"changelog"',

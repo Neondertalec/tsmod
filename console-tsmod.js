@@ -41,6 +41,12 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version:`1.1.92`,
+				news:[
+					`Some fixes.`,
+				],
+			},
+			{
 				version:`1.1.91`,
 				news:[
 					`Some fixes.`,
@@ -5475,7 +5481,7 @@ window.lastPrefix = {
 				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
 				
 				tmp = tmp.replace('null!==l&&(c=e.default.createElement("span",null,e.default.createElement("span",{className:i},l," "),c)',
-				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,r))')
+				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,s))')
 
 				tmp = tmp.replace(
 					'return e.default.createElement("div",{className:"changelog"',
