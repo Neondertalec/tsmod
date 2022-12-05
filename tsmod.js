@@ -5552,7 +5552,7 @@ new MutationObserver(function(mutations) {
 				//tmp = tmp.replace('victoryArea:i.victoryArea','victoryArea:i.victoryArea,experience:(i.experience)');
 				
 				tmp = tmp.replace('"hall-of-fame-player "+l','"hall-of-fame-player "+l, ariaLabel: n.toLocaleLowerCase()')
-				tmp = tmp.replace('name:this.state.name','name:globalThis.client.accountName=this.state.name')
+				tmp = tmp.replace(/name\:this\.state\.name/gm,'name:globalThis.client.accountName=this.state.name')
 				tmp = tmp.replace('name:t.username,isGuest:!1,','name:globalThis.client.accountName = t.username,isGuest:!1,')
 				tmp = tmp.replace('key:"onLogout",value:function(){','key:"onLogout",value:function(){globalThis.client.accountName = "";')
 				
