@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.94
+// @version     1.1.95
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -11,7 +11,6 @@
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @grant       none
 // ==/UserScript==
-
 
 globalThis.temp1 = undefined;
 globalThis.temp2 = undefined;
@@ -34,7 +33,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.92",
+	v: "1.1.93",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -55,6 +54,13 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.93`,
+				news:[
+					`Some fixes.`,
+					`In the usercard there are now mute/kick/ban buttons for mods.`
+				],
+			},
 			{
 				version:`1.1.92`,
 				news:[
@@ -2097,7 +2103,7 @@ globalThis.client = {
 	chat:null,
 	teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
 	format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
-	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]")),
+	allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]")),
 	textCommandConstsE:[],
 	textCommandConsts:{
 		prefix: getLocal("ts-prefix", "#"),
@@ -2238,7 +2244,7 @@ globalThis.client = {
 			e.stopPropagation();
 		});
 
-		for(let i = 0; i < 25; i++){
+		for(let i = 0; i < 26; i++){
 			let hero = window.id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
@@ -2354,7 +2360,22 @@ globalThis.client = {
 					`<p id="tc-result"></p>`+
 					`</div>`+
 				`</li>`+
-			`</ul>`;
+			`</ul>`+
+			`${!client.isMod ? "" : `<div class="userModTool"><button class="mute">Mute</button><button class="kick">Kick</button><button class="ban">Ban</button></div>`}`;
+			
+			let ec = (cmd)=>{
+				let chat = document.getElementById("chat-input");
+				chat.value = `/${cmd} ${name} `;
+				chat.focus(); chat.selectionStart = chat.selectionEnd = 10000;
+			}
+			
+			if(elem.querySelector(".userModTool")){
+				elem.querySelector(".userModTool>.mute").onclick = ()=>ec("mute");
+				elem.querySelector(".userModTool>.kick").onclick = ()=>ec("kick");
+				elem.querySelector(".userModTool>.ban").onclick = ()=>ec("ban");
+			}
+			
+
 			if(document.getElementById('chat'))document.getElementById('chat').parentNode.parentNode.append(elem);
 			else document.body.append(elem)
 			window.client.elem.level = elem.querySelector("ul>li>p#c1");
@@ -3860,37 +3881,9 @@ window.styleByNr = (nr)=>{
 }
 
 globalThis.id2name = (id)=>{
-	return [
-	'Magmax',
-	'Rime',
-	'Morfe',
-	'Aurora',
-	'Necro',
-	'Nexus',
-	'Brute',
-	'Shade',
-	'Euclid',
-	'Chrono',
-	'Reaper',
-	'Rameses',
-	'Jolt',
-	'Ghoul',
-	'Cent',
-	'Jotunn',
-	'Candy',
-	'Mirage',
-	'Boldrock',
-	'Glob',
-	'Magno',
-	'Ignis',
-	'Stella',
-	'Viola',
-	'Mortuus',
-	'new 1',
-	'new 2',
-	'new 3',
-	'new 4',
-	][id];
+	let r = window.heroByType(id).name;
+	if(r !== null) return r;
+	return "new ?";
 }
 
 const maps = {
@@ -3965,69 +3958,20 @@ window.getVpColor = (vp)=>{
 }
 
 window.getHeroRealColor = function(Hero){
-	switch(Hero){
-		case "Rime":
-			return "#3333ff";//"#3333ff";
-		case "Reaper":
-			return "#424a59";//"#424a59";
+	for(let i in window.heroConfig){
+		if(window.heroConfig[i].name == Hero) return window.heroConfig[i].foregroundColor;
 	}
-	return window.getHeroColor(Hero);
+	return "white";
 }
 
 window.getHeroColor = function(Hero){
 	switch(Hero){
-		case "Magmax":
-			return "#ff0000";
 		case "Rime":
 			return "#3377ff";//"#3333ff";
-		case "Morfe":
-			return "#00dd00";
-		case "Aurora":
-			return "#ff7f18";
-		case "Necro":
-			return "#ff00ff";
-		case "Nexus":
-			return "#29ffc6";
-		case "Brute":
-			return "#9b5800";
-		case "Shade":
-			return "#826565";
-		case "Euclid":
-			return "#5e4d66";
-		case "Chrono":
-			return "#00b270";
 		case "Reaper":
 			return "#787b81";//"#424a59";
-		case "Rameses":
-			return "#989b4a";
-		case "Jolt":
-			return "#e1e100";
-		case "Ghoul":
-			return "#bad7d8";
-		case "Cent":
-			return "#727272";
-		case "Jotunn":
-			return "#5cacff";
-		case "Candy":
-			return "#ff80bd";
-		case "Mirage":
-			return "#020fa2";
-		case "Boldrock":
-			return "#a18446";
-		case "Glob":
-			return "#14a300";
-		case "Magno":
-			return "#ff005d";
-		case "Ignis":
-			return "#cd501f";
-		case "Stella":
-			return "#fefa8b";
-		case "Viola":
-			return "#d9b130";
-		case "Mortuus":
-			return "#7fb332";
 	}
-	return "white";
+	return window.getHeroRealColor(Hero);
 }
 
 window.addEventListener('DOMContentLoaded', e=>{
@@ -4087,6 +4031,41 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 	.leaderboard-title-break > .leaderboard-world-title{
 		font-size: 15px;
+	}
+
+	.userModTool{
+		width: 210px;
+		position: absolute;
+		top: -40px;
+		left: -3px;
+		padding: 5px;
+		background-color: #000000aa;
+		border: solid 2px #222;
+		border-radius: 10px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.userModTool > button{
+		margin: 0 5px 0 5px;
+	}
+
+	.userModTool .mute{
+		background: #ffff00;
+		border: solid 2px #aaaa00;
+		border-radius: 5px;
+	}
+
+	.userModTool .kick{
+		background: #ffaa00;
+		border: solid 2px #aa7700;
+		border-radius: 5px;
+	}
+
+	.userModTool .ban{
+		background: red;
+		border: solid 2px #aa0000;
+		border-radius: 5px;
 	}
 
 	.chat-message-contextmenu.fake{
@@ -5451,7 +5430,7 @@ new MutationObserver(function(mutations) {
 				
 				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:('+
 				'globalThis.client.events.emit(globalThis.client.events.events.chatMessage, {'+
-					'name:r,'+
+					'name:s,'+
 					'content:a,'+
 					'privs:l,'+
 				'}),s)')
@@ -5556,8 +5535,13 @@ new MutationObserver(function(mutations) {
 				tmp = tmp.replace('name:t.username,isGuest:!1,','name:globalThis.client.accountName = t.username,isGuest:!1,')
 				tmp = tmp.replace('key:"onLogout",value:function(){','key:"onLogout",value:function(){globalThis.client.accountName = "";')
 				
+				tmp = tmp.replaceAll('isGuest,isMod:this.props.isMod,','isGuest,isMod:globalThis.client.isMod = this.props.isMod,')
+				
 				tmp = tmp.replace('"Hall of Fame"),','"Hall of Fame", (globalThis.profiler.initHOF(), e.default.createElement("button", {className: "hall-of-fame-search"}, "🔎"))),')
 
+				tmp = tmp.replace('heroes:[{','heroes: window.heroConfig = [{')
+				tmp = tmp.replace('exports.getHeroByType=','exports.getHeroByType = window.heroByType=')
+				tmp = tmp.replace('o type",e)}return null}','o type",e)}return null};')
 				//tmp = tmp.replace('','')
 				
 				//ppp
