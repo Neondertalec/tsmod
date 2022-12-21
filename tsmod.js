@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.96
+// @version     1.1.97
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -33,7 +33,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.94",
+	v: "1.1.95",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -55,11 +55,11 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
-				version:`1.1.94`,
+				version:`1.1.94 (95)`,
 				news:[
 					`Some fixes.`,
 					`In the /profile page you can now see if the player is online or not by the green/gray indicator to the right of the players name.`,
-					`In the usercard you can now see max energy and energy regeneration if the player is in the same area as you.`
+					`In the usercard you can now see energy, max energy and energy regeneration if the player is in the same area as you.`
 				],
 			},
 			{
@@ -2376,7 +2376,7 @@ globalThis.client = {
 					`<p id="c0">VP: <b ${vpcolor == "rainbow" ? `class="rainbowText" style="` : `style="color:${vpcolor};`}text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (logs[name].vp !== undefined ? logs[name].vp : "###") }</b></p>`+
 					`<p id="c1">Level: ${Level || -1}</p>`+
 					`<p id="c2">Speed: ${-1}</p>`+
-					`<p id="c3">XP: ${o != null ? `${o.experience} <br>Max E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen*10)/10).toFixed(1)}`: "not in same area" }</p>`+
+					`<p id="c3">XP: ${o != null ? `${o.experience} | Ene: ${Math.round(o.energy)}<br>Max E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen*10)/10).toFixed(1)}`: "not in same area" }</p>`+
 					`<div id="timecounter">`+
 					`<input c-lock id="tc-from" type="number" value="${window.client.getUserLogIds(name)[0]}" title="Users log id to start time counting from.">`+
 					`<input c-lock id="tc-to" type="number" value="${window.client.getUserLogIds(name)[1]}"title="End time users log id.">`+
@@ -3306,7 +3306,7 @@ globalThis.client = {
 		}
 		if(window.client.elem.xp != null){
 			try{
-				let newh = `XP: ${o != null ? `${o.experience}\nMax E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen*10)/10).toFixed(1)}`: "not in same area"}`;
+				let newh = `XP: ${o != null ? `${o.experience} | Ene: ${Math.round(o.energy)}\nMax E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen*10)/10).toFixed(1)}`: "not in same area"}`;
 				if(newh != window.client.elem.xp.innerText) window.client.elem.xp.innerText = newh;
 			}catch{
 				window.client.elem.xp = null;
