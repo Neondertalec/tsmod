@@ -2374,14 +2374,14 @@ globalThis.client = {
 			
 			let ec = (cmd)=>{
 				let chat = document.getElementById("chat-input");
-				chat.value = `/${cmd} ${name} `;
+				chat.value = `/${cmd} ${name}`;
 				chat.focus(); chat.selectionStart = chat.selectionEnd = 10000;
 			}
 			
 			if(elem.querySelector(".userModTool")){
-				elem.querySelector(".userModTool>.mute").onclick = ()=>ec("mute");
+				elem.querySelector(".userModTool>.mute").onclick = ()=>ec("mute ");
 				elem.querySelector(".userModTool>.kick").onclick = ()=>ec("kick");
-				elem.querySelector(".userModTool>.ban").onclick = ()=>ec("ban");
+				elem.querySelector(".userModTool>.ban").onclick = ()=>ec("ban ");
 			}
 			
 
