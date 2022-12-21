@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.95
+// @version     1.1.96
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
@@ -33,7 +33,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.93",
+	v: "1.1.94",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -54,6 +54,14 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.94`,
+				news:[
+					`Some fixes.`,
+					`In the /profile page you can now see if the player is online or not by the green/gray indicator to the right of the players name.`,
+					`In the usercard you can now see max energy and energy regeneration if the player is in the same area as you.`
+				],
+			},
 			{
 				version:`1.1.93`,
 				news:[
@@ -1498,6 +1506,9 @@ globalThis.profiler = {
 		this.profilestats = state;
 		setTimeout(()=>{
 			this.loadHats();
+			client.api.isPlayerOnline(this.profilestats.username).then((online)=>{
+				document.querySelector(".onlineMarker").style.backgroundColor = online ? "#00ff00" : "#444"
+			})
 		}, 100)
 	},
 	showGraph: function(){
@@ -1679,6 +1690,18 @@ window.getTime = ()=>{
 };
 
 globalThis.client = {
+	api: {
+		getOnlinePlayers: async function(){
+			return fetch("https://evades.io/api/game/usernames").then(e=>e.json());
+		},
+		isPlayerOnline: async function(name){
+			const players = await client.api.getOnlinePlayers();
+			return players.some(e=>e.toLocaleLowerCase() === name.toLocaleLowerCase());
+		},
+		getProfileData: async function(name){
+			return fetch("https://evades.io/api/account/"+name).then(e=>e.json());
+		}
+	},
 	events:{
 		events:{
 			chatMessage:0,
@@ -2121,7 +2144,7 @@ globalThis.client = {
 	},
 	grb:{
 		on: false,
-		grbKey: 3,
+		grbKey: 4,
 		toggle: function(){
 			const lt = window.getTag(window.client.main.name);
 			if(lt=="")return 2;
@@ -2353,7 +2376,7 @@ globalThis.client = {
 					`<p id="c0">VP: <b ${vpcolor == "rainbow" ? `class="rainbowText" style="` : `style="color:${vpcolor};`}text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount: (logs[name].vp !== undefined ? logs[name].vp : "###") }</b></p>`+
 					`<p id="c1">Level: ${Level || -1}</p>`+
 					`<p id="c2">Speed: ${-1}</p>`+
-					`<p id="c3">XP: ${o != null ? o.experience: "not in same area" }</p>`+
+					`<p id="c3">XP: ${o != null ? `${o.experience} <br>Max E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen*10)/10).toFixed(1)}`: "not in same area" }</p>`+
 					`<div id="timecounter">`+
 					`<input c-lock id="tc-from" type="number" value="${window.client.getUserLogIds(name)[0]}" title="Users log id to start time counting from.">`+
 					`<input c-lock id="tc-to" type="number" value="${window.client.getUserLogIds(name)[1]}"title="End time users log id.">`+
@@ -3283,7 +3306,8 @@ globalThis.client = {
 		}
 		if(window.client.elem.xp != null){
 			try{
-				window.client.elem.xp.innerText = `XP: ${o != null ? o.experience: "not in same area"}`;
+				let newh = `XP: ${o != null ? `${o.experience}\nMax E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen*10)/10).toFixed(1)}`: "not in same area"}`;
+				if(newh != window.client.elem.xp.innerText) window.client.elem.xp.innerText = newh;
 			}catch{
 				window.client.elem.xp = null;
 			}
@@ -3291,7 +3315,8 @@ globalThis.client = {
 
 		if(window.client.elem.level != null){
 			try{
-				window.client.elem.level.innerText = `Level: ${window.client.opos[0].level || -1} | Deaths: ${window.client.getDeaths(window.z)}`;
+				let newh = `Level: ${window.client.opos[0].level || -1} | Deaths: ${window.client.getDeaths(window.z)}`;
+				if(newh != window.client.elem.level.innerText) window.client.elem.level.innerText = newh;
 			}catch{
 				window.client.elem.level = null;
 			}
@@ -3309,7 +3334,8 @@ globalThis.client = {
 				let diff1 = Math.abs(dx);
 				let diff2 = Math.abs(dy);
 
-				window.client.elem.speed.innerText = `Speed X: ${diff1.toFixed(2)}\nSpeed Y: ${diff2.toFixed(2)}`;
+				let newh = `Speed X: ${diff1.toFixed(2)}\nSpeed Y: ${diff2.toFixed(2)}`;
+				if(newh != window.client.elem.speed.innerText) window.client.elem.speed.innerText = newh;
 				window.client.opos[1] = {...window.client.opos[0]};
 			}catch{
 				window.client.elem.speed = null;
@@ -4070,7 +4096,7 @@ window.addEventListener('DOMContentLoaded', e=>{
 
 	.chat-message-contextmenu.fake{
 		width:200px;
-		height: 306px;
+		min-height: 306px;
 		position: absolute;
 		right: 20px;
 		padding:10px;
@@ -5199,6 +5225,20 @@ window.addEventListener('DOMContentLoaded', e=>{
 		border-radius: 5px;
 	}
 
+	.subtitle-profile b{
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+		flex-direction: row;
+	}
+
+	.onlineMarker{
+		width: 20px;
+		height: 20px;
+		border-radius: 100%;
+		margin: 0px 0px 12px 15px;
+	}
+
 	`;
 	window.client.recalcUserMetas();
 	styles.innerHTML = newihtml;
@@ -5458,10 +5498,10 @@ new MutationObserver(function(mutations) {
 				//tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
 				
 				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
-				'if((e>3||e<0)||!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
+				'if((e>4||e<1)||!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
 
 				tmp = tmp.replace('null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))',
-				'if((e>3||e<0)||!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
+				'if((e>4||e<1)||!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
 
 				tmp = tmp.replace('this.downKeys=[]',
 				'if(!window.client.grb.on)this.downKeys=[]')
@@ -5547,7 +5587,10 @@ new MutationObserver(function(mutations) {
 				//ppp
 				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.setState(this.state);')
 				tmp = tmp.replace(/(,e\\.default\\.createElement\\("b",null,this\\.state\\.username\\)\\),)/gm,
-				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username, e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph"), e.default.createElement("button",{onClick:()=>{globalThis.profiler.showAreas()}},"Areas")))),')
+				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username,'
+				+'e.default.createElement("div",{className:"onlineMarker"}),'
+				+'e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph"),'
+				+'e.default.createElement("button",{onClick:()=>{globalThis.profiler.showAreas()}},"Areas")))),')
 				
 				tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
 				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})')
