@@ -1,11 +1,12 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.98
+// @version     1.1.99
 // @description	Evades.io TS script.
-// @author      Script by: DepressionOwU (🎀Depression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
-// @match       https://evades.io/*
-// @match       https://evades.online/*
-// @match       https://eu.evades.io/*
+// @author      Script by: DepressionOwU (🎀Agression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
+// @match       https://*.evades.io/*
+// @match       https://*.evades.online/*
+// @match       https://*evades.io/*
+// @match       https://*evades.online/*
 // @run-at      document-start
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
@@ -33,7 +34,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.95",
+	v: "1.1.96",
 	cl:{
 		ts:`#ad86d8`,
 		to:`#6f8fd5`,
@@ -54,6 +55,16 @@ window.vers = {
 	filllogp:function(){
 
 		window.vers.changeLog = [
+			{
+				version:`1.1.96`,
+				news:[
+					`Some fixes.`,
+					[`${`[Jr. Mod]`.fontcolor(this.cl.jrm)} Kaluub is now managing all the tags`,
+						`TS tags are back.`,
+						`All tags should now be up to date.`,
+					]
+				],
+			},
 			{
 				version:`1.1.94 (95)`,
 				news:[
@@ -753,7 +764,7 @@ window.vers = {
 				news:[
 					`<a href="https://www.youtube.com/watch?v=XRXmW23zyWw&feature=youtu.be&ab_channel=itsme">How to install (18s video).</a>`,
 					`<a href="https://www.youtube.com/watch?v=MA9A8OmK0Xo&ab_channel=PigerthePig">1.0.0 version video (by piger).</a>`,
-					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Depression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
+					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Agression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
 				],
 			},
 			{
@@ -773,15 +784,26 @@ window.vers = {
 			xm.send();
 			let data = JSON.parse(xm.response);
 
-			if(data["ol-tw"]){
-				xm.open("GET",data["ol-tw"],false);
+			const olCache = {};
+			let loadOl = (ol)=>{
+				if(olCache[ol])return olCache[ol];
+				xm.open("GET",data[ol],false);
 				xm.send();
-				data.tw = JSON.parse(xm.response).tw;
+				return olCache[ol] = xm.response;
+			}
+
+
+			if(data["ol-tw"]){
+				let olData = loadOl("ol-tw");
+				data.tw = JSON.parse(olData).tw;
+			}
+			if(data["ol-ctags"]){
+				let olData = loadOl("ol-ctags");
+				data.ctags = {...(data.ctags || []), ...JSON.parse(olData).tags};
 			}
 			if(data["ol-tags"]){
-				xm.open("GET",data["ol-tags"],false);
-				xm.send();
-				data.tags = [...(data.tags || []), ...JSON.parse(xm.response).tags];
+				let olData = loadOl("ol-tags");
+				data.tags = [...(data.tags || []), ...JSON.parse(olData).tags];
 			}
 
 			return data;
@@ -822,6 +844,18 @@ window.vers = {
 				}
 			}catch(e){console.error(e)}
 		}
+		if(d.ctags){
+			try{
+				for(let i in d.ctags){
+					let tag = d.ctags[i];
+
+					globalThis.tags.tagsData[i] = tag;
+					if(!globalThis.tags.tags[i]) globalThis.tags.tags[i] = [atwne];
+					globalThis.tags.tags[i].push(...(tag.players||[]))
+
+				}
+			}catch(e){console.error(e)};
+		}
 
 		if(this.checkVer(this.v,d.v)){
 			const ver = document.createElement("div");
@@ -831,6 +865,8 @@ window.vers = {
 
 			document.body.appendChild(ver);
 		}
+
+		tags.calcOldTags();
 	},
 
 	
@@ -980,7 +1016,7 @@ globalThis.tagDataEX = {...globalThis.tagDataEX,...{'[SCR]': {presudo:"[TO&Scrip
 const atwne = "atwnebissatwnebiss";
 globalThis.tags = {
 	chatTags: new globalThis.CacheTs(),
-	tags:{
+	tags:{} || false && {
 		'[oly1]':[atwne,'Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
 		'[oly2]':[atwne,'Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
 		'[oly3]':[atwne,'Vikenti', '546000', 'Defa', 'AWEN', 'DD1', '4chаn.org', 'tтеуmlI', 'R0YqL', 'Zxynn', 'nosok'],
@@ -1068,7 +1104,7 @@ globalThis.tags = {
 	tagsData:{
 		'[custom]':{
 			priority:100,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#000",
 				border:"#000",
@@ -1079,7 +1115,7 @@ globalThis.tags = {
 		},
 		'[Wreath Perms]':{
 			priority:101,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#000",
 				border:"#000",
@@ -1091,7 +1127,7 @@ globalThis.tags = {
 		},
 		'[TW]':{
 			priority:50,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#ffa390",
 				border:"#bd7869",
@@ -1102,7 +1138,7 @@ globalThis.tags = {
 		},
 		'[oly1]':{
 			priority:60,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#cedf48",
 				border:"#8e9a31",
@@ -1114,7 +1150,7 @@ globalThis.tags = {
 		},
 		'[oly2]':{
 			priority:61,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#cedf48",
 				border:"#8e9a31",
@@ -1126,7 +1162,7 @@ globalThis.tags = {
 		},
 		'[oly3]':{
 			priority:62,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#cedf48",
 				border:"#8e9a31",
@@ -1138,7 +1174,7 @@ globalThis.tags = {
 		},
 		'[oly4]':{
 			priority:63,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#cedf48",
 				border:"#8e9a31",
@@ -1150,7 +1186,7 @@ globalThis.tags = {
 		},
 		'[oly5]':{
 			priority:64,
-			noOlnTag: true,
+			notOldTag: true,
 			badge:{
 				bg:"#cedf48",
 				border:"#8e9a31",
@@ -1323,7 +1359,7 @@ globalThis.tags = {
 		},
 		'[SCR]': {
 			priority:9,
-			noOlnTag: true,
+			notOldTag: true,
 			cantH: true,
 			badge:{
 				bg:"#ff00bc",
@@ -1335,7 +1371,7 @@ globalThis.tags = {
 		},
 		'[guest]': {
 			priority:-1,
-			noOlnTag: true,
+			notOldTag: true,
 			cantH: true,
 			chat:{
 				color:"#91b800",
@@ -1374,7 +1410,7 @@ globalThis.tags = {
 		this.oldTags = {};
 		let allNames = []
 		for(let key in this.tags){
-			if(this.tagsData[key].noOlnTag)continue;
+			if(this.tagsData[key].notOldTag)continue;
 			allNames = [...allNames, ...this.tags[key]]
 		}
 
@@ -1394,7 +1430,7 @@ globalThis.tags = {
 
 	init:function(){
 		//this.tags["[TO]"] = [];
-		this.tags["[TS]"] = [];
+		//this.tags["[TS]"] = [];
 		this.calcOldTags();
 	},
 
@@ -1971,7 +2007,7 @@ globalThis.client = {
 									res = res.replaceAll("{name}", name);
 									break;
 								case "map":
-									res = res.replaceAll("{map}", map);
+									res = res.replaceAll("{map}", map.replace("₂", "2").replace("₃", "3"));
 									break;
 								case "area":
 									res = res.replaceAll("{area}", area);
@@ -2184,7 +2220,7 @@ globalThis.client = {
 						res = res.replaceAll("{name}", name);
 						break;
 					case "map":
-						res = res.replaceAll("{map}", map);
+						res = res.replaceAll("{map}", map.replace("₂", "2").replace("₃", "3"));
 						break;
 					case "area":
 						res = res.replaceAll("{area}", area);
@@ -2267,7 +2303,7 @@ globalThis.client = {
 			e.stopPropagation();
 		});
 
-		for(let i = 0; i < 26; i++){
+		for(let i = 0; i < window.heroConfig.length; i++){
 			let hero = window.id2name(i);
 			let color = window.getHeroRealColor(hero);
 			const block = document.createElement("div");
@@ -3913,47 +3949,49 @@ globalThis.id2name = (id)=>{
 }
 
 const maps = {
-	"Central Core": 		  "CC",
-	"Vicious Valley": 		  "VV",
-	"Elite Expanse": 		  "EE",
-	"Wacky Wonderland": 	  "WW",
-	"Glacial Gorge": 		  "GG",
-	"Dangerous District": 	  "DD",
-	"Peculiar Pyramid": 	  "PP",
-	"Monumental Migration":   "MM",
-	"Humongous Hollow": 	  "HuHo",
-	"Haunted Halls": 		  "HaHa",
-	"Quiet Quarry": 		  "QQ",
-	"Frozen Fjord": 		  "FF",
-	"Ominous Occult": 		  "OO",
-	"Restless Ridge": 		  "RR",
-	"Toxic Territory": 		  "TT",
-	"Magnetic Monopole": 	  "MM2",
-	"Stellar Square": 		  "SS",
 	"Assorted Alcove": 		  "AA",
-	"Burning Bunker": 		  "BB",
-	"Grand Garden": 		  "GG2",
-	"Mysterious Mansion":	  "MM3",
-
-	"Central Core Hard": 	  "CCH",
-	"Vicious Valley Hard": 	  "VVH",
-	"Elite Expanse Hard": 	  "EEH",
-	"Wacky Wonderland Hard":  "WWH",
-	"Glacial Gorge Hard": 	  "GGH",
-	"Dangerous District Hard":"DDH",
-	"Peculiar Pyramid Hard":  "PPH",
-	"Humongous Hollow Hard":  "HuHoH",
-	"Haunted Halls Hard":     "HaHaH",
-	"Quiet Quarry Hard": 	  "QQH",
-	"Frozen Fjord Hard": 	  "FFH",
-	"Ominous Occult Hard":    "OOH",
-	"Restless Ridge Hard": 	  "RRH",
-	"Toxic Territory Hard":   "TTH",
-	"Magnetic Monopole Hard": "MM2H",
 	"Assorted Alcove Hard":   "AAH",
+	"Burning Bunker": 		  "BB",
 	"Burning Bunker Hard": 	  "BBH",
-	"Grand Garden Hard":	  "GGH2",
-	"Mysterious Mansion Hard":"MM3H",
+	"Central Core": 		  "CC",
+	"Central Core Hard": 	  "CCH",
+	"Cyber Castle":			  "CC₂",
+	"Catastrophic Core":	  "CC₃",
+	"Dangerous District": 	  "DD",
+	"Dangerous District Hard":"DDH",
+	"Elite Expanse": 		  "EE",
+	"Elite Expanse Hard": 	  "EEH",
+	"Endless Echo": 		  "EE₂",
+	"Frozen Fjord": 		  "FF",
+	"Frozen Fjord Hard": 	  "FFH",
+	"Glacial Gorge": 		  "GG",
+	"Glacial Gorge Hard": 	  "GGH",
+	"Grand Garden": 		  "GG₂",
+	"Grand Garden Hard":	  "GG₂H",
+	"Humongous Hollow": 	  "HH",
+	"Humongous Hollow Hard":  "HHH",
+	"Haunted Halls": 		  "HH₂",
+	"Haunted Halls Hard": 	  "HH₂H",
+	"Monumental Migration":   "MM",
+	"Monumental Migration Hard":"MMH",
+	"Magnetic Monopole": 	  "MM₂",
+	"Magnetic Monopole Hard": "MM₂H",
+	"Mysterious Mansion":	  "MM₃",
+	"Ominous Occult": 		  "OO",
+	"Ominous Occult Hard":    "OOH",
+	"Peculiar Pyramid": 	  "PP",
+	"Peculiar Pyramid Hard":  "PPH",
+	"Quiet Quarry": 		  "QQ",
+	"Quiet Quarry Hard": 	  "QQH",
+	"Restless Ridge": 		  "RR",
+	"Restless Ridge Hard": 	  "RRH",
+	"Stellar Square": 		  "SS",
+	"Toxic Territory": 		  "TT",
+	"Toxic Territory Hard":   "TTH",
+	"Vicious Valley": 		  "VV",
+	"Vicious Valley Hard": 	  "VVH",
+	"Wacky Wonderland": 	  "WW",
+	"Wacky Wonderland Hard":  "WWH",
 }
 
 window.getShortName = (map)=>{
@@ -3972,6 +4010,10 @@ window.normalizeArea = (area)=>{
 	.replace("Locked Ladder",	"L. L.")
 	.replace("Boss",			"B.")
 	.replace("Evades",			"Ev.")
+	.replace("Research Lab",	"R.L.")
+	.replace("FINAL BOSS",		"F.B.")
+	.replace("Network Connector","N.C.")
+	.replace("Data Center",		"D.C.")
 }
 
 window.getVpColor = (vp)=>{
