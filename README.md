@@ -16,7 +16,7 @@ if you can't install any extensions, go [here](https://github.com/Neondertalec/t
     // @name        TS-Mod
     // @version     1.1.11
     // @description	Evades.io TS script.
-    // @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
+    // @author      Script by: MeOw:3 (🎀Aggression🎀#5556), Most ideas: Piger (Piger#2917).
     // @match       https://evades.io/*
     // @match       https://evades.online/*
     // @match       https://eu.evades.io/*
@@ -68,7 +68,7 @@ From now on you can have another extension that will allow you to have a custom 
 // @name        TS-Mod-addons
 // @version     1.0.0
 // @description	Evades.io TS script addon.
-// @author      Script by: MeOw:3 (🎀Depression🎀#5556).
+// @author      Script by: MeOw:3 (🎀Aggression🎀#5556).
 // @match       https://evades.io/*
 // @match       https://evades.online/*
 // @match       https://eu.evades.io/*

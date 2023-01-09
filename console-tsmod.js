@@ -749,7 +749,7 @@ window.vers = {
 				news:[
 					`<a href="https://www.youtube.com/watch?v=XRXmW23zyWw&feature=youtu.be&ab_channel=itsme">How to install (18s video).</a>`,
 					`<a href="https://www.youtube.com/watch?v=MA9A8OmK0Xo&ab_channel=PigerthePig">1.0.0 version video (by piger).</a>`,
-					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Agression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
+					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Aggression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
 				],
 			},
 			{
