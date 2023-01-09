@@ -2,7 +2,7 @@
 // @name        TS-Mod
 // @version     1.1.99
 // @description	Evades.io TS script.
-// @author      Script by: DepressionOwU (🎀Agression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
+// @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
 // @match       https://*.evades.online/*
 // @match       https://*evades.io/*
@@ -764,7 +764,7 @@ window.vers = {
 				news:[
 					`<a href="https://www.youtube.com/watch?v=XRXmW23zyWw&feature=youtu.be&ab_channel=itsme">How to install (18s video).</a>`,
 					`<a href="https://www.youtube.com/watch?v=MA9A8OmK0Xo&ab_channel=PigerthePig">1.0.0 version video (by piger).</a>`,
-					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Agression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
+					`Found a bug or someone is missing a tag? lmk:<br><i><b>${`🎀Aggression🎀#5556`.fontcolor("#ff00ff")}</b></i>`,
 				],
 			},
 			{

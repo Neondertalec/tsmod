@@ -1,5 +1,5 @@
 # FAQ
-If nothing of this helps dm me (🎀Depression🎀#5556) or piger (Piger#2917).
+If nothing of this helps dm me (🎀Aggression🎀#5556) or piger (Piger#2917).
 
 content
 -------
@@ -19,7 +19,7 @@ Code to use:
 // @name        TS-Mod
 // @version     1.1.11
 // @description	Evades.io TS script.
-// @author      Script by: MeOw:3 (🎀Depression🎀#5556), Most ideas: Piger (Piger#2917).
+// @author      Script by: MeOw:3 (🎀Aggression🎀#5556), Most ideas: Piger (Piger#2917).
 // @match       https://evades.io/*
 // @match       https://evades.online/*
 // @match       https://eu.evades.io/*
