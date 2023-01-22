@@ -196,6 +196,6 @@
       prior:0,
       lock:false,
       join: true
-	  },
+    },
   ]
 }
