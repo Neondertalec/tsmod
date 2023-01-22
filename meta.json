@@ -189,13 +189,13 @@
       "lock":false
     },
     {
-      names: ["clan"],
-      color: "#ff0000",
-      text: "AdminOf[АА]",
-      rainbow: false,
-      prior:0,
-      lock:false,
-      join: true
+      "names": ["clan"],
+      "color": "#ff0000",
+      "text": "AdminOf[АА]",
+      "rainbow": false,
+      "prior":0,
+      "lock":false,
+      "join": true
     },
   ]
 }
