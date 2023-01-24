@@ -1,6 +1,6 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.99
+// @version     1.1.100
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -39,7 +39,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.96",
+	v: "1.1.97",
 	cl: {
 		ts: `#ad86d8`,
 		to: `#6f8fd5`,
@@ -60,6 +60,13 @@ window.vers = {
 	filllogp: function () {
 
 		window.vers.changeLog = [
+			{
+				version: `1.1.97`,
+				news: [
+					`Some fixes.`,
+					`Fixed profile page not showing hats.`
+				],
+			},
 			{
 				version: `1.1.96`,
 				news: [
@@ -1652,7 +1659,7 @@ globalThis.profiler = {
 	loadHats: function () {
 		let el = document.querySelector(".profile-hats-container");
 		let hat = this.profilestats.accessories.hat_selection;
-		let hats = this.profilestats.accessories.hat_collection;
+		let hats = this.profilestats.accessories.collection;
 
 		for (let i in hats) {
 			if (hats[i]) {
@@ -1662,7 +1669,7 @@ globalThis.profiler = {
 					})
 				);*/
 				el.appendChild(
-					document.createElementP("img", { src: this.hats[i], className: `profile-hat-accessory ${i == hat ? "profile-hat-accessory-selected" : ""}` })
+					document.createElementP("img", { src: this.hats[i], className: `profile-hat-accessory ${i == hat ? "profile-hat-accessory-selected" : ""}` },(e)=>e.onerror = (e2)=>e.remove())
 				);
 			}
 		}
@@ -1814,8 +1821,8 @@ globalThis.client = {
 		obj: {},
 		retreived: () => {
 			setTimeout(() => {
-				Object.keys(client.imgs.obj).filter(e => e.startsWith("hats/")).forEach(e => {
-					globalThis.profiler.hats[e.replace("hats/", "")] = client.imgs.obj[e].src;
+				Object.keys(client.imgs.obj).filter(e => e.startsWith("cosmetics/")).forEach(e => {
+					globalThis.profiler.hats[e.replace("cosmetics/", "")] = client.imgs.obj[e].src;
 				});
 
 				client.imgs.tileOgSrc = client.imgs.obj["maps/tiles"].src;
@@ -4057,6 +4064,10 @@ window.addEventListener('DOMContentLoaded', e => {
 	let newihtml = `
 	body{overflow-x:hidden;}
 	.hidden{display:none;}
+
+	.profile-stats{
+		height: unset!important;
+	}
 	
 	#version-warning{
 		position: absolute;

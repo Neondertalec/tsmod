@@ -46,6 +46,13 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version: `1.1.97`,
+				news: [
+					`Some fixes.`,
+					`Fixed profile page not showing hats.`
+				],
+			},
+			{
 				version: `1.1.96`,
 				news: [
 					`Some fixes.`,
@@ -1637,7 +1644,7 @@ globalThis.profiler = {
 	loadHats: function () {
 		let el = document.querySelector(".profile-hats-container");
 		let hat = this.profilestats.accessories.hat_selection;
-		let hats = this.profilestats.accessories.hat_collection;
+		let hats = this.profilestats.accessories.collection;
 
 		for (let i in hats) {
 			if (hats[i]) {
@@ -1647,7 +1654,7 @@ globalThis.profiler = {
 					})
 				);*/
 				el.appendChild(
-					document.createElementP("img", { src: this.hats[i], className: `profile-hat-accessory ${i == hat ? "profile-hat-accessory-selected" : ""}` })
+					document.createElementP("img", { src: this.hats[i], className: `profile-hat-accessory ${i == hat ? "profile-hat-accessory-selected" : ""}` },(e)=>e.onerror = (e2)=>e.remove())
 				);
 			}
 		}
@@ -1799,8 +1806,8 @@ globalThis.client = {
 		obj: {},
 		retreived: () => {
 			setTimeout(() => {
-				Object.keys(client.imgs.obj).filter(e => e.startsWith("hats/")).forEach(e => {
-					globalThis.profiler.hats[e.replace("hats/", "")] = client.imgs.obj[e].src;
+				Object.keys(client.imgs.obj).filter(e => e.startsWith("cosmetics/")).forEach(e => {
+					globalThis.profiler.hats[e.replace("cosmetics/", "")] = client.imgs.obj[e].src;
 				});
 
 				client.imgs.tileOgSrc = client.imgs.obj["maps/tiles"].src;
@@ -4034,13 +4041,17 @@ window.getHeroColor = function (Hero) {
 	return window.getHeroRealColor(Hero);
 }
 
-window.vers.check();
-document.body.oncontextmenu = e => false;
+	window.vers.check();
+	document.body.oncontextmenu = e => false;
 
-let styles = document.createElement('style');
-let newihtml = `
+	let styles = document.createElement('style');
+	let newihtml = `
 	body{overflow-x:hidden;}
 	.hidden{display:none;}
+
+	.profile-stats{
+		height: unset!important;
+	}
 	
 	#version-warning{
 		position: absolute;
@@ -4718,34 +4729,34 @@ let newihtml = `
 	}
 	`
 
-if (window.tags) {
-	for (let tag in window.tags.tagsData) {
-		let tagData = window.tags.tagsData[tag];
-		{//lb
-			if (tagData.lb) {
-				let newarr = [];
-				for (let i in window.tags.oldTags[tag]) {
-					newarr.push('#leaderboard span[arialabel="' + window.tags.oldTags[tag][i] + '"]::before')
-				}
-				window.client.toggleLbTagscsscode += newarr.join(",");
-				window.client.toggleLbTagscsscode += `{
+	if (window.tags) {
+		for (let tag in window.tags.tagsData) {
+			let tagData = window.tags.tagsData[tag];
+			{//lb
+				if (tagData.lb) {
+					let newarr = [];
+					for (let i in window.tags.oldTags[tag]) {
+						newarr.push('#leaderboard span[arialabel="' + window.tags.oldTags[tag][i] + '"]::before')
+					}
+					window.client.toggleLbTagscsscode += newarr.join(",");
+					window.client.toggleLbTagscsscode += `{
 						content: "${tagData.lb.text}";
 						margin-right: 4px;
 						color: ${tagData.lb.color};
 						text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
 						${tagData.lb.rainbow ?
-						`animation-name: rainbowTextkf;
+							`animation-name: rainbowTextkf;
 							animation-duration: 20s;
 							animation-iteration-count: infinite;`:
-						``
-					}
+							``
+						}
 					}`
+				}
+				window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
 			}
-			window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
-		}
-		{//badge
-			if (tagData.badge) {
-				newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]{
+			{//badge
+				if (tagData.badge) {
+					newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]{
 						background-color: ${tagData.badge.bg};
 						border-color: ${tagData.badge.border};
 						color: ${tagData.badge.textcolor};
@@ -4754,10 +4765,10 @@ if (window.tags) {
 						animation-duration: 10s;
 						animation-iteration-count: infinite;
 						animation-timing-function: linear;`: ``
-					}
+						}
 					}`
-				if (tagData.badge.subText) {
-					newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]::after{
+					if (tagData.badge.subText) {
+						newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]::after{
 							content:"${tagData.badge.subText}";
 							color: ${tagData.badge.textcolor};
 							${tagData.badge.rainbow ? `
@@ -4765,14 +4776,14 @@ if (window.tags) {
 							animation-duration: 10s;
 							animation-iteration-count: infinite;
 							animation-timing-function: linear;`: ``
-						}
+							}
 						}`
+					}
 				}
 			}
 		}
 	}
-}
-newihtml += `
+	newihtml += `
 	.usermetas > .badgeslay > .badge::after{
 		position: absolute;
 		top: 13px;
@@ -5273,30 +5284,30 @@ newihtml += `
 	}
 
 	`;
-window.client.recalcUserMetas();
-styles.innerHTML = newihtml;
+	window.client.recalcUserMetas();
+	styles.innerHTML = newihtml;
 
-document.head.appendChild(styles);
+	document.head.appendChild(styles);
 
-document.addEventListener("keydown", (e) => {
-	if (client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && client.load) {
-		if (client.state && client.state.chatMessages) client.state.chatMessages.push("/dc");
-		e.preventDefault();
-		if (socket) socket.onclose = () => { document.location.reload(); };
-		else document.location.reload();
-		return;
-	}
-	if (document.activeElement.hasAttribute("c-lock") || document.activeElement.localName === "input") {
-		if (document.activeElement?.getAttribute("type") != "checkbox") return;
-	}
-	if (e.code == "KeyR") {
-		globalThis.CANR && window.client.openCustomSettings();
-		//window.client.openLogger();
-	} else
-		if (e.code == "Escape") {
-			window.client.toggleHeroList(true);
+	document.addEventListener("keydown", (e) => {
+		if (client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && client.load) {
+			if (client.state && client.state.chatMessages) client.state.chatMessages.push("/dc");
+			e.preventDefault();
+			if (socket) socket.onclose = () => { document.location.reload(); };
+			else document.location.reload();
+			return;
 		}
-});
+		if (document.activeElement.hasAttribute("c-lock") || document.activeElement.localName === "input") {
+			if (document.activeElement?.getAttribute("type") != "checkbox") return;
+		}
+		if (e.code == "KeyR") {
+			globalThis.CANR && window.client.openCustomSettings();
+			//window.client.openLogger();
+		} else
+			if (e.code == "Escape") {
+				window.client.toggleHeroList(true);
+			}
+	});
 
 window.checkGlobalError = () => {
 	if (globalThis._babelPolyfill) {
@@ -5439,24 +5450,24 @@ window.lastPrefix = {
 	name: ""
 }
 
-if (document.getElementsByTagName('script')[0]) {
-	var elem = Array.from(document.querySelectorAll('script')).find(a => a.src.match(/app\.[0-9a-f]{8}\.js/));
-	if (elem) {
-		let src = elem.src;
-		elem.remove();
-		elem = document.createElement('script');
-		let newInnerHTML = `
+	if (document.getElementsByTagName('script')[0]) {
+		var elem = Array.from(document.querySelectorAll('script')).find(a => a.src.match(/app\.[0-9a-f]{8}\.js/));
+		if (elem) {
+			let src = elem.src;
+			elem.remove();
+			elem = document.createElement('script');
+			let newInnerHTML = `
 			var akek=new XMLHttpRequest();
 			akek.open("GET","${src}",false);
 			akek.send();
 			tmp=akek.response;`;
 
-		for (let i = 0; i < globalThis.extraReplaces?.length; i++) {
-			let d = globalThis.extraReplaces[i];
-			let ns;
-			newInnerHTML += ns = `tmp = tmp.${d[2] === true ? "replaceAll" : "replace"}('${d[0].replaceAll("\'", "\\'")}','${d[1].replaceAll("\'", "\\'")}');\n`
-		}
-		newInnerHTML += `
+			for (let i = 0; i < globalThis.extraReplaces?.length; i++) {
+				let d = globalThis.extraReplaces[i];
+				let ns;
+				newInnerHTML += ns = `tmp = tmp.${d[2] === true ? "replaceAll" : "replace"}('${d[0].replaceAll("\'", "\\'")}','${d[1].replaceAll("\'", "\\'")}');\n`
+			}
+			newInnerHTML += `
 
 				// Декодер от protobuf
 				tmp = tmp.replace(
@@ -5635,7 +5646,7 @@ if (document.getElementsByTagName('script')[0]) {
 				console.log("%cScript loaded.","color: green; font-size: 20px");
 
 			`;
-		elem.innerHTML = newInnerHTML;
-		document.body.appendChild(elem);
+			elem.innerHTML = newInnerHTML;
+			document.body.appendChild(elem);
+		}
 	}
-}
