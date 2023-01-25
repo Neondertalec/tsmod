@@ -1594,7 +1594,7 @@ globalThis.profiler = {
 				let ii = parseInt(i);
 				let nd = {
 					x: ii,
-					y: cd.wins,
+					y: cd.wins || 0,
 				}
 
 				if (!loadedData.stats.week_record[ii - 1] && !fd.includes(ii - 1)) {
