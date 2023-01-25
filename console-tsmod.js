@@ -1817,7 +1817,7 @@ globalThis.client = {
 
 		tileOgSrc: "",
 		changeTile: () => {
-			client.imgs.obj["maps/tiles"].src = client.textCommandConsts.notiles ? "https://u.cubeupload.com/Ravelfett/tiles5e12c370.jpg" : client.imgs.tileOgSrc;
+			client.imgs.obj["maps/tiles"].src = client.textCommandConsts.notiles ? "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" : client.imgs.tileOgSrc;
 		}
 	},
 
