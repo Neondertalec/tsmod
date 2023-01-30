@@ -1618,7 +1618,7 @@ globalThis.profiler = {
 				let ii = parseInt(i);
 				let nd = {
 					x: ii,
-					y: cd.wins,
+					y: cd.wins || 0,
 				}
 
 				if (!loadedData.stats.week_record[ii - 1] && !fd.includes(ii - 1)) {
@@ -1854,7 +1854,7 @@ globalThis.client = {
 
 		tileOgSrc: "",
 		changeTile: () => {
-			client.imgs.obj["maps/tiles"].src = client.textCommandConsts.notiles ? "https://u.cubeupload.com/Ravelfett/tiles5e12c370.jpg" : client.imgs.tileOgSrc;
+			client.imgs.obj["maps/tiles"].src = client.textCommandConsts.notiles ? "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" : client.imgs.tileOgSrc;
 		}
 	},
 
