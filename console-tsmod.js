@@ -46,6 +46,14 @@ window.vers = {
 
 		window.vers.changeLog = [
 			{
+				version: `1.1.98`,
+				news: [
+					`Some fixes.`,
+					`Profile page now shows players equipped hat, body and gem.`,
+					`Settings now have an additional setting - old leaderboard size. It sets the leaderboard size to fixed 200px.`,
+				],
+			},
+			{
 				version: `1.1.97`,
 				news: [
 					`Some fixes.`,
@@ -1503,6 +1511,7 @@ globalThis.profiler = {
 		"sticky-coat": "/sticky-coat.1412b8a0.png",
 		"toxic-coat": "/toxic-coat.a27cd6c9.png",
 	},
+	accessories:{},
 	graph: {
 		el: null,
 		graph: null,
@@ -1644,6 +1653,8 @@ globalThis.profiler = {
 	loadHats: function () {
 		let el = document.querySelector(".profile-hats-container");
 		let hat = this.profilestats.accessories.hat_selection;
+		let body = this.profilestats.accessories.body_selection;
+		let gem = this.profilestats.accessories.gem_selection;
 		let hats = this.profilestats.accessories.collection;
 
 		for (let i in hats) {
@@ -1654,7 +1665,15 @@ globalThis.profiler = {
 					})
 				);*/
 				el.appendChild(
-					document.createElementP("img", { src: this.hats[i], className: `profile-hat-accessory ${i == hat ? "profile-hat-accessory-selected" : ""}` },(e)=>e.onerror = (e2)=>e.remove())
+					document.createElementP("div", {className: `profile-hat-accessory ${(i == hat || i == body) ? "profile-hat-accessory-selected" : ""}` },(e)=>{
+						e.style.background = `url(${this.hats[i]})`;
+						
+						let testImage = new Image();
+						testImage.onerror = ()=>e.remove();
+						testImage.src = this.hats[i];
+
+						if(gem && /(\-crown)/.test(i)) e.appendChild(document.createElementP("img", {src: this.accessories[gem+"-gem"], className:"profile-hat-accessory-gem"}, e2=>e2.onerror = ()=>e2.remove()));
+					})
 				);
 			}
 		}
@@ -1808,6 +1827,9 @@ globalThis.client = {
 			setTimeout(() => {
 				Object.keys(client.imgs.obj).filter(e => e.startsWith("cosmetics/")).forEach(e => {
 					globalThis.profiler.hats[e.replace("cosmetics/", "")] = client.imgs.obj[e].src;
+				});
+				Object.keys(client.imgs.obj).filter(e => e.startsWith("accessories/")).forEach(e => {
+					globalThis.profiler.accessories[e.replace("accessories/", "")] = client.imgs.obj[e].src;
 				});
 
 				client.imgs.tileOgSrc = client.imgs.obj["maps/tiles"].src;
@@ -2427,9 +2449,9 @@ globalThis.client = {
 			}
 
 			if (elem.querySelector(".userModTool")) {
-				elem.querySelector(".userModTool>.mute").onclick = () => ec("mute ");
+				elem.querySelector(".userModTool>.mute").onclick = () => ec("mute");
 				elem.querySelector(".userModTool>.kick").onclick = () => ec("kick");
-				elem.querySelector(".userModTool>.ban").onclick = () => ec("ban ");
+				elem.querySelector(".userModTool>.ban").onclick = () => ec("ban");
 			}
 
 
@@ -3823,8 +3845,8 @@ globalThis.client = {
 	},
 
 	showClasses: getLocal("ts-showClasses", "false") == "true",
+	leaderboard200px: getLocal("ts-leaderboard200px", "false") == "true",
 
-	autoMode: false,
 	script: false,
 	count: 0,
 	load: false,
@@ -3900,6 +3922,35 @@ window.replaces = {
 								document.getElementById("leaderboard").ariaLabel = "fat"
 							} else {
 								document.getElementById("leaderboard").ariaLabel = ""
+							}
+							setTimeout(window.createNewLeaderboard, 1);
+						}
+					}
+				)
+			)
+		);
+	},
+	id4_2: function () {
+		return this.default.createElement(
+			"label",
+			{ htmlFor: "leaderboard200px" },
+			this.default.createElement(
+				"div",
+				{ className: "settings-setting" },
+				"Old leaderboard size",
+				this.default.createElement(
+					"input",
+					{
+						type: "checkbox",
+						className: "settings-checkbox",
+						id: "leaderboard200px",
+						checked: client.leaderboard200px,
+						onChange: function (e) {
+							localStorage.setItem("ts-leaderboard200px", client.leaderboard200px = !client.leaderboard200px);
+							if (client.leaderboard200px) {
+								document.getElementById("leaderboard").setAttribute("aria-label2", "old")
+							} else {
+								document.getElementById("leaderboard").setAttribute("aria-label2", "")
 							}
 							setTimeout(window.createNewLeaderboard, 1);
 						}
@@ -4089,7 +4140,7 @@ window.getHeroColor = function (Hero) {
 		left: 50%;
 		transform: translate(-50%, -50%);
 		width: 250px;
-		height: 410px;
+		height: 450px;
 		background-color: #000E;
 		border-radius: 5px;
 		color: #fff;
@@ -4464,6 +4515,10 @@ window.getHeroColor = function (Hero) {
 		left: unset!important;
 		right: 10px!important;
 	}
+	#leaderboard[aria-label2="old"]{
+		width: 200px;
+	}
+
 	#leaderboard[aria-label="fat"]{
 		width:230px;
 	}
@@ -5241,6 +5296,12 @@ window.getHeroColor = function (Hero) {
 		color: #ffc249;
 	}
 
+	.profile-hats-container{
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
 	.profile-hat-accessory{
 		border: 1px solid #b9b9b9;
 		width: 50px;
@@ -5250,6 +5311,11 @@ window.getHeroColor = function (Hero) {
 
 	.profile-hat-accessory-selected{
 		border-color: #89ff85;
+	}
+
+	.profile-hat-accessory-gem{
+		max-width:100%;
+		max-height:100%;
 	}
 
 	.hall-of-fame-search{
@@ -5409,6 +5475,9 @@ window.loadGame = () => {
 	if (globalThis.client.showClasses) {
 		document.getElementById("leaderboard").ariaLabel = "fat"
 	}
+	if (globalThis.client.leaderboard200px) {
+		document.getElementById("leaderboard").setAttribute("aria-label2", "old")
+	}
 }
 
 window.getTag = (name) => {
@@ -5495,7 +5564,7 @@ window.lastPrefix = {
 				//id: 4
 				tmp = tmp.replace(
 					'ck:this.cancel.bind(this)}),',
-					'ck:this.cancel.bind(this)}),replaces.id4.call(e),replaces.id5.call(e),'
+					'ck:this.cancel.bind(this)}),replaces.id4.call(e),replaces.id4_2.call(e),replaces.id5.call(e),'
 				);
 
 				//Таймеры
