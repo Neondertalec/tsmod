@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.106
+// @version     1.1.107
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -1468,7 +1468,7 @@ window.tags = {
 
     getUserHighestTagByType: function(utags, type) {
         for (const t of utags.reverse()) {
-            if (!this.tags.tagsData[t].cantH && this.tags.tagsData[t][type]) {
+            if (!window.tags.tagsData[t].cantH && window.tags.tagsData[t][type]) {
                 return t;
             }
         }
@@ -4493,7 +4493,7 @@ function tsmodInit() {
         left: 50%;
         transform: translate(-50%, -50%);
         width: 250px;
-        height: 450px;
+        height: 500px;
         background-color: #000E;
         border-radius: 5px;
         color: #fff;
