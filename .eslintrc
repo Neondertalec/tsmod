@@ -7,6 +7,7 @@
     "es6": true
   },
   "globals": {
+    "CanvasJS": true,
     "global": false,
     "globalThis": true
   },
@@ -24,9 +25,7 @@
     "constructor-super": 2,
     "curly": [2, "all"],
     "default-case": 2,
-    "eqeqeq": 2,
     "generator-star-spacing": 2,
-    "guard-for-in": 2,
     "indent": [2, 4, {"SwitchCase": 1, "ignoreComments":  true }],
     "jsx-quotes": 2,
     "key-spacing": 2,

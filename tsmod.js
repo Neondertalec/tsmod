@@ -34,6 +34,8 @@ window.customTags = [
     },
 ];
 
+const atwne = "atwnebissatwnebiss";
+
 window.vers = {
     v: "1.1.99",
     cl: {
@@ -212,9 +214,9 @@ window.vers = {
                         `CZheng`,
                     ],
                     [`New command ${`#arealb`.fontcolor(this.cl.cmd)}.<br>` +
-                        `By using the command you will see a leaderboard in the chat in this format:<br>` +
-                        `Name ;; Level ;; XP ;; Hero<br>` +
-                        `You can sort it by typing ${`#arealb arg`.fontcolor(this.cl.cmd)} where arg is:`,
+                    `By using the command you will see a leaderboard in the chat in this format:<br>` +
+                    `Name ;; Level ;; XP ;; Hero<br>` +
+                    `You can sort it by typing ${`#arealb arg`.fontcolor(this.cl.cmd)} where arg is:`,
                     `area`,
                     `xp`,
                     `hero`,
@@ -815,7 +817,8 @@ window.vers = {
                 }
                 xm.open("GET", data[ol], false);
                 xm.send();
-                return olCache[ol] = xm.response;
+                olCache[ol] = xm.response;
+                return xm.response;
             };
 
 
@@ -839,7 +842,7 @@ window.vers = {
     },
 
     checkVer: function(v1, v2) {
-        [v1, v2] = [v1.split(".").map((v) => parseInt(v)), v2.split(".").map((v) => parseInt(v))];
+        [v1, v2] = [v1.split(".").map((v) => parseInt(v, 10)), v2.split(".").map((v) => parseInt(v, 10))];
         for (let i = 0; i < v1.length; i++) {
             if (v1[i] < v2[i]) {
                 return true;
@@ -900,14 +903,15 @@ window.vers = {
             document.body.appendChild(ver);
         }
 
-        tags.calcOldTags();
+        globalThis.tags.calcOldTags();
     },
 
 
     genLog: function(version, news) {
         let id = version, ver = version;
         if (typeof version === "object") {
-            id = version[0]; ver = version[1];
+            id = version[0];
+            ver = version[1];
         }
         let newData =
             `<div class="changelog-section" logid="${id}">` +
@@ -970,23 +974,26 @@ window.vers = {
         }
 
         if (!this.chlog[0]) {
-            return void (console.warn(".changelog not found"));
+            console.warn(".changelog not found");
+            return;
         }
         if (!this.chlog[1]) {
-            return void (console.warn(".ts-changelog not found"));
+            console.warn(".ts-changelog not found");
+            return;
         }
         if (!this.chlog[2]) {
-            return void (console.warn(".ts-links not found"));
+            console.warn(".ts-links not found");
+            return;
         }
 
         const l = ["ev", "ts", "li"];
         this.chlog.forEach((e, i) => {
             if (who != l[i]) {
                 e.classList.contains("hidden") ||
-                    e.classList.add("hidden");
+                e.classList.add("hidden");
             } else {
                 e.classList.contains("hidden") &&
-                    e.classList.remove("hidden");
+                e.classList.remove("hidden");
             }
         });
     }
@@ -1015,7 +1022,8 @@ globalThis.CacheTs = class CacheTs {
     _data = {};
 
     setVal(key, val) {
-        return this._data[key] = val;
+        this._data[key] = val;
+        return val;
     }
 
     getVal(key, def = undefined) {
@@ -1033,10 +1041,10 @@ globalThis.CacheTs = class CacheTs {
     }
 };
 
-new MutationObserver(function(m) {
+new MutationObserver((_, observer) => {
     if (document.querySelector(".leaderboard-line.Central-Core-Dull")) {
         window.updateLeaderboard();
-        this.disconnect();
+        observer.disconnect();
     }
 }).observe(document, {childList: true, subtree: true});
 
@@ -1051,7 +1059,8 @@ try {
         const newArr = [];
         xm.response.slice(xm.response.indexOf("anned Players\\n\\n\\u0010\\u0012\\u001cPlayer"), xm.response.indexOf("\\n\\u0011")).replace(/\\u0012\\u001c/gm, "\n").replace(/\\n\\u001c/gm, "/n").split("\n").forEach((e, i) => {
             if (i > 1) {
-                newArr._d = 1; newArr.push(e.split("/n")[0]);
+                newArr._d = 1;
+                newArr.push(e.split("/n")[0]);
             }
         });
         if (newArr._d) {
@@ -1059,14 +1068,15 @@ try {
             window.blaclist = newArr;
         }
     }
-} catch { }
+} catch {
+    // Do nothing
+}
 
 globalThis.tagsEX = globalThis.tagsEX ?? {};
 globalThis.tagDataEX = globalThis.tagsEX ?? {};
 
 globalThis.tagsEX = {...globalThis.tagsEX, ...{'[SCR]': ['DepressionOwU'],}};
 globalThis.tagDataEX = {...globalThis.tagDataEX, ...{'[SCR]': {presudo: "[TO&Scripter]", color: "#ff00bc"},}};
-const atwne = "atwnebissatwnebiss";
 globalThis.tags = {
     chatTags: new globalThis.CacheTs(),
     tags: {} || false && {
@@ -1076,7 +1086,8 @@ globalThis.tags = {
         '[oly4]': [atwne, 'Ventinari', 'Ndaverr', 'Tetar', 'Bluemonkey14', '9jd8fn48fnf8rnr', 'PotatoNuke', 'lindsay', 'Koraiii', 'BJG', 'Harmony556'],
         '[oly5]': [atwne, 'BOTSLAYER', 'Strat', 'Dreamz', 'Harmony556', 'AngelNarwall', 'Ventinari', 'BJG', 'lindsay', 'Koraiii', 'eagle45'],
         '[custom]': [atwne, 'DepressionOwU', ...window.customTags.reduce(function(vv, ii) {
-            vv.push(...ii.names); return vv;
+            vv.push(...ii.names);
+            return vv;
         }, [])],
         '[YT]': [atwne, 'R0YqL', 'Strat', 'mRDDanik', 'DD1'],
         '[ST]': [atwne, 'Zaxoosh'],
@@ -1084,9 +1095,9 @@ globalThis.tags = {
         '[TS]': [atwne, 'yIzaac😎👌',
 
             // 'Creazy',
-            'Aries', /* 'goldy',*/ /* 'drippyk',*/ /* 'SANDWICH',*/ /* 'Damasus'*/, '☺♣○•♣♥☻♦♠◘', 'Stryker123', /* 'prod1gy',*/ 'Zade',
+            'Aries', /* 'goldy',*/ /* 'drippyk',*/ /* 'SANDWICH',*/ /* 'Damasus'*/ '☺♣○•♣♥☻♦♠◘', 'Stryker123', /* 'prod1gy',*/ 'Zade',
             '1Phoenix1',
-            'DepressionOwU',,			/* 'Exscord'*/
+            'DepressionOwU',			/* 'Exscord'*/
             'piger',
 
             // 'DEFA', 'ZaLo', 'notdefa',
@@ -1459,7 +1470,7 @@ globalThis.tags = {
 
     getUserHighestTagByType: function(utags, type) {
         for (const t of utags.reverse()) {
-            if (!tags.tagsData[t].cantH && tags.tagsData[t][type]) {
+            if (!this.tags.tagsData[t].cantH && this.tags.tagsData[t][type]) {
                 return t;
             }
         }
@@ -1529,17 +1540,20 @@ globalThis.tags = {
                 customs = customs.sort((v1, v2) => v1[0].prior - v2[0].prior);
 
                 if (!lock) {
-                    tagSearch: for (const tag in window.tags.tagsData) {
+                    for (const tag in window.tags.tagsData) {
                         const tagData = window.tags.tagsData[tag];
-                        { // chat
-                            if (tagData.chat) {
-                                for (const i in window.tags.oldTags[tag]) {
-                                    if (window.tags.oldTags[tag][i] == name) {
-                                        code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow ? "rainbowText" : ""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`;
-                                        break tagSearch;
-                                    }
+                        let found = false;
+                        if (tagData.chat) {
+                            for (const index in window.tags.oldTags[tag]) {
+                                if (window.tags.oldTags[tag][index] == name) {
+                                    code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow ? "rainbowText" : ""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`;
+                                    found = true;
+                                    break;
                                 }
                             }
+                        }
+                        if (found) {
+                            break;
                         }
                     }
                 }
@@ -1554,15 +1568,14 @@ globalThis.tags = {
 };
 window.tags.init();
 
-globalThis.getLocal = (key, def) => {
+function getLocal(key, def) {
     const res = localStorage.getItem(key);
     return res !== null ? res : def;
-};
+}
 
 window.secondsFormat = (time, m = true, t = 0) => {
-
-    return t === 1 ? `${m ? (time / 60 >> 0) + ":" : ""}` + `${time % 60 < 10 ? "0" + (time % 60) : time % 60}` :
-        `${m ? (time / 60 >> 0) + "m " : ""}` + `${time % 60}s`;
+    return t === 1 ? `${m ? (time / 60 >> 0) + ":" : ""}${time % 60 < 10 ? "0" + (time % 60) : time % 60}` :
+        `${m ? (time / 60 >> 0) + "m " : ""}${time % 60}s`;
 };
 
 globalThis.profiler = {
@@ -1602,11 +1615,12 @@ globalThis.profiler = {
             if (hof) {
                 hof.onclick = () => {
                     if (hof.innerHTML == "🔎") {
-                        let searchBar; hof.appendChild(searchBar = document.createElementP("input", {className: "searchLB"}, (e) => {
-                            e.onclick = (e) => {
-                                e.stopPropagation();
+                        let searchBar;
+                        hof.appendChild(searchBar = document.createElementP("input", {className: "searchLB"}, (e) => {
+                            e.onclick = (event) => {
+                                event.stopPropagation();
                             };
-                            e.placeholder = globalThis.client.accountName || "";
+                            e.placeholder = window.client.accountName || "";
                             e.addEventListener("blur", () => {
                                 hof.innerHTML = "🔎";
                             });
@@ -1617,8 +1631,7 @@ globalThis.profiler = {
                                         targetEl.scrollIntoView();
                                         hof.innerHTML = "🔎";
                                     }
-                                } else
-                                if (evt.key === "Escape") {
+                                } else if (evt.key === "Escape") {
                                     hof.innerHTML = "🔎";
                                 }
                             });
@@ -1634,7 +1647,7 @@ globalThis.profiler = {
         this.profilestats = state;
         setTimeout(() => {
             this.loadHats();
-            client.api.playerOnlineData(this.profilestats.username).then((online) => {
+            window.client.api.playerOnlineData(this.profilestats.username).then((online) => {
                 const marker = document.querySelector(".onlineMarker");
                 marker.style.backgroundColor = online ? "#00ff00" : "#444";
                 if (online) {
@@ -1647,7 +1660,7 @@ globalThis.profiler = {
                     markerTip.setAttribute("on", "1");
                 }
             });
-            profiler.initWeeklyBoxes();
+            globalThis.profiler.initWeeklyBoxes();
         }, 100);
     },
     showGraph: function() {
@@ -1657,7 +1670,8 @@ globalThis.profiler = {
             document.head.appendChild(this.lib);
             console.log("lib added");
             this.lib.onload = () => {
-                this.libl = true; this.displayGraph();
+                this.libl = true;
+                this.displayGraph();
             };
         }
         if (!this.libl) {
@@ -1675,8 +1689,8 @@ globalThis.profiler = {
                     this.hideGrapth();
                 };
                 e.innerHTML = `<div id="chartContainer" style="height: 370px; width: 80%;"></div>`;
-                e.children[0].onclick = (e) => {
-                    e.stopPropagation();
+                e.children[0].onclick = (event) => {
+                    event.stopPropagation();
                 };
                 document.body.appendChild(e);
             });
@@ -1701,13 +1715,13 @@ globalThis.profiler = {
         const loadedData = this.profilestats;
 
         const points = [];
-        const cw = parseInt(document.querySelector(".profile-week-name").innerHTML.slice(5));
+        const cw = parseInt(document.querySelector(".profile-week-name").innerHTML.slice(5), 10);
         const player = this.profilestats.username + ` (${this.profilestats.stats.highest_area_achieved_counter})`;
         const fd = [];
         for (const i in loadedData.stats.week_record) {
             const cd = loadedData.stats.week_record[i];
             if (loadedData.stats.week_record[i]) {
-                const ii = parseInt(i);
+                const ii = parseInt(i, 10);
                 const nd = {
                     x: ii,
                     y: cd.wins || 0,
@@ -1773,15 +1787,20 @@ globalThis.profiler = {
                     })
                 );*/
                 el.appendChild(
-                    document.createElementP("div", {className: `profile-hat-accessory ${(i == hat || i == body) ? "profile-hat-accessory-selected" : ""}`},(e) => {
+                    document.createElementP("div", {className: `profile-hat-accessory ${(i == hat || i == body) ? "profile-hat-accessory-selected" : ""}`}, (e) => {
                         e.style.background = `url(${this.hats[i]})`;
 
                         const testImage = new Image();
                         testImage.onerror = () => e.remove();
                         testImage.src = this.hats[i];
 
-                        if (gem && (/(\-crown)/).test(i)) {
-                            e.appendChild(document.createElementP("img", {src: this.accessories[gem + "-gem"], className: "profile-hat-accessory-gem"}, (e2) => e2.onerror = () => e2.remove()));
+                        if (gem && (/(-crown)/).test(i)) {
+                            e.appendChild(document.createElementP("img", {
+                                src: this.accessories[gem + "-gem"],
+                                className: "profile-hat-accessory-gem"
+                            }, (e2) => {
+                                e2.onerror = () => e2.remove();
+                            }));
                         }
                     })
                 );
@@ -1837,38 +1856,40 @@ globalThis.profiler = {
     },
 
     initWeeklyBoxes: function() {
-        if (!profiler.filterCss) {
-            profiler.filterCss = document.createElement("style");
-            document.head.appendChild(profiler.filterCss);
+        if (!globalThis.profiler.filterCss) {
+            globalThis.profiler.filterCss = document.createElement("style");
+            document.head.appendChild(globalThis.profiler.filterCss);
         }
 
         document.querySelectorAll("[wbkey]").forEach((e) => {
             const k = e.getAttribute("wbkey");
-            e.checked = profiler.filterConsts[k];
+            e.checked = globalThis.profiler.filterConsts[k];
         });
-        profiler.rerenderWeeklyBoxes();
+        globalThis.profiler.rerenderWeeklyBoxes();
     },
 
     toggleWeeklyBoxes: function(k) {
         const e = document.querySelector(`[wbkey="${k}"]`);
-        localStorage.setItem("ts-" + k, e.checked = profiler.filterConsts[k] = !profiler.filterConsts[k]);
-        profiler.rerenderWeeklyBoxes();
+        globalThis.profiler.filterConsts[k] = !globalThis.profiler.filterConsts[k];
+        e.checked = globalThis.profiler.filterConsts[k];
+        localStorage.setItem("ts-" + k, e.checked);
+        globalThis.profiler.rerenderWeeklyBoxes();
     },
 
     rerenderWeeklyBoxes: function() {
-        if (!profiler.filterCss) {
-            profiler.filterCss = document.createElement("style");
-            document.head.appendChild(profiler.filterCss);
+        if (!globalThis.profiler.filterCss) {
+            globalThis.profiler.filterCss = document.createElement("style");
+            document.head.appendChild(globalThis.profiler.filterCss);
         }
-        const filterCss = profiler.filterCss;
+        const filterCss = globalThis.profiler.filterCss;
 
-        const fc = profiler.filterConsts;
+        const fc = globalThis.profiler.filterConsts;
         filterCss.innerHTML =
-        `.profile-rectangle-undefined{display:${fc.lbUnd ? "block" : "none"};}` +
-        `.profile-rectangle-null{display:${fc.lbNull ? "block" : "none"};}` +
-        `.profile-rectangle-bronze{display:${fc.lbBronze ? "block" : "none"};}` +
-        `.profile-rectangle-silver{display:${fc.lbSilver ? "block" : "none"};}` +
-        `.profile-rectangle-gold{display:${fc.lbGold ? "block" : "none"};}`
+            `.profile-rectangle-undefined{display:${fc.lbUnd ? "block" : "none"};}` +
+            `.profile-rectangle-null{display:${fc.lbNull ? "block" : "none"};}` +
+            `.profile-rectangle-bronze{display:${fc.lbBronze ? "block" : "none"};}` +
+            `.profile-rectangle-silver{display:${fc.lbSilver ? "block" : "none"};}` +
+            `.profile-rectangle-gold{display:${fc.lbGold ? "block" : "none"};}`
         ;
     }
 };
@@ -1891,13 +1912,60 @@ window.getTime = () => {
     return Math.floor((Date.now() - window.timeZero) / 1000);// client.state.self.entity.survivalTime;
 };
 
-globalThis.client = {
+
+const maps = {
+    "Assorted Alcove": "AA",
+    "Assorted Alcove Hard": "AAH",
+    "Burning Bunker": "BB",
+    "Burning Bunker Hard": "BBH",
+    "Central Core": "CC",
+    "Central Core Hard": "CCH",
+    "Cyber Castle": "CC₂",
+    "Catastrophic Core": "CC₃",
+    "Dangerous District": "DD",
+    "Dangerous District Hard": "DDH",
+    "Elite Expanse": "EE",
+    "Elite Expanse Hard": "EEH",
+    "Endless Echo": "EE₂",
+    "Frozen Fjord": "FF",
+    "Frozen Fjord Hard": "FFH",
+    "Glacial Gorge": "GG",
+    "Glacial Gorge Hard": "GGH",
+    "Grand Garden": "GG₂",
+    "Grand Garden Hard": "GG₂H",
+    "Humongous Hollow": "HH",
+    "Humongous Hollow Hard": "HHH",
+    "Haunted Halls": "HH₂",
+    "Haunted Halls Hard": "HH₂H",
+    "Monumental Migration": "MM",
+    "Monumental Migration Hard": "MMH",
+    "Magnetic Monopole": "MM₂",
+    "Magnetic Monopole Hard": "MM₂H",
+    "Mysterious Mansion": "MM₃",
+    "Ominous Occult": "OO",
+    "Ominous Occult Hard": "OOH",
+    "Peculiar Pyramid": "PP",
+    "Peculiar Pyramid Hard": "PPH",
+    "Quiet Quarry": "QQ",
+    "Quiet Quarry Hard": "QQH",
+    "Restless Ridge": "RR",
+    "Restless Ridge Hard": "RRH",
+    "Stellar Square": "SS",
+    "Toxic Territory": "TT",
+    "Toxic Territory Hard": "TTH",
+    "Vicious Valley": "VV",
+    "Vicious Valley Hard": "VVH",
+    "Wacky Wonderland": "WW",
+    "Wacky Wonderland Hard": "WWH",
+};
+
+window.client = {
     api: {
         getOnlinePlayersLocations: async function() {
             return fetch("https://evades.io/api/game/list").then((e) => e.json());
         },
         playerOnlineData: async function(name) {
-            const players = await client.api.getOnlinePlayersLocations();
+            const players = await window.client.api.getOnlinePlayersLocations();
             for (const i in players.local) {
                 const s1 = players.local[i][0].online;
 
@@ -1919,7 +1987,7 @@ globalThis.client = {
             return fetch("https://evades.io/api/game/usernames").then((e) => e.json());
         },
         isPlayerOnline: async function(name) {
-            const players = await client.api.getOnlinePlayers();
+            const players = await window.client.api.getOnlinePlayers();
             return players.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase());
         },
         getProfileData: async function(name) {
@@ -1933,10 +2001,6 @@ globalThis.client = {
         },
         listners: {},
 
-        /**
-         * @param {number} key
-         * @param {function()} fnc
-         */
         addEventListener: function(key, fnc) {
             if (!this.listners[key]) {
                 this.listners[key] = [];
@@ -1944,10 +2008,6 @@ globalThis.client = {
             this.listners[key].push(fnc);
         },
 
-        /**
-         * @param {number} key
-         * @param {function()} fnc
-         */
         removeEventListener: function(key, fnc) {
             if (this.listners[key]) {
                 const index = this.listners[key].indexOf(fnc);
@@ -1957,10 +2017,6 @@ globalThis.client = {
             }
         },
 
-        /**
-         * @param {number} key
-         * @param {object} data
-         */
         emit: function(key, data) {
             console.log("emit", key, data);
             if (this.listners[key]) {
@@ -1991,7 +2047,8 @@ globalThis.client = {
 
         frame: function() {
             this.frames++;
-            let d, now = Date.now();
+            let d;
+            const now = Date.now();
             if ((d = now - this.lastFpsTime) > 1000) {
                 this.fps = Math.round(this.frames * (1000 - (d % 1000)) * 0.001);
                 this.frames = 0;
@@ -2004,33 +2061,35 @@ globalThis.client = {
         obj: {},
         retreived: () => {
             setTimeout(() => {
-                Object.keys(client.imgs.obj).filter((e) => e.startsWith("cosmetics/")).forEach((e) => {
-                    globalThis.profiler.hats[e.replace("cosmetics/", "")] = client.imgs.obj[e].src;
+                Object.keys(window.client.imgs.obj).filter((e) => e.startsWith("cosmetics/")).forEach((e) => {
+                    globalThis.profiler.hats[e.replace("cosmetics/", "")] = window.client.imgs.obj[e].src;
                 });
-                Object.keys(client.imgs.obj).filter((e) => e.startsWith("accessories/")).forEach((e) => {
-                    globalThis.profiler.accessories[e.replace("accessories/", "")] = client.imgs.obj[e].src;
+                Object.keys(window.client.imgs.obj).filter((e) => e.startsWith("accessories/")).forEach((e) => {
+                    globalThis.profiler.accessories[e.replace("accessories/", "")] = window.client.imgs.obj[e].src;
                 });
 
-                client.imgs.tileOgSrc = client.imgs.obj["maps/tiles"].src;
-                client.imgs.changeTile();
+                window.client.imgs.tileOgSrc = window.client.imgs.obj["maps/tiles"].src;
+                window.client.imgs.changeTile();
             }, 0);
         },
 
         tileOgSrc: "",
         changeTile: () => {
-            client.imgs.obj["maps/tiles"].src = client.textCommandConsts.notiles ? "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" : client.imgs.tileOgSrc;
+            window.client.imgs.obj["maps/tiles"].src = window.client.textCommandConsts.notiles ?
+                "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" :
+                window.client.imgs.tileOgSrc;
         }
     },
 
     areaData: {
         data: {},
         check: () => {
-            if (!client.state) {
+            if (!window.client.state) {
                 return;
             }
             window.client.areaData.data = {};
-            for (const i in client.state.globalEntities) {
-                const user = client.state.globalEntities[i];
+            for (const i in window.client.state.globalEntities) {
+                const user = window.client.state.globalEntities[i];
                 window.client.areaData.addUser(user);
             }
             window.client.areaData.updateLb();
@@ -2099,36 +2158,36 @@ globalThis.client = {
             let names = [];
             let all = 0;
 
-            // {//sellect logs
-            const popup_logs = document.createElement("div");
-            popup_logs.className = "log_part";
+            // // select logs
+            const popupLogs = document.createElement("div");
+            popupLogs.className = "log_part";
 
-            popup_logs.innerHTML = `<div class="theader">logs</div>`;
+            popupLogs.innerHTML = `<div class="theader">logs</div>`;
 
             const refreshButton = document.createElement("button");
             refreshButton.className = "refresh";
             refreshButton.innerHTML = "Refresh";
             refreshButton.style.width = "70px";
-            popup_logs.children[0].appendChild(refreshButton);
+            popupLogs.children[0].appendChild(refreshButton);
 
-            const popup_logs_scroll = document.createElement("div");
-            popup_logs_scroll.className = "scoll_elem";
+            const popupLogsScroll = document.createElement("div");
+            popupLogsScroll.className = "scoll_elem";
 
             const setLogs = () => {
-                popup_logs_scroll.innerHTML = "";
+                popupLogsScroll.innerHTML = "";
                 for (const i of allObjs) {
-                    popup_logs_scroll.appendChild(window.client.createLogLine(i));
+                    popupLogsScroll.appendChild(window.client.createLogLine(i));
                 }
             };
-            popup_logs.appendChild(popup_logs_scroll);
+            popupLogs.appendChild(popupLogsScroll);
 
             const startInput = document.createElement("input");
             const endInput = document.createElement("input");
 
             startInput.type = endInput.type = "number";
 
-            popup_logs.appendChild(startInput);
-            popup_logs.appendChild(endInput);
+            popupLogs.appendChild(startInput);
+            popupLogs.appendChild(endInput);
             startInput.setAttribute("c-lock", "");
             endInput.setAttribute("c-lock", "");
 
@@ -2137,18 +2196,17 @@ globalThis.client = {
             // }
 
             // {//result
-            const popup_result = document.createElement("div");
-            popup_result.className = "result_part";
+            const popupResult = document.createElement("div");
+            popupResult.className = "result_part";
 
-            popup_result.innerHTML = `<div class="theader">Result</div>`;
+            popupResult.innerHTML = `<div class="theader">Result</div>`;
 
-            const popup_result_text = document.createElement("textarea");
-            popup_result_text.className = "result_elem";
-            popup_result_text.setAttribute("c-lock", "");
-            popup_result_text.readOnly = true;
+            const popupResultText = document.createElement("textarea");
+            popupResultText.className = "result_elem";
+            popupResultText.setAttribute("c-lock", "");
+            popupResultText.readOnly = true;
 
             const genResult = (p, regetArr = true) => {
-
                 if (regetArr) {
                     allObjs = [];
                     names = [];
@@ -2161,7 +2219,10 @@ globalThis.client = {
                         }
                     });
                     let index = 0;
-                    allObjs = allObjs.filter((a) => a[2] == areaName).sort((a, b) => a[0] - b[0]).map((l) => (l[5] = ++index, l));
+                    allObjs = allObjs.filter((a) => a[2] == areaName).sort((a, b) => a[0] - b[0]).map((l) => {
+                        l[5] = ++index;
+                        return l;
+                    });
                 }
 
                 setLogs();
@@ -2171,10 +2232,10 @@ globalThis.client = {
 
 
                 const name = names.join(" + "),
-                    time = window.client.getTimeDiff("", parseInt(startInput.value), parseInt(endInput.value), null, allObjs),
+                    time = window.client.getTimeDiff("", parseInt(startInput.value, 10), parseInt(endInput.value, 10), null, allObjs),
                     lastMapData = allObjs[time[4]],
                     map = window.getShortName(lastMapData[2]),
-                    area = window.normalizeArea(lastMapData[3]),
+                    normalizedArea = window.normalizeArea(lastMapData[3]),
                     time1 = time[1],
                     time2 = time[2];
 
@@ -2205,14 +2266,13 @@ globalThis.client = {
                     if (r.startsWith("name") && r.length > 4 && r[4] == " ") {
                         const arg = r.substring(5, r.length);
                         res = res.replaceAll(`{${r}}`, names.join(` ${arg} `));
-                    } else
-                    if (r.startsWith("hero num") && r.length > 8 && r[8] == " ") {
+                    } else if (r.startsWith("hero num") && r.length > 8 && r[8] == " ") {
                         const arg = r.substring(9, r.length);
                         res = res.replaceAll(`{${r}}`, heroNum.reduce((v, v2) => {
-                            v.push(v2[1] + " " + v2[0]); return v;
+                            v.push(v2[1] + " " + v2[0]);
+                            return v;
                         }, []).join(` ${arg} `));
-                    } else
-                    if (r.startsWith("hero") && r != "hero num" && r.length > 4 && r[4] == " ") {
+                    } else if (r.startsWith("hero") && r != "hero num" && r.length > 4 && r[4] == " ") {
                         const arg = r.substring(5, r.length);
                         res = res.replaceAll(`{${r}}`, heroes.join(` ${arg} `));
                     } else {
@@ -2224,7 +2284,7 @@ globalThis.client = {
                                 res = res.replaceAll("{map}", map.replace("₂", "2").replace("₃", "3"));
                                 break;
                             case "area":
-                                res = res.replaceAll("{area}", area);
+                                res = res.replaceAll("{area}", normalizedArea);
                                 break;
                             case "time":
                                 res = res.replaceAll("{time}", time[0]);
@@ -2240,19 +2300,21 @@ globalThis.client = {
                                 break;
                             case "hero num":
                                 res = res.replaceAll("{hero num}", heroNum.reduce((v, v2) => {
-                                    v.push(v2[1] + " " + v2[0]); return v;
+                                    v.push(v2[1] + " " + v2[0]);
+                                    return v;
                                 }, []).join(" + "));
                                 break;
+                            default:
                         }
                     }
                 });
                 res += "\n```";
 
-                popup_result_text.innerHTML = res;
+                popupResultText.innerHTML = res;
 
             };
 
-            popup_result.appendChild(popup_result_text);
+            popupResult.appendChild(popupResultText);
 
             // }
 
@@ -2288,7 +2350,8 @@ globalThis.client = {
 
 
                     popup_users_scroll.appendChild(userelem);
-                } genResult(popup_users_scroll);
+                }
+                genResult(popup_users_scroll);
             };
             fillusers();
 
@@ -2365,9 +2428,9 @@ globalThis.client = {
             // }
 
             popup.appendChild(popup_users);
-            popup.appendChild(popup_logs);
+            popup.appendChild(popupLogs);
             popup.appendChild(popup_format);
-            popup.appendChild(popup_result);
+            popup.appendChild(popupResult);
             backpan.appendChild(popup);
         }
     },
@@ -2390,7 +2453,7 @@ globalThis.client = {
         bannedType: +getLocal("ts-bannedType", "0"),
         showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
         showUcard: getLocal("ts-showUcard", "true") == "true",
-        timerReal: (temp1 = getLocal("ts-timerReal", "1"), temp1 == "true" ? 1 : temp1 == "false" ? 2 : +temp1),
+        timerReal: (globalThis.temp1 = getLocal("ts-timerReal", "1"), globalThis.temp1 == "true" ? 1 : globalThis.temp1 == "false" ? 2 : +globalThis.temp1),
         lbTags: getLocal("ts-lbTags", "true") == "true",
         togglefps: getLocal("ts-togglefps", "true") == "true",
         autodc: getLocal("ts-autodc", "false") == "true",
@@ -2415,7 +2478,7 @@ globalThis.client = {
     },
     userMetas: JSON.parse(getLocal("ts-userMetas", "{}")),
 
-    splitArgKeys: function(text, isTeam) {
+    splitArgKeys: function(text) {
         const r = text.match(/\{(name|map|area|time|start time|end time|hero|hero num).*?\}/gm);
         if (r) {
             return r.map((e) => e.substring(1, e.length - 1));
@@ -2425,7 +2488,8 @@ globalThis.client = {
 
     genResult: function(name) {
         const format = window.client.format;// "{name} ;; {map} {area} ;; {time} ;; (0/2)";
-        let res, u = window.client.elem.logsstor[name];
+        let res;
+        const u = window.client.elem.logsstor[name];
         if (u) {
             const list = [...u.travel, ...u.deaths].sort((a1, a2) => {
                     return a1[0] - a2[0];
@@ -2438,9 +2502,9 @@ globalThis.client = {
                 time1 = time[1],
                 time2 = time[2];
 
-            const splres = window.client.splitArgKeys(format);
+            const args = window.client.splitArgKeys(format);
             res = "```\n" + format;
-            splres.forEach((r) => {
+            args.forEach((r) => {
                 switch (r) {
                     case "name":
                         res = res.replaceAll("{name}", name);
@@ -2463,6 +2527,7 @@ globalThis.client = {
                     case "hero":
                         res = res.replaceAll("{hero}", hero);
                         break;
+                    default:
                 }
             });
             res += "\n```";
@@ -2587,38 +2652,37 @@ globalThis.client = {
         }
     },
 
-    openUcard: function(namee, pos, logs) {
+    openUcard: function(name, pos, logs) {
         if (window.client.textCommandConsts.showUcard) {
-            let HeroT, Hero, Level, Name, targetName;
-            window.z = targetName = namee;
-            if (client.state) {
-                for (const i in client.state.globalEntities) {
-                    const element = client.state.globalEntities[i];
+            let heroT, hero, level;
+            const targetName = name;
+            window.z = targetName;
+            if (window.client.state) {
+                for (const i in window.client.state.globalEntities) {
+                    const element = window.client.state.globalEntities[i];
 
                     // targetName = getAttrInParents(event.target,"aria-label");
 
                     if (element.name == targetName) {
                         // window.z = element.name;
-                        HeroT = element.heroType;
-                        Hero = window.id2name(HeroT);
-                        Level = element.level;
-                        Name = element.name;
+                        heroT = element.heroType;
+                        hero = window.id2name(heroT);
+                        level = element.level;
                         break;
                     }
                 }
             } else {
-                Hero = "undefined";
-                Name = "undefined";
+                hero = "undefined";
             }
 
-            client.count = 1;
+            window.client.count = 1;
 
-            const name = targetName;
+            name = targetName;
 
             let o = null;
-            if (client.state) {
-                for (const i in client.state.entities) {
-                    const obj = client.state.entities[i];
+            if (window.client.state) {
+                for (const i in window.client.state.entities) {
+                    const obj = window.client.state.entities[i];
                     if (obj.name == window.z) {
                         o = obj;// experience
                         break;
@@ -2636,7 +2700,7 @@ globalThis.client = {
             const vpcolor = window.getVpColor(o?.winCount ? o.winCount : logs[name].vp);
             elem.innerHTML =
                 `<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>` +
-                `<button id="log"class="bbtn"onClick="window.client.showLog('${name}', ${pos[1]}, window.client.openLogger(false))"title="Open logs popup.">L</button>` +
+                `<button id="log"class="bbtn"onClick="window.client.showLog('${name}', window.client.openLogger(false))"title="Open logs popup.">L</button>` +
                 `<button id="add"class="bbtn"onClick="window.client.customLog('${name}')"title="Add a custom (special) log.">+</button>` +
                 `<button id="gen"class="bbtn"onClick="window.client.genResult('${name}')"title="Generate the runs data.">G</button>` +
                 `<button id="reset"class="bbtn"onClick="window.client.resetAreaLog('${name}')"title="Reset the log that shows when the user entered the game area.">R</button>` +
@@ -2645,9 +2709,9 @@ globalThis.client = {
                 `<ul style="display: table-cell;">` +
                 `<li style="display: table-cell;">` +
                 `<a href="/profile/${name}" target="_blank">Profile</a>` +
-                `<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(HeroT) ? '' : 'blacklisted'}" style="color:${window.getHeroColor(Hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${Hero}</b></p>` +
+                `<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(heroT) ? '' : 'blacklisted'}" style="color:${window.getHeroColor(hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${hero}</b></p>` +
                 `<p id="c0">VP: <b ${vpcolor == "rainbow" ? `class="rainbowText" style="` : `style="color:${vpcolor};`}text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount : (logs[name].vp !== undefined ? logs[name].vp : "###")}</b></p>` +
-                `<p id="c1">Level: ${Level || -1}</p>` +
+                `<p id="c1">Level: ${level || -1}</p>` +
                 `<p id="c2">Speed: ${-1}</p>` +
                 `<p id="c3">XP: ${o != null ? `${o.experience} | Ene: ${Math.round(o.energy)}<br>Max E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen * 10) / 10).toFixed(1)}` : "not in same area"}</p>` +
                 `<div id="timecounter">` +
@@ -2657,12 +2721,13 @@ globalThis.client = {
                 `</div>` +
                 `</li>` +
                 `</ul>` +
-                `${!client.isMod ? "" : `<div class="userModTool"><button class="mute">Mute</button><button class="kick">Kick</button><button class="ban">Ban</button></div>`}`;
+                `${!window.client.isMod ? "" : `<div class="userModTool"><button class="mute">Mute</button><button class="kick">Kick</button><button class="ban">Ban</button></div>`}`;
 
             const ec = (cmd) => {
                 const chat = document.getElementById("chat-input");
                 chat.value = `/${cmd} ${name}`;
-                chat.focus(); chat.selectionStart = chat.selectionEnd = 10000;
+                chat.focus();
+                chat.selectionStart = chat.selectionEnd = 10000;
             };
 
             if (elem.querySelector(".userModTool")) {
@@ -2714,7 +2779,7 @@ globalThis.client = {
             });
 
             nameEmem.addEventListener("click", (e) => {
-                window.client.openUserMetas(getAttrInParents(e.target, "realname"));
+                window.client.openUserMetas(window.getAttrInParents(e.target, "realname"));
                 e.stopPropagation();
             });
 
@@ -2800,7 +2865,7 @@ globalThis.client = {
     },
 
     /* toggleExtendLb: function(){
-        globalThis.client.extendLb = globalThis.client.textCommandConsts.ssxp;// || smth
+        window.client.extendLb = window.client.textCommandConsts.ssxp;// || smth
     },*/
 
     checkMsg: function(value) {
@@ -2812,8 +2877,6 @@ globalThis.client = {
             const messageS = value.split(" ");
 
             if (["#", p, p + "help"].includes(messageS[0])) {
-                const f = (t) => `<font style="font-weight:bold;" onclick="let e = document.getElementById('chat-input');e.focus();e.value='${t}';e">${t}</font>`;
-
                 let sysText = `${p} is the prefix.<br>` +
                     `${window.client.editChatInput(false, `{prefix}prefix`)} - set prefix.<br>` +
                     `${window.client.editChatInput(false, `{prefix}toggletag`)} - switches ON/OFF.<br>` +
@@ -2839,102 +2902,89 @@ globalThis.client = {
                 }
 
                 window.client.sendSystemMessage(sysText);
-            } else
-            if ([p + "prefix"].includes(messageS[0])) { // nd
+            } else if ([p + "prefix"].includes(messageS[0])) { // nd
                 if (messageS[1]?.length > 0 && messageS[1] != "/") {
                     localStorage.setItem("ts-prefix", window.client.textCommandConsts.prefix = messageS[1]);
                     window.client.sendSystemMessage(`The prefix is changed from ${p} is to ${messageS[1]}`);
                 } else {
                     window.client.sendSystemMessage(`Prefix should contain atleast 1 character and cannot be a /`);
                 }
-            } else
-            if ([p + "toggletag"].includes(messageS[0])) {
+            } else if ([p + "toggletag"].includes(messageS[0])) {
                 localStorage.setItem("ts-showTag", window.client.textCommandConsts.showTag = !window.client.textCommandConsts.showTag);
                 window.client.sendSystemMessage(`User tags are now turned ${["off", "on"][+window.client.textCommandConsts.showTag]}`);
-            } else
-            if ([p + "autodc"].includes(messageS[0])) {
+            } else if ([p + "autodc"].includes(messageS[0])) {
                 localStorage.setItem("ts-autodc", window.client.textCommandConsts.autodc = !window.client.textCommandConsts.autodc);
                 window.client.sendSystemMessage(`autodc is now turned ${["off", "on"][+window.client.textCommandConsts.autodc]}`);
             } else
 
-                            /* if([p+"ssxp"].includes(messageS[0])){
-                                localStorage.setItem("ts-ssxp", window.client.textCommandConsts.ssxp = !window.client.textCommandConsts.ssxp);
-                                window.client.sendSystemMessage(`ssxp is now turned ${["off","on"][+window.client.textCommandConsts.ssxp]}`);
-                                window.client.toggleExtendLb();
-                            }else*/
+                /* if([p+"ssxp"].includes(messageS[0])){
+                    localStorage.setItem("ts-ssxp", window.client.textCommandConsts.ssxp = !window.client.textCommandConsts.ssxp);
+                    window.client.sendSystemMessage(`ssxp is now turned ${["off","on"][+window.client.textCommandConsts.ssxp]}`);
+                    window.client.toggleExtendLb();
+                }else*/
             if ([p + "togglelbtags"].includes(messageS[0])) {
                 localStorage.setItem("ts-lbTags", window.client.textCommandConsts.lbTags = !window.client.textCommandConsts.lbTags);
                 window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
                 window.client.sendSystemMessage(`Leaderboard tags are now turned ${["off", "on"][+window.client.textCommandConsts.lbTags]}`);
             } else
 
-                                /* if([p+"toggletimer"].includes(messageS[0])){//nd
-                                    localStorage.setItem("ts-timerReal", window.client.textCommandConsts.timerReal = !window.client.textCommandConsts.timerReal);
-                                    window.client.sendSystemMessage(`timer now shows ${["end screen time","real time"][+window.client.textCommandConsts.timerReal]}`);
-                                }else*/
+                /* if([p+"toggletimer"].includes(messageS[0])){//nd
+                    localStorage.setItem("ts-timerReal", window.client.textCommandConsts.timerReal = !window.client.textCommandConsts.timerReal);
+                    window.client.sendSystemMessage(`timer now shows ${["end screen time","real time"][+window.client.textCommandConsts.timerReal]}`);
+                }else*/
             if ([p + "toggleusers"].includes(messageS[0])) {
                 localStorage.setItem("ts-showUIACnt", window.client.textCommandConsts.showUIACnt = !window.client.textCommandConsts.showUIACnt);
                 window.client.areaData.updateLb();
                 window.client.sendSystemMessage(`User count is now turned ${["off", "on"][+window.client.textCommandConsts.showUIACnt]}`);
-            } else
-            if ([p + "toggleusercard"].includes(messageS[0])) {
+            } else if ([p + "toggleusercard"].includes(messageS[0])) {
                 localStorage.setItem("ts-showUcard", window.client.textCommandConsts.showUcard = !window.client.textCommandConsts.showUcard);
                 window.client.toggleUcard(window.client.textCommandConsts.showUcard);
                 window.client.sendSystemMessage(`User card is now turned ${["off", "on"][+window.client.textCommandConsts.showUcard]}`);
-            } else
-            if ([p + "togglefps"].includes(messageS[0])) {
+            } else if ([p + "togglefps"].includes(messageS[0])) {
                 localStorage.setItem("ts-togglefps", window.client.textCommandConsts.togglefps = !window.client.textCommandConsts.togglefps);
                 window.client.sendSystemMessage(`User card is now turned ${["off", "on"][+window.client.textCommandConsts.togglefps]}`);
-            } else
-            if ([p + "banned"].includes(messageS[0])) {
+            } else if ([p + "banned"].includes(messageS[0])) {
                 if (messageS.length > 1) {
-                    if (!isNaN(parseInt(messageS[1]))) {
+                    if (!isNaN(parseInt(messageS[1], 10))) {
                         localStorage.setItem("ts-bannedType", "" + (window.client.textCommandConsts.bannedType = +messageS[1]));
                         window.client.sendSystemMessage(`Banned user show type is now ${window.client.textCommandConsts.bannedType}`);
                         return false;
                     }
                 }
                 window.client.sendSystemMessage(`Invalid input. Use a number from 0 to 1`);
-            } else
-            if ([p + "grb"].includes(messageS[0])) {
+            } else if ([p + "grb"].includes(messageS[0])) {
                 const r = window.client.grb.toggle();
                 window.client.sendSystemMessage(r != 2 ? `GRB is now turned ${["off", "on"][window.client.grb.on ? 1 : 0]}` : `GRB is currently unavailable!`);
-            } else
-            if ([p + "format"].includes(messageS[0])) {
+            } else if ([p + "format"].includes(messageS[0])) {
                 const sf = window.client.editChatInput;
                 const f = (t) => sf(true, t, ` {${t}}`);
                 window.client.sendSystemMessage(
                     `Keywords: ${f("name")}, ${f("map")}, ${f("area")}, ${f("time")}, ${f("start time")}, ${f("end time")}, ${f("hero")}.` +
-                                                            `<br>Working example:<br>${sf(false, `{prefix}setformat {name} ;; {map} {area} ;; {time}`)}<br>` +
-                                                            `current: ${sf(false, window.client.format, `{prefix}setformat ${window.client.format}`)}`
+                    `<br>Working example:<br>${sf(false, `{prefix}setformat {name} ;; {map} {area} ;; {time}`)}<br>` +
+                    `current: ${sf(false, window.client.format, `{prefix}setformat ${window.client.format}`)}`
                 );
-            } else
-            if ([p + "setformat"].includes(messageS[0])) {
+            } else if ([p + "setformat"].includes(messageS[0])) {
                 let newFromat = [...messageS];
                 newFromat.splice(0, 1);
                 newFromat = newFromat.join(" ");
                 localStorage.setItem("ts-resFormat", window.client.format = newFromat);
                 window.client.sendSystemMessage(`Newformat is setd to "${newFromat}"`);
-            } else
-            if ([p + "arealb"].includes(messageS[0])) {
-                let sort = (e1, e2) => 0;
+            } else if ([p + "arealb"].includes(messageS[0])) {
+                let sort = () => 0;
                 if (messageS[1] == "xp") {
                     sort = (e1, e2) => e2.experience - e1.experience;
-                }
-                if (messageS[1] == "area") {
+                } else if (messageS[1] == "area") {
                     sort = (e1, e2) => e2.areaNumber - e1.areaNumber;
-                }
-                if (messageS[1] == "name") {
+                } else if (messageS[1] == "name") {
                     sort = (e1, e2) => e1.name > e2.name ? 1 : -1;
-                }
-                if (messageS[1] == "hero") {
+                } else if (messageS[1] == "hero") {
                     sort = (e1, e2) => e1.heroType - e2.heroType;
                 }
 
-                client.sendSystemMessage(`${globalThis.client.main.regionName} ${globalThis.client.main.areaName}<br>` +
-                                                                    Object.values(globalThis.client.state.entities).filter((e) => e.entityType == 0)
-                                                                        .sort(sort)
-                                                                        .map((e) => `${e.name} ;; ${e.level} LVL ;; ${e.experience} XP ;; ${id2name(e.heroType)}`).join("<br>"));
+                window.client.sendSystemMessage(`${window.client.main.regionName} ${window.client.main.areaName}<br>` +
+                    Object.values(window.client.state.entities).filter((e) => e.entityType == 0)
+                        .sort(sort)
+                        .map((e) => `${e.name} ;; ${e.level} LVL ;; ${e.experience} XP ;; ${window.id2name(e.heroType)}`).join("<br>"));
             } else {
 
                 if (window.client.textCommandConstsE.length > 0) {
@@ -2960,10 +3010,11 @@ globalThis.client = {
         if (["/mute", "/ipmute", "/ban", "/ipban"].includes(valueS[0])) {
             const pref = valueS.splice(0, 1);
             const tempval = valueS.join(" ");
-            let similarNames = [], theName = "";
-            for (const i in client.state.globalEntities) {
-                if (tempval.startsWith(client.state.globalEntities[i].name + " ")) {
-                    similarNames.push(client.state.globalEntities[i].name);
+            const similarNames = [];
+            let theName = "";
+            for (const i in window.client.state.globalEntities) {
+                if (tempval.startsWith(window.client.state.globalEntities[i].name + " ")) {
+                    similarNames.push(window.client.state.globalEntities[i].name);
                 }
             }
             if (similarNames.length == 0) {
@@ -3011,6 +3062,7 @@ globalThis.client = {
                         resTime += data[0] * 60 * 60 * 24 * 7;
                         passed = true;
                         break;
+                    default:
                 }
             }
             if (!passed) {
@@ -3074,8 +3126,7 @@ globalThis.client = {
             if (input.checked && key == -1) {
                 window.client.logTypesToShow.push(nr);
                 f(true);
-            } else
-            if (!input.checked && key != -1) {
+            } else if (!input.checked && key != -1) {
                 window.client.logTypesToShow.splice(key, 1);
                 f(false);
             }
@@ -3090,7 +3141,7 @@ globalThis.client = {
         }
     },
 
-    showLog: function(name = "", y = 0, deleted = false, dragable = true) {
+    showLog: function(name = "", deleted = false, draggable = true) {
         let u = null;
         if (Object.keys(window.client.userlog2)?.length > 0) {
             u = window.client.userlog2[name] ?? window.client.userlog[name];
@@ -3100,8 +3151,8 @@ globalThis.client = {
         if (u) {
             if (!document.getElementById("log-" + name) && !deleted) {
                 const elpos = document.querySelector(".chat-message-contextmenu.fake");
-                let elposy = parseInt(elpos?.style?.top?.substring(0, elpos?.style?.top?.length - 2));
-                let elposx = parseInt(elpos?.style?.right?.substring(0, elpos?.style?.right?.length - 2));
+                let elposy = parseInt(elpos?.style?.top?.substring(0, elpos?.style?.top?.length - 2), 10);
+                let elposx = parseInt(elpos?.style?.right?.substring(0, elpos?.style?.right?.length - 2), 10);
                 elposy = isNaN(elposy) ? 0 : elposy;
                 elposx = isNaN(elposx) ? 0 : elposx;
                 const elem = document.createElement("div");
@@ -3141,12 +3192,11 @@ globalThis.client = {
                 }
 
                 document.body.appendChild(elem2);
-                if (dragable) {
+                if (draggable) {
                     window.makeDragable(elem, [elem, elem2]);
                 }
                 return [elem, elem2];
-            } else
-            if (!deleted) {
+            } else if (!deleted) {
                 document.getElementById("log-" + name).remove();
                 document.getElementById("log-h-" + name).remove();
             }
@@ -3154,16 +3204,14 @@ globalThis.client = {
     },
 
     openUserMetas: function(name, closeonly = false, cb = null) {
-        const THELEM = document.querySelector(".usermetas");
-        if (THELEM) {
+        const theElem = document.querySelector(".usermetas");
+        if (theElem) {
             globalThis.CANR = true;
             if (cb) {
                 cb();
             }
-            THELEM.parentNode.remove();
-            return;
-        } else
-        if (!closeonly) {
+            theElem.parentNode.remove();
+        } else if (!closeonly) {
             globalThis.CANR = false;
             const res = window.client.userMetas[name] ? {...window.client.userMetas[name]} : {
                 lbtag: "",
@@ -3223,8 +3271,11 @@ globalThis.client = {
                 for (const i of rolesArr) {
                     const tagData = window.tags.tagsData[i];
                     if (tagData.badge) {
-                        const badge = document.createElementP("div", {className: "badge", innerText: tagData.badge.text}, (e) => {
-                            e.setAttribute("badge", i);
+                        const badge = document.createElementP("div", {
+                            className: "badge",
+                            innerText: tagData.badge.text
+                        }, (event) => {
+                            event.setAttribute("badge", i);
                         });
                         e.appendChild(badge);
                     }
@@ -3395,7 +3446,7 @@ globalThis.client = {
     customLog: function(name, type = 3, arrname = "travel", onlyElem = false) {
         if (window.client.userlog[name]) {
             const time = window.getTime();
-            const ctime = secondsFormat(Math.floor(time));
+            const ctime = window.secondsFormat(Math.floor(time));
 
             const uo = window.client.userlog[name];
             if (uo && uo[arrname]) {
@@ -3441,7 +3492,7 @@ globalThis.client = {
 
     logUserAreas: function(usr) {
         const time = window.getTime();
-        const ctime = secondsFormat(Math.floor(time));
+        const ctime = window.secondsFormat(Math.floor(time));
 
         if (window.client.userlog[usr.name]) {
             const uo = window.client.userlog[usr.name];
@@ -3467,8 +3518,7 @@ globalThis.client = {
 
                     uo.totalDeaths++;
                 }
-            } else
-            if (uo.dead) {
+            } else if (uo.dead) {
                 uo.dead = false;
                 uo.deaths.push([time, ctime, usr.regionName, usr.areaName, 2, uo.logid++]);
 
@@ -3510,7 +3560,7 @@ globalThis.client = {
         return -1;
     },
 
-    drBefore: function(e, t) {
+    drBefore: function() {
         window.client.pingNfps.frame();
         const namesA = [];
         const namesB = [];
@@ -3523,27 +3573,27 @@ globalThis.client = {
         }
 
         let newpt = [];
-        for (const i in client.state.globalEntities) {
+        for (const i in window.client.state.globalEntities) {
             uc++;
-            namesB.push(client.state.globalEntities[i].name);
-            const isnew = window.client.logUserAreas(client.state.globalEntities[i]);
-            const uo = window.client.userlog[client.state.globalEntities[i].name];
-            if (uo && uo.heroes[uo.heroes.length - 1][0] != client.state.globalEntities[i].heroType) {
-                uo.heroes.push([client.state.globalEntities[i].heroType, window.getTime()]);
+            namesB.push(window.client.state.globalEntities[i].name);
+            const isnew = window.client.logUserAreas(window.client.state.globalEntities[i]);
+            const uo = window.client.userlog[window.client.state.globalEntities[i].name];
+            if (uo && uo.heroes[uo.heroes.length - 1][0] != window.client.state.globalEntities[i].heroType) {
+                uo.heroes.push([window.client.state.globalEntities[i].heroType, window.getTime()]);
             }
-            if (client.state.globalEntities[i].name == window.z) {
-                window.client.opos[0] = client.state.globalEntities[i];
+            if (window.client.state.globalEntities[i].name == window.z) {
+                window.client.opos[0] = window.client.state.globalEntities[i];
             }
             if (isnew) {
                 newpt.push({
-                    name: client.state.globalEntities[i].name,
+                    name: window.client.state.globalEntities[i].name,
                     logs: uo
                 });
             }
         }
 
         if (newpt.length > 0) {
-            globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
+            window.client.events.emit(window.client.events.events.playerCountChange, {
                 players: newpt,
                 count: uc,
                 action: "joined",
@@ -3561,7 +3611,7 @@ globalThis.client = {
         }
 
         newpt = [];
-        for (i of namesA) {
+        for (const i of namesA) {
             if (!window.client.userlog[i].q) {
                 const uo = window.client.userlog[i];
                 newpt.push({
@@ -3578,7 +3628,7 @@ globalThis.client = {
         }
 
         if (newpt.length > 0) {
-            globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
+            window.client.events.emit(window.client.events.events.playerCountChange, {
                 players: newpt,
                 count: uc,
                 action: "left",
@@ -3586,18 +3636,18 @@ globalThis.client = {
         }
 
         newpt = [];
-        for (i of namesB) {
+        for (const i of namesB) {
             if (window.client.userlog[i].q) {
                 // "join?"
                 const uo = window.client.userlog[i];
                 const time = window.getTime();
-                const ctime = secondsFormat(Math.floor(time));
+                const ctime = window.secondsFormat(Math.floor(time));
 
                 uo.q = false;
 
-                for (const j in client.state.globalEntities) {
-                    if (client.state.globalEntities[j].name == i) {
-                        const usr = client.state.globalEntities[j];
+                for (const j in window.client.state.globalEntities) {
+                    if (window.client.state.globalEntities[j].name == i) {
+                        const usr = window.client.state.globalEntities[j];
                         uo.travel.push([time, ctime, usr.regionName, usr.areaName, 6, uo.logid++]);
                         uo.heroes.push([usr.heroType, time]);
                         window.client.customLog(i, 6, "travel", true);
@@ -3613,7 +3663,7 @@ globalThis.client = {
         }
         if (newpt.length > 0) {
 
-            globalThis.client.events.emit(globalThis.client.events.events.playerCountChange, {
+            window.client.events.emit(window.client.events.events.playerCountChange, {
                 players: newpt,
                 count: uc,
                 action: "joined",
@@ -3622,33 +3672,31 @@ globalThis.client = {
 
         let o = null;
         let m = null;
-        {
-            for (var i in client.state.entities) {
-                const obj = client.state.entities[i];
-                if (obj.name == window.z) {
-                    o = obj;// experience
-                }
-                if (obj.name) {
-                    window.client.userlog[obj.name].vp = obj.winCount;
-                    if (!window.client.getHasExited(obj.name)) {
-                        if (!m) {
-                            for (const j in client.state.map.area.zones.zones) {
-                                const zone = client.state.map.area.zones.zones[j];
-                                if (zone.type == 0) {
-                                    m = zone;
-                                    break;
-                                }
+        for (const i in window.client.state.entities) {
+            const obj = window.client.state.entities[i];
+            if (obj.name == window.z) {
+                o = obj;// experience
+            }
+            if (obj.name) {
+                window.client.userlog[obj.name].vp = obj.winCount;
+                if (!window.client.getHasExited(obj.name)) {
+                    if (!m) {
+                        for (const j in window.client.state.map.area.zones.zones) {
+                            const zone = window.client.state.map.area.zones.zones[j];
+                            if (zone.type == 0) {
+                                m = zone;
+                                break;
                             }
                         }
-                        if (m) {
-                            if (obj.x + obj.radius - m.x > 0
-                                && obj.x - obj.radius - m.x - m.width < 0
-                                && obj.y + obj.radius - m.y > 0
-                                && obj.y - obj.radius - m.y - m.height < 0
-                            ) {
-                                window.client.userlog[obj.name].exited = true;
-                                window.client.customLog(obj.name, 4);
-                            }
+                    }
+                    if (m) {
+                        if (obj.x + obj.radius - m.x > 0
+                            && obj.x - obj.radius - m.x - m.width < 0
+                            && obj.y + obj.radius - m.y > 0
+                            && obj.y - obj.radius - m.y - m.height < 0
+                        ) {
+                            window.client.userlog[obj.name].exited = true;
+                            window.client.customLog(obj.name, 4);
                         }
                     }
                 }
@@ -3724,144 +3772,139 @@ globalThis.client = {
             popup.id = "LOGGER-S";
             popup.className = "logger-users";
 
+            const extras = document.createElement("div");
+            extras.id = "extras";
 
-            {
-                const extras = document.createElement("div");
-                extras.id = "extras";
+            extras.innerHTML =
+                `<input type="checkbox" ${window.client.loggerShownOnly ? " checked" : ""} class="custombox lp">` +
+                `<button onclick="document.getElementById('copy-sellector').value = window.client.getShownLogs();document.getElementById('copy-sellector').select();document.execCommand('copy');">Export</button>` +
+                `<input id="copy-sellector" value="suck" style="position:absolute; left:-100%; width:10px; border:none;">` +
+                `<input id="pastesel" placeholder="import">`;
 
-                extras.innerHTML =
-                    `<input type="checkbox" ${window.client.loggerShownOnly ? " checked" : ""} class="custombox lp">` +
-                    `<button onclick="document.getElementById('copy-sellector').value = window.client.getShownLogs();document.getElementById('copy-sellector').select();document.execCommand('copy');">Export</button>` +
-                    `<input id="copy-sellector" value="suck" style="position:absolute; left:-100%; width:10px; border:none;">` +
-                    `<input id="pastesel" placeholder="import">`;
+            const cb = extras.querySelector(".custombox.lp");
+            cb.addEventListener("click", () => {
+                window.client.loggerShownOnly = cb.checked;
+                if (window.client.logger) {
+                    window.client.logger.remove();
+                }
+                window.client.logger = null;
+                window.client.openLogger();
+            });
 
-                const cb = extras.querySelector(".custombox.lp");
-                cb.addEventListener("click", () => {
-                    window.client.loggerShownOnly = cb.checked;
+            const el = extras.querySelector("#pastesel");
+            el.addEventListener("blur", () => {
+                let json = "";
+                try {
+                    json = JSON.parse(el.value);
+                } catch {
+                    // Do nothing
+                }
+
+                const f = () => {
                     if (window.client.logger) {
                         window.client.logger.remove();
                     }
                     window.client.logger = null;
                     window.client.openLogger();
-                });
+                };
 
-                const el = extras.querySelector("#pastesel");
-                el.addEventListener("blur", () => {
-                    let json = "";
-                    try {
-                        json = JSON.parse(el.value);
-                    } catch { }
-
-                    const f = () => {
-                        if (window.client.logger) {
-                            window.client.logger.remove();
-                        }
-                        window.client.logger = null;
-                        window.client.openLogger();
-                    };
-
-                    if (typeof json === "object") {
-                        window.client.userlog2 = json;
+                if (typeof json === "object") {
+                    window.client.userlog2 = json;
+                    f();
+                } else {
+                    const kl = Object.keys(window.client.userlog2)?.length;
+                    window.client.userlog2 = {};
+                    if (kl > 0) {
                         f();
+                    }
+                }
+            });
+
+            popup.appendChild(extras);
+
+            const holder = document.createElement("div");
+            holder.id = "holder";
+            popup.appendChild(holder);
+            let who = 0;
+            const keys = Object.keys(Object.keys(window.client.userlog2)?.length > 0 ? (who = 2, window.client.userlog2) : (who = 1, window.client.userlog));
+            for (let i = 0; i < keys.length; i++) {
+                const elem = document.createElement("div");
+
+                elem.innerHTML = ``;
+                const includes = window.client.loggerShown.includes(keys[i]);
+
+                elem.style.display = !includes && window.client.loggerShownOnly ? "none" : "";
+
+                if (who == 1) {
+                    elem.innerHTML += `<input type="checkbox" ${includes ? " checked" : ""} class="custombox lp">`;
+                }
+                elem.innerHTML += `<p>${keys[i]}</p>`
+                ;
+
+                elem.querySelector("input")?.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const inputElement = elem.querySelector("input");
+                    if (!inputElement) {
+                        return;
+                    }
+
+                    if (inputElement.checked) {
+                        window.client.loggerShown.push(keys[i]);
+                        if (window.client.loggerShownOnly) {
+                            elem.style.display = "";
+                        }
                     } else {
-                        const kl = Object.keys(window.client.userlog2)?.length;
-                        window.client.userlog2 = {};
-                        if (kl > 0) {
-                            f();
+                        const index = window.client.loggerShown.findIndex((a) => {
+                            return a == keys[i];
+                        });
+                        if (index != -1) {
+                            window.client.loggerShown.splice(index, 1);
+                        }
+                        if (window.client.loggerShownOnly) {
+                            elem.style.display = "none";
                         }
                     }
                 });
 
-                popup.appendChild(extras);
-            }
+                // elem.querySelector("p").innerText = keys[i];
 
-            {
-                const holder = document.createElement("div");
-                holder.id = "holder";
-                popup.appendChild(holder);
-                let who = 0;
-                const keys = Object.keys(Object.keys(window.client.userlog2)?.length > 0 ? (who = 2, window.client.userlog2) : (who = 1, window.client.userlog));
-                for (let i = 0; i < keys.length; i++) {
-                    const elem = document.createElement("div");
-
-                    elem.innerHTML = ``;
-                    const includes = window.client.loggerShown.includes(keys[i]);
-
-                    elem.style.display = !includes && window.client.loggerShownOnly ? "none" : "";
-
-                    if (who == 1) {
-                        elem.innerHTML += `<input type="checkbox" ${includes ? " checked" : ""} class="custombox lp">`;
+                elem.addEventListener("click", () => {
+                    const logPopup = document.querySelector(".log-popup");
+                    if (logPopup) {
+                        logPopup.remove();
                     }
-                    elem.innerHTML += `<p>${keys[i]}</p>`
-                    ;
+                    const p2 = document.querySelector(".log-popup-extra");
+                    if (p2) {
+                        p2.remove();
+                    }
 
-                    elem.querySelector("input")?.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        const el = elem.querySelector("input");
-                        if (!el) {
-                            return;
+                    const o = window.client.openUcard(keys[i], [window.innerWidth / 2 - 100, window.innerHeight / 2 - 150], who == 1 ? window.client.userlog : window.client.userlog2);// window.client.showLog(keys[i], 100, false, false);
+                    if (o && o[0]) {
+                        o[0].style.top = "50%";
+                        o[0].style.right = "50%";
+                        o[0].style.transform = "translate(50%, -50%)";
+
+                        if (o[1]) {
+                            o[1].style.left = "50%";
+                            o[1].style.top = "50%";
+                            o[1].style.transform = "translate(-150px,-50%)";
                         }
+                    }
+                });
 
-                        if (el.checked) {
-                            window.client.loggerShown.push(keys[i]);
-                            if (window.client.loggerShownOnly) {
-                                elem.style.display = "";
-                            }
-                        } else {
-                            const index = window.client.loggerShown.findIndex((a) => {
-                                return a == keys[i];
-                            });
-                            if (index != -1) {
-                                window.client.loggerShown.splice(index, 1);
-                            }
-                            if (window.client.loggerShownOnly) {
-                                elem.style.display = "none";
-                            }
-                        }
-                    });
-
-                    // elem.querySelector("p").innerText = keys[i];
-
-                    elem.addEventListener("click", () => {
-                        const popup = document.querySelector(".log-popup");
-                        if (popup) {
-                            popup.remove();
-                        }
-                        const p2 = document.querySelector(".log-popup-extra");
-                        if (p2) {
-                            p2.remove();
-                        }
-
-                        const o = window.client.openUcard(keys[i], [window.innerWidth / 2 - 100, window.innerHeight / 2 - 150], who == 1 ? window.client.userlog : window.client.userlog2);// window.client.showLog(keys[i], 100, false, false);
-                        if (o && o[0]) {
-                            o[0].style.top = "50%";
-                            o[0].style.right = "50%";
-                            o[0].style.transform = "translate(50%, -50%)";
-
-                            if (o[1]) {
-                                o[1].style.left = "50%";
-                                o[1].style.top = "50%";
-                                o[1].style.transform = "translate(-150px,-50%)";
-                            }
-                        }
-                    });
-
-                    holder.appendChild(elem);
-                }
+                holder.appendChild(elem);
             }
 
             window.client.logger = popup;
             document.body.appendChild(popup);
-        } else
-        if (p) {
+        } else if (p) {
             p.remove();
             const p2 = document.querySelector(".log-popup-extra");
             if (p2) {
                 p2.remove();
             }
             return true;
-        } else
-        if (notOnlyLogs) {
+        } else if (notOnlyLogs) {
             if (window.client.logger) {
                 window.client.logger.remove();
                 window.client.logger = null;
@@ -3881,8 +3924,7 @@ globalThis.client = {
         if (element) {
             element.parentNode.remove();
             return;
-        } else
-        if (!removeOnly) {
+        } else if (!removeOnly) {
             document.createElementP("div", null, (backpan) => {
                 backpan.style.position = "absolute";
                 backpan.style.width = "100%";
@@ -3893,7 +3935,7 @@ globalThis.client = {
 
                 document.body.appendChild(backpan);
 
-                backpan.addEventListener("click", (e) => {
+                backpan.addEventListener("click", () => {
                     window.client.openCustomSettings(true);
                 });
 
@@ -3934,7 +3976,10 @@ globalThis.client = {
 
                     popup.appendChild(document.createElementP("div", {className: "lay"}, (lay) => {
                         let mapToOpen = "Central Core";
-                        lay.appendChild(document.createElementP("button", {className: "TeamLogger", innerHTML: "Team logger"}, (el) => {
+                        lay.appendChild(document.createElementP("button", {
+                            className: "TeamLogger",
+                            innerHTML: "Team logger"
+                        }, (el) => {
                             el.addEventListener("click", (e) => {
                                 window.client.openCustomSettings(true);
                                 window.client.areaData.openAreaPopup(false, mapToOpen);
@@ -3962,8 +4007,7 @@ globalThis.client = {
         if (element) {
             element.parentNode.remove();
             return true;
-        } else
-        if (!removeOnly) {
+        } else if (!removeOnly) {
             document.createElementP("div", null, (backpan) => {
                 backpan.style.position = "absolute";
                 backpan.style.width = "100%";
@@ -3972,7 +4016,7 @@ globalThis.client = {
                 backpan.style.left = "0";
                 document.body.appendChild(backpan);
 
-                backpan.addEventListener("click", (e) => {
+                backpan.addEventListener("click", () => {
                     window.client.openAllUserMetas(true);
                 });
 
@@ -3991,14 +4035,15 @@ globalThis.client = {
                     }));
 
 
-                    let input, itemsContainer,
-                        prior = (t) => t == "" ? 0 : t == "Warning" ? 1 : 2,
-                        allNames = Object.keys(window.client.userMetas).sort().sort((a, b) => prior(window.client.userMetas[b].lbtag) - prior(window.client.userMetas[a].lbtag)),
-                        displaynames = [...allNames],
-                        fill = () => { };
+                    let input;
+                    const prior = (t) => t == "" ? 0 : t == "Warning" ? 1 : 2;
+                    const allNames = Object.keys(window.client.userMetas).sort().sort((a, b) => prior(window.client.userMetas[b].lbtag) - prior(window.client.userMetas[a].lbtag));
+                    let displayNames = [...allNames];
+                    let fill = () => {
+                    };
 
                     const research = () => {
-                        displaynames = [...allNames].filter((n) => n.toLocaleLowerCase().startsWith(input.value.toLocaleLowerCase()));
+                        displayNames = [...allNames].filter((n) => n.toLocaleLowerCase().startsWith(input.value.toLocaleLowerCase()));
                         fill();
                     };
 
@@ -4021,17 +4066,18 @@ globalThis.client = {
                         }));
                     }));
 
-                    popup.appendChild(itemsContainer = document.createElementP("div", {className: "container"}, (lay) => {
+                    popup.appendChild(document.createElementP("div", {className: "container"}, (lay) => {
                         (fill = () => {
                             lay.innerHTML = "";
-                            for (let i = 0, l = displaynames.length; i < l; i++) {
-                                let bgcolor = prior(window.client.userMetas[displaynames[i]].lbtag);
+                            for (let i = 0, l = displayNames.length; i < l; i++) {
+                                const displayName = displayNames[i];
+                                let bgcolor = prior(window.client.userMetas[displayName].lbtag);
                                 bgcolor = bgcolor == 0 ? "transparent" : bgcolor == 1 ? "red" : "green";
                                 lay.appendChild(document.createElementP("div", {
                                     innerHTML:
-                                            `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>` + displaynames[i]
+                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>` + displayName
                                 }, (el) => {
-                                    el.setAttribute("uname", displaynames[i]);
+                                    el.setAttribute("uname", displayName);
                                     el.addEventListener("click", () => {
                                         window.client.openAllUserMetas(true);
                                         globalThis.CANR = false;
@@ -4056,8 +4102,7 @@ globalThis.client = {
         if (element) {
             element.parentNode.remove();
             return true;
-        } else
-        if (!removeOnly) {
+        } else if (!removeOnly) {
             document.createElementP("div", null, (backpan) => {
                 backpan.style.position = "absolute";
                 backpan.style.width = "100%";
@@ -4066,7 +4111,7 @@ globalThis.client = {
                 backpan.style.left = "0";
                 document.body.appendChild(backpan);
 
-                backpan.addEventListener("click", (e) => {
+                backpan.addEventListener("click", () => {
                     window.client.openCustomCommands(true);
                 });
 
@@ -4079,7 +4124,8 @@ globalThis.client = {
                         ["bool", "Disable tiles", "notiles", "ts-notiles", () => {
                             window.client.imgs.changeTile();
                         }],
-                        ["bool", "User tags", "showTag", "ts-showTag", () => { }],
+                        ["bool", "User tags", "showTag", "ts-showTag", () => {
+                        }],
                         ["bool", "User LB tags", "lbTags", "ts-lbTags", (r) => {
                             window.client.toggleLbTags(r);
                         }],
@@ -4089,17 +4135,19 @@ globalThis.client = {
                         ["bool", "User card", "showUcard", "ts-showUcard", (r) => {
                             window.client.toggleUcard(r);
                         }],
-                        ["bool", "Show fps and ping", "togglefps", "ts-togglefps", () => { }],
+                        ["bool", "Show fps and ping", "togglefps", "ts-togglefps", () => {
+                        }],
                         ["option", "Timer:", [
                             ["Real time", "1"],
                             ["Ingame time", "2"],
                             ["None", "3"]
-                        ], "timerReal", "ts-timerReal", () => { }],
-                        ["bool", "Automatic disconnect", "autodc", "ts-autodc", () => { }],
+                        ], "timerReal", "ts-timerReal", () => {
+                        }],
+                        ["bool", "Automatic disconnect", "autodc", "ts-autodc", () => {
+                        }],
 
-                            // ["bool", "SS leaderboard shows xp", "ssxp", "ts-ssxp", ()=>{window.client.toggleExtendLb()}],
+                        // ["bool", "SS leaderboard shows xp", "ssxp", "ts-ssxp", ()=>{window.client.toggleExtendLb()}],
                     ];
-                    let i = 0;
                     popup.appendChild(document.createElementP("div", {className: "lay header"}, (lay) => {
                         lay.innerHTML += `<label>Custom Settings</label>`;
                         lay.appendChild(document.createElementP("button", {innerHTML: "X"}, (btn) => {
@@ -4108,7 +4156,8 @@ globalThis.client = {
                             });
                         }));
                     }));
-                    for (const cmd of cmdStruct) {
+                    for (let i = 0; i < cmdStruct.length; i++) {
+                        const cmd = cmdStruct[i];
                         popup.appendChild(document.createElementP("div", {className: "lay"}, (lay) => {
                             if (i == cmdStruct.length - 1) {
                                 lay.style.marginBottom = "10px";
@@ -4116,8 +4165,9 @@ globalThis.client = {
                             if (cmd[0] == "bool") {
                                 lay.innerHTML += `<label>${cmd[1]}</label>`;
 
-                                    // lay.appendChild(document.createElementP("div",{innerHTML:cmd[1]},(el)=>{
-                                let checkbox; lay.appendChild(checkbox = document.createElementP("input", {type: "checkbox"}));
+                                // lay.appendChild(document.createElementP("div",{innerHTML:cmd[1]},(el)=>{
+                                let checkbox;
+                                lay.appendChild(checkbox = document.createElementP("input", {type: "checkbox"}));
                                 const r = () => {
                                     checkbox.checked = window.client.textCommandConsts[cmd[2]];
                                 };
@@ -4126,19 +4176,18 @@ globalThis.client = {
                                     let res;
                                     localStorage.setItem(cmd[3], res = window.client.textCommandConsts[cmd[2]] = !window.client.textCommandConsts[cmd[2]]);
 
-                                        // r()
+                                    // r()
                                     if (cmd[4]) {
                                         cmd[4](res);
                                     }
                                     e.stopPropagation();
                                 });
 
-                                    // }));
-                            } else
-                            if (cmd[0] == "option") {
+                                // }));
+                            } else if (cmd[0] == "option") {
                                 lay.innerHTML += `<label>${cmd[1]}</label>`;
 
-                                        // lay.appendChild(document.createElementP("div",{className:"droplist",innerHTML:`<label>${cmd[1]}</label>`},(el)=>{
+                                // lay.appendChild(document.createElementP("div",{className:"droplist",innerHTML:`<label>${cmd[1]}</label>`},(el)=>{
                                 lay.appendChild(document.createElementP("select", null, (el) => {
                                     for (const d of cmd[2]) {
                                         el.innerHTML += `<option value="${d[1]}">${d[0]}</option>`;
@@ -4149,7 +4198,7 @@ globalThis.client = {
                                     });
                                 }));
 
-                                        // }));
+                                // }));
                             }
                         }));
                         i++;
@@ -4161,7 +4210,7 @@ globalThis.client = {
     },
 
     init: function() {
-        globalThis.client.events.addEventListener(globalThis.client.events.events.playerCountChange, (e) => {
+        window.client.events.addEventListener(window.client.events.events.playerCountChange, (e) => {
             if (e.action == "left") {
                 for (const player of e.players) {
                     globalThis.tags.chatTags.delVal(player.name);
@@ -4169,7 +4218,7 @@ globalThis.client = {
             }
         });
 
-        globalThis.client.events.addEventListener(globalThis.client.events.events.chatMessage, (e) => {
+        window.client.events.addEventListener(window.client.events.events.chatMessage, (e) => {
             console.log(e);
             if (e.name == window.client.main.name) {
                 if (window.client.pingNfps.sendTime != 0) {
@@ -4192,29 +4241,31 @@ globalThis.client = {
     load: false,
 };
 
-globalThis.client.init();
+window.client.init();
 
 HTMLElement.prototype.removeChild2 = HTMLElement.prototype.removeChild;
 HTMLElement.prototype.removeChild = function(e, e2) {
     try {
         this.removeChild2(e, e2);
-    } catch (e) { }
+    } catch {
+        // Do nothing
+    }
 };
 
 setInterval(() => {
-    if (!client.chat) {
-        client.chat = document.getElementById("chat-window");
+    if (!window.client.chat) {
+        window.client.chat = document.getElementById("chat-window");
     }
-    if (client.chat) {
-        while (client.chat.childElementCount > 100) {
-            client.chat.childNodes[0].remove();
+    if (window.client.chat) {
+        while (window.client.chat.childElementCount > 100) {
+            window.client.chat.childNodes[0].remove();
         }
     }
 }, 10000);
 
 
 window.replaces = {
-    id2: function(e, t, l) {
+    id2: function(e, t) {
         /* if (window.client.textCommandConsts.timerReal != 3) {
             t.font = 'bold ' + e.default.font(30);
             let secs = secondsFormat(window.client.textCommandConsts.timerReal == 1 ? window.getTime() : window.client.main.survivalTime);
@@ -4224,7 +4275,7 @@ window.replaces = {
 
         const olw = t.lineWidth, fis = t.strokeStyle, strs = t.fillStyle;
 
-        if (window.client.textCommandConsts.togglefps && client.state) {
+        if (window.client.textCommandConsts.togglefps && window.client.state) {
             t.textAlign = "right";
             t.lineWidth = 3;
             t.font = 'bold ' + e.font(13);
@@ -4259,10 +4310,11 @@ window.replaces = {
                         type: "checkbox",
                         className: "settings-checkbox",
                         id: "showClasses",
-                        checked: client.showClasses,
-                        onChange: function(e) {
-                            localStorage.setItem("ts-showClasses", client.showClasses = !client.showClasses);
-                            if (client.showClasses) {
+                        checked: window.client.showClasses,
+                        onChange: () => {
+                            window.client.showClasses = !window.client.showClasses;
+                            localStorage.setItem("ts-showClasses", window.client.showClasses);
+                            if (window.client.showClasses) {
                                 document.getElementById("leaderboard").setAttribute("aria-label", "fat");
                             } else {
                                 document.getElementById("leaderboard").setAttribute("aria-label", "");
@@ -4288,10 +4340,11 @@ window.replaces = {
                         type: "checkbox",
                         className: "settings-checkbox",
                         id: "leaderboard200px",
-                        checked: client.leaderboard200px,
-                        onChange: function(e) {
-                            localStorage.setItem("ts-leaderboard200px", client.leaderboard200px = !client.leaderboard200px);
-                            if (client.leaderboard200px) {
+                        checked: window.client.leaderboard200px,
+                        onChange: () => {
+                            window.client.leaderboard200px = !window.client.leaderboard200px;
+                            localStorage.setItem("ts-leaderboard200px", window.client.leaderboard200px);
+                            if (window.client.leaderboard200px) {
                                 document.getElementById("leaderboard").setAttribute("aria-label2", "old");
                             } else {
                                 document.getElementById("leaderboard").setAttribute("aria-label2", "");
@@ -4317,9 +4370,10 @@ window.replaces = {
                         type: "checkbox",
                         className: "settings-checkbox",
                         id: "disableTiles",
-                        checked: client.textCommandConsts.notiles,
-                        onChange: function(e) {
-                            localStorage.setItem("ts-notiles", client.textCommandConsts.notiles = !client.textCommandConsts.notiles);
+                        checked: window.client.textCommandConsts.notiles,
+                        onChange: () => {
+                            window.client.textCommandConsts.notiles = !window.client.textCommandConsts.notiles;
+                            localStorage.setItem("ts-notiles", window.client.textCommandConsts.notiles);
                             window.client.imgs.changeTile();
                         }
                     }
@@ -4344,52 +4398,6 @@ globalThis.id2name = (id) => {
         return r;
     }
     return "new ?";
-};
-
-const maps = {
-    "Assorted Alcove": "AA",
-    "Assorted Alcove Hard": "AAH",
-    "Burning Bunker": "BB",
-    "Burning Bunker Hard": "BBH",
-    "Central Core": "CC",
-    "Central Core Hard": "CCH",
-    "Cyber Castle": "CC₂",
-    "Catastrophic Core": "CC₃",
-    "Dangerous District": "DD",
-    "Dangerous District Hard": "DDH",
-    "Elite Expanse": "EE",
-    "Elite Expanse Hard": "EEH",
-    "Endless Echo": "EE₂",
-    "Frozen Fjord": "FF",
-    "Frozen Fjord Hard": "FFH",
-    "Glacial Gorge": "GG",
-    "Glacial Gorge Hard": "GGH",
-    "Grand Garden": "GG₂",
-    "Grand Garden Hard": "GG₂H",
-    "Humongous Hollow": "HH",
-    "Humongous Hollow Hard": "HHH",
-    "Haunted Halls": "HH₂",
-    "Haunted Halls Hard": "HH₂H",
-    "Monumental Migration": "MM",
-    "Monumental Migration Hard": "MMH",
-    "Magnetic Monopole": "MM₂",
-    "Magnetic Monopole Hard": "MM₂H",
-    "Mysterious Mansion": "MM₃",
-    "Ominous Occult": "OO",
-    "Ominous Occult Hard": "OOH",
-    "Peculiar Pyramid": "PP",
-    "Peculiar Pyramid Hard": "PPH",
-    "Quiet Quarry": "QQ",
-    "Quiet Quarry Hard": "QQH",
-    "Restless Ridge": "RR",
-    "Restless Ridge Hard": "RRH",
-    "Stellar Square": "SS",
-    "Toxic Territory": "TT",
-    "Toxic Territory Hard": "TTH",
-    "Vicious Valley": "VV",
-    "Vicious Valley Hard": "VVH",
-    "Wacky Wonderland": "WW",
-    "Wacky Wonderland Hard": "WWH",
 };
 
 window.getShortName = (map) => {
@@ -4440,13 +4448,14 @@ window.getHeroColor = function(Hero) {
             return "#3377ff";// "#3333ff";
         case "Reaper":
             return "#787b81";// "#424a59";
+        default:
+            return window.getHeroRealColor(Hero);
     }
-    return window.getHeroRealColor(Hero);
 };
 
 function tsmodInit() {
     window.vers.check();
-    document.body.oncontextmenu = (e) => false;
+    document.body.oncontextmenu = () => false;
 
     const styles = document.createElement('style');
     let newihtml = `
@@ -5147,31 +5156,30 @@ function tsmodInit() {
     if (window.tags) {
         for (const tag in window.tags.tagsData) {
             const tagData = window.tags.tagsData[tag];
-            { // lb
-                if (tagData.lb) {
-                    const newarr = [];
-                    for (const i in window.tags.oldTags[tag]) {
-                        newarr.push('#leaderboard span[aria-label="' + window.tags.oldTags[tag][i] + '"]::before');
-                    }
-                    window.client.toggleLbTagscsscode += newarr.join(",");
-                    window.client.toggleLbTagscsscode += `{
+
+            // lb
+            if (tagData.lb) {
+                const newarr = [];
+                for (const i in window.tags.oldTags[tag]) {
+                    newarr.push('#leaderboard span[aria-label="' + window.tags.oldTags[tag][i] + '"]::before');
+                }
+                window.client.toggleLbTagscsscode += newarr.join(",");
+                window.client.toggleLbTagscsscode += `{
                         content: "${tagData.lb.text}";
                         margin-right: 4px;
                         color: ${tagData.lb.color};
                         text-shadow: -1px -1px 5px #0000006e, 1px -1px 5px #0000006e, -1px 1px 20px #0000006e, 1px 1px 5px #0000006e;
                         ${tagData.lb.rainbow ?
         `animation-name: rainbowTextkf;
-                            animation-duration: 20s;
-                            animation-iteration-count: infinite;` :
-        ``
-}
-                    }`;
-                }
-                window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
+                                animation-duration: 20s;
+                                animation-iteration-count: infinite;` : ``}
+                        }`;
             }
-            { // badge
-                if (tagData.badge) {
-                    newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]{
+            window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
+
+            // badge
+            if (tagData.badge) {
+                newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]{
                         background-color: ${tagData.badge.bg};
                         border-color: ${tagData.badge.border};
                         color: ${tagData.badge.textcolor};
@@ -5179,21 +5187,18 @@ function tsmodInit() {
                         animation-name: rainbowBadgekf;
                         animation-duration: 10s;
                         animation-iteration-count: infinite;
-                        animation-timing-function: linear;` : ``
-}
+                        animation-timing-function: linear;` : ``}
                     }`;
-                    if (tagData.badge.subText) {
-                        newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]::after{
+                if (tagData.badge.subText) {
+                    newihtml += `.usermetas > .badgeslay > .badge[badge="${tag}"]::after{
                             content:"${tagData.badge.subText}";
                             color: ${tagData.badge.textcolor};
                             ${tagData.badge.rainbow ? `
                             animation-name: rainbowBadgeSubTextkf;
                             animation-duration: 10s;
                             animation-iteration-count: infinite;
-                            animation-timing-function: linear;` : ``
-}
+                            animation-timing-function: linear;` : ``}
                         }`;
-                    }
                 }
             }
         }
@@ -5739,13 +5744,13 @@ function tsmodInit() {
     document.head.appendChild(styles);
 
     document.addEventListener("keydown", (e) => {
-        if (client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && client.load) {
-            if (client.state && client.state.chatMessages) {
-                client.state.chatMessages.push("/dc");
+        if (window.client.textCommandConsts.autodc && (e.code == "F5" || (e.code == "KeyR" && e.ctrlKey)) && window.client.load) {
+            if (window.client.state && window.client.state.chatMessages) {
+                window.client.state.chatMessages.push("/dc");
             }
             e.preventDefault();
-            if (socket) {
-                socket.onclose = () => {
+            if (window.socket) {
+                window.socket.onclose = () => {
                     document.location.reload();
                 };
             } else {
@@ -5762,8 +5767,7 @@ function tsmodInit() {
             globalThis.CANR && window.client.openCustomSettings();
 
             // window.client.openLogger();
-        } else
-        if (e.code == "Escape") {
+        } else if (e.code == "Escape") {
             window.client.toggleHeroList(true);
         }
     });
@@ -5792,8 +5796,8 @@ window.fireB = () => {
 };
 
 window.createNewLeaderboard = () => {
-    fireB();
-    setTimeout(fireB, 50);
+    window.fireB();
+    setTimeout(window.fireB, 50);
 };
 
 window.removeFakes = () => {
@@ -5802,26 +5806,26 @@ window.removeFakes = () => {
 
 window.z = "";
 globalThis.getAttrInParents = (e, a) => {
-    let at;
-    if (at = e.getAttribute(a)) {
+    const at = e.getAttribute(a);
+    if (at) {
         return at;
     } else {
-        return window.getAttrInParents(e.parentNode, a);
+        return globalThis.getAttrInParents(e.parentNode, a);
     }
 };
 window.updateLeaderboard = () => {
     // window.client.areaData.check();
     document.body.onclick = () => {
-        client.count = 0; // window.removeFakes();
+        window.client.count = 0; // window.removeFakes();
     };
     const llb = document.querySelector(".leaderboard-title");
     if (llb && llb?.innerText == "Leaderboard") {
-        (llb.innerText = window.lbText) || (llb.innerText = window.lbText = "Leaderboard " + (socket.url.startsWith("wss://eu") ? "EU " : "NA ") + (1 + +socket.url.split("?")[1].split("&")[0].split("=")[1]));
+        (llb.innerText = window.lbText) || (llb.innerText = window.lbText = "Leaderboard " + (window.socket.url.startsWith("wss://eu") ? "EU " : "NA ") + (1 + +window.socket.url.split("?")[1].split("&")[0].split("=")[1]));
     }
 
     for (const names of [...document.getElementsByClassName('leaderboard-name')]) {
         names.oncontextmenu = (event) => {
-            window.client.openUcard(getAttrInParents(event.target, "aria-label"), [20, event.y], window.client.userlog);
+            window.client.openUcard(globalThis.getAttrInParents(event.target, "aria-label"), [20, event.y], window.client.userlog);
         };
         names.style.cursor = "pointer";
     }
@@ -5845,8 +5849,8 @@ document.addEventListener("mousemove", (e) => {
             }
             for (let i = 0; i < window.firstPos[2].length; i++) {
                 const el = window.firstPos[2][i];
-                el.style.top = (parseInt(el.style.top.substring(0, el.style.top.length - 2)) + e.screenY - window.firstPos[1]) + "px";
-                el.style.right = (parseInt(el.style.right.substring(0, el.style.right.length - 2)) + (window.firstPos[0] - e.screenX)) + "px";
+                el.style.top = (parseInt(el.style.top.substring(0, el.style.top.length - 2), 10) + e.screenY - window.firstPos[1]) + "px";
+                el.style.right = (parseInt(el.style.right.substring(0, el.style.right.length - 2), 10) + (window.firstPos[0] - e.screenX)) + "px";
 
                 // e.screenX,e.screenY
             }
@@ -5854,19 +5858,19 @@ document.addEventListener("mousemove", (e) => {
         }
     }
 });
-document.addEventListener("mouseup", (e) => {
+document.addEventListener("mouseup", () => {
     window.firstPos = null;
 });
 const settings = document.createElement('label');
 settings.innerHTML = "showClasses";
 
 window.updateName = (id, name) => {
-    if (!(client.showClasses && client.state)) {
+    if (!(window.client.showClasses && window.client.state)) {
         return name;
     }
 
-    for (const i in client.state.globalEntities) {
-        const element = client.state.globalEntities[i];
+    for (const i in window.client.state.globalEntities) {
+        const element = window.client.state.globalEntities[i];
         console.log(id, element);
         if (element.id !== id) {
             continue;
@@ -5881,14 +5885,14 @@ window.updateName = (id, name) => {
 
 window.loadGame = () => {
     window.createNewLeaderboard();
-    client.load = true;
+    window.client.load = true;
     window.client.toggleUcard(window.client.textCommandConsts.showUcard);
     let e;
     document.head.appendChild((e = document.createElement("style"), e.innerHTML = `html,body{overflow: hidden!important;}`, e));
-    if (globalThis.client.showClasses) {
+    if (window.client.showClasses) {
         document.getElementById("leaderboard").setAttribute("aria-label", "fat");
     }
-    if (globalThis.client.leaderboard200px) {
+    if (window.client.leaderboard200px) {
         document.getElementById("leaderboard").setAttribute("aria-label2", "old");
     }
 };
