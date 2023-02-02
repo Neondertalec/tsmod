@@ -1,0 +1,13 @@
+{
+  "name": "tsmod",
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "eslint tsmod.js --fix"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/eslint-parser": "^7.19.1",
+    "eslint": "^8.33.0"
+  }
+}
