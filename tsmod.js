@@ -1,13 +1,12 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.103
+// @version     1.1.104
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
 // @match       https://*.evades.online/*
 // @match       https://*evades.io/*
 // @match       https://*evades.online/*
-// @match       https://*localhost/*
 // @run-at      document-start
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
@@ -19,11 +18,6 @@ globalThis.temp2 = undefined;
 globalThis.temp3 = undefined;
 globalThis.CANR = true;
 window.tsmod = true;
-
-/*console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.", "color: red; font-size: 20px; background: black;border-radius:10px;");
-console.log("%cScript loading... ", "color: green; font-size: 20px");
-console.groupCollapsed("what happened between loading");
-console.log("...");*/
 
 function fontcolor(text, color) {
 	return `<span style="color: ${color};">${text}</span>`;
@@ -4194,8 +4188,7 @@ window.getHeroColor = function (Hero) {
 	return window.getHeroRealColor(Hero);
 }
 
-window.addEventListener('DOMContentLoaded', e => {
-	console.log("loaded");
+function tsmodInit() {
 	window.vers.check();
 	document.body.oncontextmenu = e => false;
 
@@ -5508,7 +5501,13 @@ window.addEventListener('DOMContentLoaded', e => {
 				window.client.toggleHeroList(true);
 			}
 	});
-});
+};
+
+if (window.tsmodConsole) {
+	tsmodInit();
+} else {
+	window.addEventListener('DOMContentLoaded', tsmodInit);
+}
 
 window.checkGlobalError = () => {
 	if (globalThis._babelPolyfill) {
@@ -5656,215 +5655,3 @@ window.lastPrefix = {
 	color: "red",
 	name: ""
 }
-
-false && new MutationObserver(function (mutations) {
-	if (document.getElementsByTagName('script')[0]) {
-		var elem = Array.from(document.querySelectorAll('script')).find(a => a.src.match(/app\.[0-9a-f]{8}\.js/));
-		if (elem) {
-			let src = elem.src;
-			elem.remove();
-			elem = document.createElement('script');
-			let newInnerHTML = `
-			var akek=new XMLHttpRequest();
-			akek.open("GET","${src}",false);
-			akek.send();
-			tmp=akek.response;`;
-
-			for (let i = 0; i < globalThis.extraReplaces?.length; i++) {
-				let d = globalThis.extraReplaces[i];
-				let ns;
-				newInnerHTML += ns = `tmp = tmp.${d[2] === true ? "replaceAll" : "replace"}('${d[0].replaceAll("\'", "\\'")}','${d[1].replaceAll("\'", "\\'")}');\n`
-			}
-			newInnerHTML += `
-
-				// Декодер от protobuf
-				tmp = tmp.replace(
-					'n.Payloads.FramePayload.decode(l),',
-					'n.Payloads.FramePayload.decode(l);window.protobuf||(window.protobuf=n.Payloads);'
-				);
-
-				//id: 1
-				tmp = tmp.replace(
-					'this.chat.style.visibility="visible",',
-					'this.chat.style.visibility="visible",client.state=t,client.main=t.self.entity,'
-				);
-
-				// Собирание инфы со всех игроков
-				//id: 2
-				tmp = tmp.replace(
-					'nter",t.lineWidth=6,t.strokeStyle=this.titleStrokeColor,t.fillStyle=this.titleColor,',
-					'nter",t.lineWidth=6,t.strokeStyle=this.titleStrokeColor,t.fillStyle=this.titleColor,replaces.id2.call(this,e,t,l),'
-				);
-				//id: 3
-				tmp = tmp.replace(
-					'e.default.createElement("span",{className:"leaderboard-name"},this.props.name),',
-					'e.default.createElement("span",{className:"leaderboard-name"},window.updateName(this.props.player.id,this.props.name)),window.updateLeaderboard(e),(!client.load)?window.loadGame():null,'
-				);
-				//id: 4
-				tmp = tmp.replace(
-					'ck:this.cancel.bind(this)}),',
-					'ck:this.cancel.bind(this)}),replaces.id4.call(e),replaces.id4_2.call(e),replaces.id5.call(e),'
-				);
-
-				//Таймеры
-				tmp = tmp.replace(
-					'(e,i){if(this.ready){',
-					'(e,i){this==client.main&&client.drBefore.call(this,e,i);if(this.ready){'
-				);
-
-				// Фикс панели
-				//id: 8
-
-				tmp = tmp.replace('null!==this.gameState&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))', 'null!==this.gameState&& !(document.activeElement.getAttributeNames().includes("c-lock"))&&null!==this.updateChat&&(!this.gameState.initial&&!(i.ctrlKey||i.altKey||i.metaKey))');
-
-				
-				tmp = tmp.replace('className:"chat-message-sender"', 'className:"chat-message-sender", ariaLabel:('+
-				'globalThis.client.events.emit(globalThis.client.events.events.chatMessage, {'+
-					'name:s,'+
-					'content:a,'+
-					'privs:l,'+
-				'}),s)')
-				tmp = tmp.replace('className:"chat-message"', 'className:"chat-message", ariaLabel:s')
-
-
-				tmp = tmp.replace('"leaderboard-name"','"leaderboard-name",ariaLabel:this.props.player.name');
-
-				/*tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
-				'e.font2=e.font,e.font=(window.ssss2??14)+"px Tahoma, Verdana, Segoe, sans-serif",'+
-				'window.genPrefix(this.name),e.lineWidth2=e.lineWidth,e.lineWidth=(window.ssss??2.5),e.strokeStyle ="black",e.strokeText(window.lastPrefix.name,a,r-this.radius-11 - (window.consts?.tagY??14)),e.textAlign="center",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a,r-this.radius-11 - (window.consts?.tagY??14)),'+
-				'e.font=e.font2,e.lineWidth=e.lineWidth2,'+
-				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),');*/
-
-				/*//left
-				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
-				'window.genPrefix(this.name),e.textAlign="left",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a - e.measureText(window.lastPrefix.name+this.name).width/1.8,r-this.radius-11),'+
-				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a + e.measureText(window.lastPrefix.name).width/3,r-this.radius-11)),');
-				*/
-
-				tmp = tmp.replace('(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0)',
-				'((this.gameState.heroInfoCard.hidden && ((u.width == 48 && u.height == 48) || (u.width == 14 && u.height == 14) || (u.width == 82 && u.height == 40)))?false:(this.enteredButtons.add(u),u.mouseOver=!0,u.interactive&&(this.down&&!u.mouseDown?(e.keys.keyDown(u.key),u.onClick()):!this.down&&u.mouseDown&&e.keys.keyUp(u.key),u.mouseDown=this.down,s=!0),o=!0))')
-
-				tmp = tmp.replace('message:t,', 'message: window.client.checkMsg(t) ? (window.client.checkMsgSend(t)) : void 0,');
-				//tmp = tmp.replace('this.gameState.chatMessages.push(o.value)', 'window.client.checkMsg(o.value)&&this.gameState.chatMessages.push(o.value)');
-				
-				tmp = tmp.replace('null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))',
-				'if((e>4||e<1)||!window.client.grb.on || (window.client.grb.on && e !== window.client.grb.grbKey)){null!==e&&(this.isKeyUp(e)||this.downKeys.splice(this.downKeys.indexOf(e),1))}')
-
-				tmp = tmp.replace('null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))',
-				'if((e>4||e<1)||!window.client.grb.on || (window.client.grb.on && e === window.client.grb.grbKey)){null!==e&&(this.isKeyDown(e)||this.downKeys.push(e))}')
-
-				tmp = tmp.replace('this.downKeys=[]',
-				'if(!window.client.grb.on)this.downKeys=[]')
-
-				tmp = tmp.replace('require("babel-polyfill")', 'window.checkGlobalError()&&require("babel-polyfill")');
-
-				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
-				
-				//TODO: remake chat tags from autogeneration
-				tmp = tmp.replace('null!==l&&(c=e.default.createElement("span",null,e.default.createElement("span",{className:i},l," "),c)',
-				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,s))')
-
-				tmp = tmp.replace(
-					'return e.default.createElement("div",{className:"changelog"',
-					'return e.default.createElement("div",{id:"changelogs"},'+
-					'e.default.createElement("div",{id:"chlbuttons"},'+
-					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ev")}}, "Evades.io"),'+
-					'e.default.createElement("button",{onClick:()=>{window.vers.swi("ts")}}, "TS Mod"),'+
-					'e.default.createElement("button",{onClick:()=>{window.vers.swi("li")}}, "Links")'+
-					'),'+
-					'e.default.createElement("div",{className:"ts-changelog hidden"}),'+
-					'e.default.createElement("div",{className:"ts-links hidden"}),'+
-					'e.default.createElement("div",{className:"changelog"'
-				)
-				tmp = tmp.replace('d."))))','d.")))) )')
-				
-				tmp = tmp.replace('"48"}))),','"48"})),'+
-				'e.default.createElement("a", {'+
-					'href: "https://docs.google.com/spreadsheets/d/1iNQsgPGu0xtSNyKEBDt8jr9EQfjD4Djn4e-qL7ljrRc"'+
-				'},e.default.createElement("img", {'+
-					'alt: "Highscores",'+
-					'src: "https://cdn.discordapp.com/attachments/783087872605028372/877227883016388708/unknown.png",'+
-					'width: "48",'+
-					'height: "48"'+
-				'}))'+
-				'),')
-				
-				tmp = tmp.replace('}))))','})),'+
-				'e.default.createElement("a", {'+
-					'href: "https://docs.google.com/spreadsheets/d/1iNQsgPGu0xtSNyKEBDt8jr9EQfjD4Djn4e-qL7ljrRc"'+
-				'},e.default.createElement("img", {'+
-					'alt: "Highscores",'+
-					'src: "https://cdn.discordapp.com/attachments/783087872605028372/877227883016388708/unknown.png",'+
-					'width: "48",'+
-					'height: "48"'+
-				'}))'+
-				'))')
-
-
-				tmp = tmp.replace('"Mute"),','"Mute"),'
-				+'  a && e.default.createElement("li", {'
-				+'	className: "chat-message-contextitem-selectable chat-message-moderate",'
-				+'	onClick: function() {'
-				+'	let chat = document.getElementById("chat-input"); chat.value = "/mute "+ t.props.message.sender + " ";'
-				+'	t.hide(); chat.focus(); chat.selectionStart = chat.selectionEnd = 10000;'
-				+'		return undefined;'
-				+'	}'
-				+'}, "Mute Copy"),'
-				)
-				
-				
-				//tmp = tmp.replace('var s=Object.values(e);','var s=Object.values(e);if(globalThis.client.extendLb)Object.values(globalThis.client.state?.entities || []).forEach((v)=>{let ii;if(v.entityType == 0 && (ii=s.findIndex(vv=>vv.name == v.name))){console.log(ii.name,ii);s[ii]={...s[ii],...v}} });')
-				
-				//tmp = tmp.replace('var n,a;','var n,a,kk=(globalThis.client.textCommandConsts.ssxp && e.xp)?"experience":"level";');
-				//tmp = tmp.replace('n=e.level,a=t.level','n=e[kk],a=t[kk]');
-				//tmp = tmp.replace('||i.victoryArea!==u.victoryArea','|| i.victoryArea !== u.victoryArea|| (i.experience!==undefined && i.experience !== u.experience)');
-				//tmp = tmp.replace('n?u.level','n?u[(globalThis.client.textCommandConsts.ssxp && u.experience !== undefined)?"experience":"level"]');
-				//tmp = tmp.replace('victoryArea:i.victoryArea','victoryArea:i.victoryArea,experience:(i.experience)');
-				
-				tmp = tmp.replace(/name\:this\.state\.name/gm,'name:globalThis.client.accountName=this.state.name')
-				tmp = tmp.replace('name:t.username,isGuest:!1,','name:globalThis.client.accountName = t.username,isGuest:!1,')
-				tmp = tmp.replace('key:"onLogout",value:function(){','key:"onLogout",value:function(){globalThis.client.accountName = "";')
-				
-				tmp = tmp.replaceAll('isGuest,isMod:this.props.isMod,','isGuest,isMod:globalThis.client.isMod = this.props.isMod,')
-				
-				//TODO: hall of fame
-				tmp = tmp.replace('"hall-of-fame-player "+l','"hall-of-fame-player "+l, ariaLabel: n.toLocaleLowerCase()')
-				tmp = tmp.replace('"Hall of Fame"),','"Hall of Fame", (globalThis.profiler.initHOF(), e.default.createElement("button", {className: "hall-of-fame-search"}, "🔎"))),')
-
-				tmp = tmp.replace('heroes:[{','heroes: window.heroConfig = [{')
-				tmp = tmp.replace('exports.getHeroByType=','exports.getHeroByType = window.heroByType=')
-				tmp = tmp.replace('o type",e)}return null}','o type",e)}return null};')
-				//tmp = tmp.replace('','')
-				
-				//ppp
-				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.setState(this.state);')
-				tmp = tmp.replace(/(,e\\.default\\.createElement\\("b",null,this\\.state\\.username\\)\\),)/gm,
-				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username,'
-				+'e.default.createElement("div",{className:"onlineMarker"}, e.default.createElement("div",{className:"onlineMarker-tip"})),'
-				+'e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph"),'
-				+'e.default.createElement("button",{onClick:()=>{globalThis.profiler.showAreas()}},"Areas")))),')
-				
-				/*tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
-				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})'+
-				',e.default.createElement("div", {className:"profile-week-controll"}'+
-				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbUnd")}, wbkey:"lbUnd"})'+
-				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbNull")}, wbkey:"lbNull"})'+
-				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbBronze")}, wbkey:"lbBronze"})'+
-				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbSilver")}, wbkey:"lbSilver"})'+
-				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbGold")}, wbkey:"lbGold"})'+
-				')')*/
-				tmp = tmp.replace('var u={},n=!1;', 'var u={},n=!1;client.imgs.obj = u;client.imgs.retreived();');
-
-				//tmp = tmp.replace('module.exports="/area-50','globalThis.profiler.hats["area-50"] = module.exports="/area-50')
-				
-				eval(tmp);
-				console.groupEnd()
-				console.log("%cScript loaded.","color: green; font-size: 20px");
-
-			`;
-			elem.innerHTML = newInnerHTML;
-			document.body.appendChild(elem);
-			this.disconnect();
-		}
-	}
-}).observe(document, { childList: true, subtree: true });
