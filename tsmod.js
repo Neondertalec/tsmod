@@ -1,12 +1,13 @@
 // ==UserScript== 
 // @name        TS-Mod
-// @version     1.1.102
+// @version     1.1.103
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
 // @match       https://*.evades.online/*
 // @match       https://*evades.io/*
 // @match       https://*evades.online/*
+// @match       https://*localhost/*
 // @run-at      document-start
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
@@ -17,11 +18,12 @@ globalThis.temp1 = undefined;
 globalThis.temp2 = undefined;
 globalThis.temp3 = undefined;
 globalThis.CANR = true;
+window.tsmod = true;
 
-console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.", "color: red; font-size: 20px; background: black;border-radius:10px;");
+/*console.log("%c IMPORTANT! \nIF THERE IS NO 'Script loaded.' TEXT, YOU PROBABLY HAVE MORE THAT 1 SCRIPT ENABLED THAT CONFLICTS. PLEASE TURN OF THE SCRIPTS YOU DONT NEED.", "color: red; font-size: 20px; background: black;border-radius:10px;");
 console.log("%cScript loading... ", "color: green; font-size: 20px");
 console.groupCollapsed("what happened between loading");
-console.log("...");
+console.log("...");*/
 
 function fontcolor(text, color) {
 	return `<span style="color: ${color};">${text}</span>`;
@@ -39,7 +41,7 @@ window.customTags = [
 ]
 
 window.vers = {
-	v: "1.1.98",
+	v: "1.1.99",
 	cl: {
 		ts: `#ad86d8`,
 		to: `#6f8fd5`,
@@ -60,6 +62,13 @@ window.vers = {
 	filllogp: function () {
 
 		window.vers.changeLog = [
+			{
+				version: `1.1.99`,
+				news: [
+					`Some fixes.`,
+					`"Custom tags" and "hall of fame search" are temporary disabled.`,
+				],
+			},
 			{
 				version: `1.1.98`,
 				news: [
@@ -1500,6 +1509,17 @@ globalThis.tags = {
 }
 window.tags.init();
 
+globalThis.getLocal = (key, def) => {
+	let res = localStorage.getItem(key)
+	return res !== null ? res : def;
+}
+
+window.secondsFormat = (time, m = true, t = 0) => {
+
+	return t === 1 ? `${m ? (time / 60 >> 0) + ":" : ""}` + `${time % 60 < 10 ? "0" + (time % 60) : time % 60}` :
+		`${m ? (time / 60 >> 0) + "m " : ""}` + `${time % 60}s`
+};
+
 globalThis.profiler = {
 	profilestats: null,
 	lib: null,
@@ -1542,7 +1562,7 @@ globalThis.profiler = {
 						e.addEventListener("blur", () => { hof.innerHTML = "🔎" });
 						e.addEventListener("keyup", (evt) => {
 							if (evt.key === "Enter") {
-								let targetEl = document.querySelector(`.hall-of-fame-player[arialabel='${(e.value || e.placeholder).toLocaleLowerCase()}']`);
+								let targetEl = document.querySelector(`.hall-of-fame-player[aria-label='${(e.value || e.placeholder).toLocaleLowerCase()}']`);
 								if (targetEl) {
 									targetEl.scrollIntoView();
 									hof.innerHTML = "🔎"
@@ -1563,9 +1583,18 @@ globalThis.profiler = {
 		this.profilestats = state;
 		setTimeout(() => {
 			this.loadHats();
-			client.api.isPlayerOnline(this.profilestats.username).then((online) => {
-				document.querySelector(".onlineMarker").style.backgroundColor = online ? "#00ff00" : "#444"
+			client.api.playerOnlineData(this.profilestats.username).then((online) => {
+				let marker = document.querySelector(".onlineMarker");
+				marker.style.backgroundColor = online ? "#00ff00" : "#444";
+				if(online){
+					let markerTip = document.querySelector(".onlineMarker-tip");
+					markerTip.innerText = online;
+					markerTip.style.backgroundColor = online ? "#00ff00" : "#444";
+					if(online) markerTip.style.color = "#222";
+					markerTip.setAttribute("on", "1");
+				}
 			})
+			profiler.initWeeklyBoxes();
 		}, 100)
 	},
 	showGraph: function () {
@@ -1726,19 +1755,53 @@ globalThis.profiler = {
 				}))
 			})
 		document.body.appendChild(this.areas.el);
+	},
+
+	filterCss: "",
+	filterConsts:{
+		lbUnd: getLocal("ts-lbUnd", "true") == "true",
+		lbNull: getLocal("ts-lbNull", "true") == "true",
+		lbBronze: getLocal("ts-lbBronze", "true") == "true",
+		lbSilver: getLocal("ts-lbSilver", "true") == "true",
+		lbGold: getLocal("ts-lbGold", "true") == "true",
+	},
+
+	initWeeklyBoxes: function(){
+		if(!profiler.filterCss){
+			profiler.filterCss = document.createElement("style")
+			document.head.appendChild(profiler.filterCss);
+		}
+
+		document.querySelectorAll("[wbkey]").forEach(e=>{
+			const k = e.getAttribute("wbkey");
+			e.checked = profiler.filterConsts[k];
+		});
+		profiler.rerenderWeeklyBoxes();
+	},
+
+	toggleWeeklyBoxes: function(k){
+		const e = document.querySelector(`[wbkey="${k}"]`);
+		localStorage.setItem("ts-"+k, e.checked = profiler.filterConsts[k] = !profiler.filterConsts[k]);
+		profiler.rerenderWeeklyBoxes();
+	},
+
+	rerenderWeeklyBoxes: function(){
+		if(!profiler.filterCss){
+			profiler.filterCss = document.createElement("style")
+			document.head.appendChild(profiler.filterCss);
+		}
+		const filterCss = profiler.filterCss;
+
+		let fc = profiler.filterConsts;
+		filterCss.innerHTML = 
+		`.profile-rectangle-undefined{display:${fc.lbUnd ? "block" : "none"};}`+
+		`.profile-rectangle-null{display:${fc.lbNull ? "block" : "none"};}`+
+		`.profile-rectangle-bronze{display:${fc.lbBronze ? "block" : "none"};}`+
+		`.profile-rectangle-silver{display:${fc.lbSilver ? "block" : "none"};}`+
+		`.profile-rectangle-gold{display:${fc.lbGold ? "block" : "none"};}`
+		;
 	}
 }
-
-globalThis.getLocal = (key, def) => {
-	let res = localStorage.getItem(key)
-	return res !== null ? res : def;
-}
-
-window.secondsFormat = (time, m = true, t = 0) => {
-
-	return t === 1 ? `${m ? (time / 60 >> 0) + ":" : ""}` + `${time % 60 < 10 ? "0" + (time % 60) : time % 60}` :
-		`${m ? (time / 60 >> 0) + "m " : ""}` + `${time % 60}s`
-};
 
 window.timeZero = 0;
 window.getTime = () => {
@@ -1758,6 +1821,28 @@ window.getTime = () => {
 
 globalThis.client = {
 	api: {
+		getOnlinePlayersLocations: async function () {
+			return fetch("https://evades.io/api/game/list").then(e => e.json());
+		},
+		playerOnlineData: async function (name) {
+			const players = await client.api.getOnlinePlayersLocations();
+			for(let i in players.local){
+				let s1 = players.local[i][0].online;
+
+				if(s1.some(e => e.toLocaleLowerCase() === name.toLocaleLowerCase())){
+					return "NA"+(+i+1)
+				}
+			}
+			const EU = Object.keys(players.remotes)[0];
+			for(let i in players.remotes[EU]){
+				let s1 = players.remotes[EU][i][0].online;
+
+				if(s1.some(e => e.toLocaleLowerCase() === name.toLocaleLowerCase())){
+					return "EU"+(+i+1)
+				}
+			}
+			return null;
+		},
 		getOnlinePlayers: async function () {
 			return fetch("https://evades.io/api/game/usernames").then(e => e.json());
 		},
@@ -1801,6 +1886,7 @@ globalThis.client = {
 		 * @param {object} data 
 		 */
 		emit: function (key, data) {
+			console.log("emit", key, data);
 			if (this.listners[key]) {
 				this.listners[key].forEach((f) => { f(data) });
 			}
@@ -2395,7 +2481,7 @@ globalThis.client = {
 				for (let i in client.state.globalEntities) {
 					const element = client.state.globalEntities[i];
 
-					//targetName = getAttrInParents(event.target,"ariaLabel");
+					//targetName = getAttrInParents(event.target,"aria-label");
 
 					if (element.name == targetName) {
 						//window.z = element.name;
@@ -2551,8 +2637,8 @@ globalThis.client = {
 		let arr1 = [], arr2 = [];
 		for (let i in window.client.userMetas) {
 			let data = window.client.userMetas[i];
-			if (data.lbtag == "Friend") arr1.push('#leaderboard span[arialabel="' + i + '"]::before')
-			else if (data.lbtag == "Warning") arr2.push('#leaderboard span[arialabel="' + i + '"]::before')
+			if (data.lbtag == "Friend") arr1.push('#leaderboard span[aria-label="' + i + '"]::before')
+			else if (data.lbtag == "Warning") arr2.push('#leaderboard span[aria-label="' + i + '"]::before')
 		}
 		if (arr1.length > 0) {
 			newiHtml += `
@@ -2809,7 +2895,7 @@ globalThis.client = {
 				chat.innerHTML = chat.innerHTML +
 					`<div class="chat-message">` +
 					`<span class="server-warning">` +
-					`<span class="chat-message-sender" arialabel="[SCRIPT]">` +
+					`<span class="chat-message-sender" aria-label="[SCRIPT]">` +
 					`[SCRIPT]` +
 					`</span>` +
 					`: ${message}` +
@@ -3847,6 +3933,7 @@ globalThis.client = {
 		})
 
 		globalThis.client.events.addEventListener(globalThis.client.events.events.chatMessage, (e) => {
+			console.log(e);
 			if (e.name == window.client.main.name) {
 				if (window.client.pingNfps.sendTime != 0) {
 					window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
@@ -3886,19 +3973,19 @@ setInterval(() => {
 
 window.replaces = {
 	id2: function (e, t, l) {
-		if (window.client.textCommandConsts.timerReal != 3) {
+		/*if (window.client.textCommandConsts.timerReal != 3) {
 			t.font = 'bold ' + e.default.font(30);
 			let secs = secondsFormat(window.client.textCommandConsts.timerReal == 1 ? window.getTime() : window.client.main.survivalTime);
 			t.strokeText(secs, l, 80);
 			t.fillText(secs, l, 80);
+		}*/
 
-		}
 		let olw = t.lineWidth, fis = t.strokeStyle, strs = t.fillStyle;
 
 		if (window.client.textCommandConsts.togglefps && client.state) {
 			t.textAlign = "right"
 			t.lineWidth = 3;
-			t.font = 'bold ' + e.default.font(13);
+			t.font = 'bold ' + e.font(13);
 			t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#770" : "#700";
 			t.fillStyle = window.client.pingNfps.fps >= 28 ? "#0f0" : window.client.pingNfps.fps >= 20 ? "#ff0" : "#f00";
 			t.strokeText("fps: " + window.client.pingNfps.fps, 1260, 640);
@@ -3914,17 +4001,17 @@ window.replaces = {
 		t.textAlign = "center";
 		t.strokeStyle = fis;
 		t.fillStyle = strs;
-		t.font = 'bold ' + e.default.font(35);
+		t.font = 'bold ' + e.font(35);
 	},
 	id4: function () {
-		return this.default.createElement(
+		return this.createElement(
 			"label",
 			{ htmlFor: "showClasses" },
-			this.default.createElement(
+			this.createElement(
 				"div",
 				{ className: "settings-setting" },
 				"Show Heroes",
-				this.default.createElement(
+				this.createElement(
 					"input",
 					{
 						type: "checkbox",
@@ -3934,9 +4021,9 @@ window.replaces = {
 						onChange: function (e) {
 							localStorage.setItem("ts-showClasses", client.showClasses = !client.showClasses);
 							if (client.showClasses) {
-								document.getElementById("leaderboard").ariaLabel = "fat"
+								document.getElementById("leaderboard").setAttribute("aria-label", "fat")
 							} else {
-								document.getElementById("leaderboard").ariaLabel = ""
+								document.getElementById("leaderboard").setAttribute("aria-label", "")
 							}
 							setTimeout(window.createNewLeaderboard, 1);
 						}
@@ -3946,14 +4033,14 @@ window.replaces = {
 		);
 	},
 	id4_2: function () {
-		return this.default.createElement(
+		return this.createElement(
 			"label",
 			{ htmlFor: "leaderboard200px" },
-			this.default.createElement(
+			this.createElement(
 				"div",
 				{ className: "settings-setting" },
 				"Old leaderboard size",
-				this.default.createElement(
+				this.createElement(
 					"input",
 					{
 						type: "checkbox",
@@ -3975,14 +4062,14 @@ window.replaces = {
 		);
 	},
 	id5: function () {
-		return this.default.createElement(
+		return this.createElement(
 			"label",
 			{ htmlFor: "disableTiles" },
-			this.default.createElement(
+			this.createElement(
 				"div",
 				{ className: "settings-setting" },
 				"Disable Tiles",
-				this.default.createElement(
+				this.createElement(
 					"input",
 					{
 						type: "checkbox",
@@ -4108,6 +4195,7 @@ window.getHeroColor = function (Hero) {
 }
 
 window.addEventListener('DOMContentLoaded', e => {
+	console.log("loaded");
 	window.vers.check();
 	document.body.oncontextmenu = e => false;
 
@@ -4518,6 +4606,13 @@ window.addEventListener('DOMContentLoaded', e => {
 	}
 
 
+	/*winboxes-------------------------------------------------------------*/
+
+	.custombox.lp[type="checkbox"]:before{
+		background: #890000;
+	}
+
+
 
 
 
@@ -4807,7 +4902,7 @@ window.addEventListener('DOMContentLoaded', e => {
 				if (tagData.lb) {
 					let newarr = [];
 					for (let i in window.tags.oldTags[tag]) {
-						newarr.push('#leaderboard span[arialabel="' + window.tags.oldTags[tag][i] + '"]::before')
+						newarr.push('#leaderboard span[aria-label="' + window.tags.oldTags[tag][i] + '"]::before')
 					}
 					window.client.toggleLbTagscsscode += newarr.join(",");
 					window.client.toggleLbTagscsscode += `{
@@ -5296,7 +5391,7 @@ window.addEventListener('DOMContentLoaded', e => {
 		transform: translate(-50%, -50%);
 	}
 
-	.subtitle-profile>div>b>button{
+	.subtitle-profile >b>button{
 		margin-left: 20px;
 		position: relative;
 		top: -7px;
@@ -5306,7 +5401,7 @@ window.addEventListener('DOMContentLoaded', e => {
 		border: solid 2px #5a3c00;
 		color: #ffa900;
 	}
-	.subtitle-profile>div>b>button:hover{
+	.subtitle-profile >b>button:hover{
 		background-color: #333;
 		border: solid 2px #885b00;
 		color: #ffc249;
@@ -5359,10 +5454,33 @@ window.addEventListener('DOMContentLoaded', e => {
 	}
 
 	.onlineMarker{
+		position: relative;
 		width: 20px;
 		height: 20px;
 		border-radius: 100%;
 		margin: 0px 0px 12px 15px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.onlineMarker-tip{
+		display:none;
+		transform: translateY(-35px);
+		font-size: 18px;
+		border-radius: 10% 10% 50% 50%;
+		padding: 7px;
+		height: 22px;
+
+	}
+
+	.onlineMarker:hover .onlineMarker-tip[on]{
+		display: block;
+	}
+
+	.profile-week-controll{
+		width: 880px;
+		margin: 0 auto;
+		transform: translate(366px, 30px);
 	}
 
 	`;
@@ -5434,7 +5552,7 @@ window.updateLeaderboard = () => {
 
 	for (let names of [...document.getElementsByClassName('leaderboard-name')]) {
 		names.oncontextmenu = event => {
-			window.client.openUcard(getAttrInParents(event.target, "ariaLabel"), [20, event.y], window.client.userlog);
+			window.client.openUcard(getAttrInParents(event.target, "aria-label"), [20, event.y], window.client.userlog);
 		};
 		names.style.cursor = "pointer";
 	}
@@ -5469,15 +5587,18 @@ let settings = document.createElement('label');
 settings.innerHTML = "showClasses";
 
 window.updateName = (id, name) => {
+	console.log(id, name)
 	with (client) {
 		if (!(showClasses && state)) return name;
 
 		for (let i in state.globalEntities) {
 			const element = state.globalEntities[i];
+			console.log(id, element)
 			if (element.id !== id) continue;
-
+			
 			let Hero = window.id2name(element.heroType);
 			let DeathTime = window.secondsFormat(Math.floor(element.deathTimer / 1000), false);
+			console.log(`${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})`)
 			return typeof name == 'string' ? `${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})` : name;
 		}
 	}
@@ -5490,7 +5611,7 @@ window.loadGame = () => {
 	let e;
 	document.head.appendChild((e = document.createElement("style"), e.innerHTML = `html,body{overflow: hidden!important;}`, e))
 	if (globalThis.client.showClasses) {
-		document.getElementById("leaderboard").ariaLabel = "fat"
+		document.getElementById("leaderboard").setAttribute("aria-label", "fat")
 	}
 	if (globalThis.client.leaderboard200px) {
 		document.getElementById("leaderboard").setAttribute("aria-label2", "old")
@@ -5536,7 +5657,7 @@ window.lastPrefix = {
 	name: ""
 }
 
-new MutationObserver(function (mutations) {
+false && new MutationObserver(function (mutations) {
 	if (document.getElementsByTagName('script')[0]) {
 		var elem = Array.from(document.querySelectorAll('script')).find(a => a.src.match(/app\.[0-9a-f]{8}\.js/));
 		if (elem) {
@@ -5608,11 +5729,11 @@ new MutationObserver(function (mutations) {
 
 				tmp = tmp.replace('"leaderboard-name"','"leaderboard-name",ariaLabel:this.props.player.name');
 
-				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
+				/*tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
 				'e.font2=e.font,e.font=(window.ssss2??14)+"px Tahoma, Verdana, Segoe, sans-serif",'+
 				'window.genPrefix(this.name),e.lineWidth2=e.lineWidth,e.lineWidth=(window.ssss??2.5),e.strokeStyle ="black",e.strokeText(window.lastPrefix.name,a,r-this.radius-11 - (window.consts?.tagY??14)),e.textAlign="center",e.fillStyle=window.lastPrefix.color,e.fillText(window.lastPrefix.name,a,r-this.radius-11 - (window.consts?.tagY??14)),'+
 				'e.font=e.font2,e.lineWidth=e.lineWidth2,'+
-				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),');
+				'e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),');*/
 
 				/*//left
 				tmp = tmp.replace('e.textAlign="center",e.fillStyle="black",e.fillText(this.name,a,r-this.radius-11)),',
@@ -5639,6 +5760,7 @@ new MutationObserver(function (mutations) {
 
 				tmp = tmp.replace('null!==r&&(this.leaderboardRef.current.scrollTop=r)', 'null!==r&&(this.leaderboardRef.current.scrollTop=r, window.client.areaData.check())');
 				
+				//TODO: remake chat tags from autogeneration
 				tmp = tmp.replace('null!==l&&(c=e.default.createElement("span",null,e.default.createElement("span",{className:i},l," "),c)',
 				'(c=eval(globalThis.tags.getChatTag(c,e,l,i,s))')
 
@@ -5699,13 +5821,14 @@ new MutationObserver(function (mutations) {
 				//tmp = tmp.replace('n?u.level','n?u[(globalThis.client.textCommandConsts.ssxp && u.experience !== undefined)?"experience":"level"]');
 				//tmp = tmp.replace('victoryArea:i.victoryArea','victoryArea:i.victoryArea,experience:(i.experience)');
 				
-				tmp = tmp.replace('"hall-of-fame-player "+l','"hall-of-fame-player "+l, ariaLabel: n.toLocaleLowerCase()')
 				tmp = tmp.replace(/name\:this\.state\.name/gm,'name:globalThis.client.accountName=this.state.name')
 				tmp = tmp.replace('name:t.username,isGuest:!1,','name:globalThis.client.accountName = t.username,isGuest:!1,')
 				tmp = tmp.replace('key:"onLogout",value:function(){','key:"onLogout",value:function(){globalThis.client.accountName = "";')
 				
 				tmp = tmp.replaceAll('isGuest,isMod:this.props.isMod,','isGuest,isMod:globalThis.client.isMod = this.props.isMod,')
 				
+				//TODO: hall of fame
+				tmp = tmp.replace('"hall-of-fame-player "+l','"hall-of-fame-player "+l, ariaLabel: n.toLocaleLowerCase()')
 				tmp = tmp.replace('"Hall of Fame"),','"Hall of Fame", (globalThis.profiler.initHOF(), e.default.createElement("button", {className: "hall-of-fame-search"}, "🔎"))),')
 
 				tmp = tmp.replace('heroes:[{','heroes: window.heroConfig = [{')
@@ -5717,13 +5840,19 @@ new MutationObserver(function (mutations) {
 				tmp = tmp.replace('this.state.stats;', 'this.state.stats;globalThis.profiler.setState(this.state);')
 				tmp = tmp.replace(/(,e\\.default\\.createElement\\("b",null,this\\.state\\.username\\)\\),)/gm,
 				',e.default.createElement("div",null,e.default.createElement("b",null,this.state.username,'
-				+'e.default.createElement("div",{className:"onlineMarker"}),'
+				+'e.default.createElement("div",{className:"onlineMarker"}, e.default.createElement("div",{className:"onlineMarker-tip"})),'
 				+'e.default.createElement("button",{onClick:()=>{globalThis.profiler.showGraph()}},"Graph"),'
 				+'e.default.createElement("button",{onClick:()=>{globalThis.profiler.showAreas()}},"Areas")))),')
 				
-				tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
-				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})')
-				
+				/*tmp = tmp.replace('"Career VP: ",m.highest_area_achieved_counter||0)',
+				'"Career VP: ",m.highest_area_achieved_counter||0),e.default.createElement("div", {className:"profile-hats-container"})'+
+				',e.default.createElement("div", {className:"profile-week-controll"}'+
+				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbUnd")}, wbkey:"lbUnd"})'+
+				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbNull")}, wbkey:"lbNull"})'+
+				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbBronze")}, wbkey:"lbBronze"})'+
+				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbSilver")}, wbkey:"lbSilver"})'+
+				',e.default.createElement("input", {type:"checkbox", onClick:()=>{profiler.toggleWeeklyBoxes("lbGold")}, wbkey:"lbGold"})'+
+				')')*/
 				tmp = tmp.replace('var u={},n=!1;', 'var u={},n=!1;client.imgs.obj = u;client.imgs.retreived();');
 
 				//tmp = tmp.replace('module.exports="/area-50','globalThis.profiler.hats["area-50"] = module.exports="/area-50')
