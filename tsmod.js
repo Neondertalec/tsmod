@@ -1566,10 +1566,10 @@ globalThis.tags = {
 };
 window.tags.init();
 
-function getLocal(key, def) {
+globalThis.getLocal = (key, def) => {
     const res = localStorage.getItem(key);
     return res !== null ? res : def;
-}
+};
 
 window.secondsFormat = (time, m = true, t = 0) => {
     return t === 1 ? `${m ? (time / 60 >> 0) + ":" : ""}${time % 60 < 10 ? "0" + (time % 60) : time % 60}` :
@@ -1846,11 +1846,11 @@ globalThis.profiler = {
 
     filterCss: "",
     filterConsts: {
-        lbUnd: getLocal("ts-lbUnd", "true") == "true",
-        lbNull: getLocal("ts-lbNull", "true") == "true",
-        lbBronze: getLocal("ts-lbBronze", "true") == "true",
-        lbSilver: getLocal("ts-lbSilver", "true") == "true",
-        lbGold: getLocal("ts-lbGold", "true") == "true",
+        lbUnd: globalThis.getLocal("ts-lbUnd", "true") == "true",
+        lbNull: globalThis.getLocal("ts-lbNull", "true") == "true",
+        lbBronze: globalThis.getLocal("ts-lbBronze", "true") == "true",
+        lbSilver: globalThis.getLocal("ts-lbSilver", "true") == "true",
+        lbGold: globalThis.getLocal("ts-lbGold", "true") == "true",
     },
 
     initWeeklyBoxes: function() {
@@ -2440,23 +2440,23 @@ window.client = {
     userlog: {},
     userlog2: {},
     chat: null,
-    teamFormat: getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
-    format: getLocal("ts-resFormat", "No format yet. Do #format for help"),
-    allowedHeroes: JSON.parse(getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]")),
+    teamFormat: globalThis.getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
+    format: globalThis.getLocal("ts-resFormat", "No format yet. Do #format for help"),
+    allowedHeroes: JSON.parse(globalThis.getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]")),
     textCommandConstsE: [],
     textCommandConsts: {
-        prefix: getLocal("ts-prefix", "#"),
-        notiles: getLocal("ts-notiles", "false") == "true",
-        showTag: getLocal("ts-showTag", "false") == "true",
-        bannedType: +getLocal("ts-bannedType", "0"),
-        showUIACnt: getLocal("ts-showUIACnt", "false") == "true",
-        showUcard: getLocal("ts-showUcard", "true") == "true",
-        timerReal: (globalThis.temp1 = getLocal("ts-timerReal", "1"), globalThis.temp1 == "true" ? 1 : globalThis.temp1 == "false" ? 2 : +globalThis.temp1),
-        lbTags: getLocal("ts-lbTags", "true") == "true",
-        togglefps: getLocal("ts-togglefps", "true") == "true",
-        autodc: getLocal("ts-autodc", "false") == "true",
+        prefix: globalThis.getLocal("ts-prefix", "#"),
+        notiles: globalThis.getLocal("ts-notiles", "false") == "true",
+        showTag: globalThis.getLocal("ts-showTag", "false") == "true",
+        bannedType: +globalThis.getLocal("ts-bannedType", "0"),
+        showUIACnt: globalThis.getLocal("ts-showUIACnt", "false") == "true",
+        showUcard: globalThis.getLocal("ts-showUcard", "true") == "true",
+        timerReal: (globalThis.temp1 = globalThis.getLocal("ts-timerReal", "1"), globalThis.temp1 == "true" ? 1 : globalThis.temp1 == "false" ? 2 : +globalThis.temp1),
+        lbTags: globalThis.getLocal("ts-lbTags", "true") == "true",
+        togglefps: globalThis.getLocal("ts-togglefps", "true") == "true",
+        autodc: globalThis.getLocal("ts-autodc", "false") == "true",
 
-        // ssxp: getLocal("ts-ssxp", "false") == "true",
+        // ssxp: globalThis.getLocal("ts-ssxp", "false") == "true",
 
     },
     grb: {
@@ -2474,7 +2474,7 @@ window.client = {
             }
         }
     },
-    userMetas: JSON.parse(getLocal("ts-userMetas", "{}")),
+    userMetas: JSON.parse(globalThis.getLocal("ts-userMetas", "{}")),
 
     splitArgKeys: function(text) {
         const r = text.match(/\{(name|map|area|time|start time|end time|hero|hero num).*?\}/gm);
@@ -3158,9 +3158,6 @@ window.client = {
                 elem.style.top = `${elposy}px`;
                 elem.style.right = `${elposx + 230}px`;
                 elem.className = "log-popup";
-
-                // ele
-
 
                 const list = [...u.travel, ...u.deaths].sort((a1, a2) => {
                     return a1[0] - a2[0];
@@ -4229,8 +4226,8 @@ window.client = {
         // window.client.toggleExtendLb();
     },
 
-    showClasses: getLocal("ts-showClasses", "false") == "true",
-    leaderboard200px: getLocal("ts-leaderboard200px", "false") == "true",
+    showClasses: globalThis.getLocal("ts-showClasses", "false") == "true",
+    leaderboard200px: globalThis.getLocal("ts-leaderboard200px", "false") == "true",
 
     script: false,
     count: 0,
