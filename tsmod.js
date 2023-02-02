@@ -13,10 +13,10 @@
 // @grant       none
 // ==/UserScript==
 
-globalThis.temp1 = undefined;
-globalThis.temp2 = undefined;
-globalThis.temp3 = undefined;
-globalThis.CANR = true;
+window.temp1 = undefined;
+window.temp2 = undefined;
+window.temp3 = undefined;
+window.CANR = true;
 window.tsmod = true;
 
 function fontcolor(text, color) {
@@ -856,14 +856,14 @@ window.vers = {
         if (d.tw) {
             const names = d.tw;
 
-            globalThis.tags.tags["[TW]"] = names;
-            globalThis.customTags[0].names = names;
+            window.tags.tags["[TW]"] = names;
+            window.customTags[0].names = names;
         }
         if (d.tags) {
             try {
                 for (const i in d.tags) {
                     const ntag = d.tags[i];
-                    globalThis.customTags.push({
+                    window.customTags.push({
                         names: [...ntag.names],
                         color: ntag.color || "#ff0000",
                         text: ntag.text || "[?]",
@@ -882,11 +882,11 @@ window.vers = {
                 for (const i in d.ctags) {
                     const tag = d.ctags[i];
 
-                    globalThis.tags.tagsData[i] = tag;
-                    if (!globalThis.tags.tags[i]) {
-                        globalThis.tags.tags[i] = [atwne];
+                    window.tags.tagsData[i] = tag;
+                    if (!window.tags.tags[i]) {
+                        window.tags.tags[i] = [atwne];
                     }
-                    globalThis.tags.tags[i].push(...(tag.players || []));
+                    window.tags.tags[i].push(...(tag.players || []));
 
                 }
             } catch (e) {
@@ -903,7 +903,7 @@ window.vers = {
             document.body.appendChild(ver);
         }
 
-        globalThis.tags.calcOldTags();
+        window.tags.calcOldTags();
     },
 
 
@@ -1018,7 +1018,7 @@ document.createElementP = function(name, args = null, fnc = null) {
 
 window.vers.filllogp();
 
-globalThis.CacheTs = class CacheTs {
+window.CacheTs = class CacheTs {
     _data = {};
 
     setVal(key, val) {
@@ -1070,13 +1070,13 @@ try {
     }
 } catch {}
 
-globalThis.tagsEX = globalThis.tagsEX ?? {};
-globalThis.tagDataEX = globalThis.tagsEX ?? {};
+window.tagsEX = window.tagsEX ?? {};
+window.tagDataEX = window.tagsEX ?? {};
 
-globalThis.tagsEX = {...globalThis.tagsEX, ...{'[SCR]': ['DepressionOwU'],}};
-globalThis.tagDataEX = {...globalThis.tagDataEX, ...{'[SCR]': {presudo: "[TO&Scripter]", color: "#ff00bc"},}};
-globalThis.tags = {
-    chatTags: new globalThis.CacheTs(),
+window.tagsEX = {...window.tagsEX, ...{'[SCR]': ['DepressionOwU'],}};
+window.tagDataEX = {...window.tagDataEX, ...{'[SCR]': {presudo: "[TO&Scripter]", color: "#ff00bc"},}};
+window.tags = {
+    chatTags: new window.CacheTs(),
     tags: {} || false && {
         '[oly1]': [atwne, 'Pentagonis', 'R0YqL', 'Fauderix', 'AWEN', 'снегири', 'piger', 'Damasus', '⚝Simba⚝', 'Lumaz', 'Invi'],
         '[oly2]': [atwne, 'Ventinari', 'Nickchm', 'Strat', 'fAtKiD', 'koraiii', 'eagle45', 'PotatoNuke', 'Harmony556', 'Amasterclasher', 'Zade'],
@@ -1566,7 +1566,7 @@ globalThis.tags = {
 };
 window.tags.init();
 
-globalThis.getLocal = (key, def) => {
+window.getLocal = (key, def) => {
     const res = localStorage.getItem(key);
     return res !== null ? res : def;
 };
@@ -1576,7 +1576,7 @@ window.secondsFormat = (time, m = true, t = 0) => {
         `${m ? (time / 60 >> 0) + "m " : ""}${time % 60}s`;
 };
 
-globalThis.profiler = {
+window.profiler = {
     profilestats: null,
     lib: null,
     libl: false,
@@ -1658,7 +1658,7 @@ globalThis.profiler = {
                     markerTip.setAttribute("on", "1");
                 }
             });
-            globalThis.profiler.initWeeklyBoxes();
+            window.profiler.initWeeklyBoxes();
         }, 100);
     },
     showGraph: function() {
@@ -1846,42 +1846,42 @@ globalThis.profiler = {
 
     filterCss: "",
     filterConsts: {
-        lbUnd: globalThis.getLocal("ts-lbUnd", "true") == "true",
-        lbNull: globalThis.getLocal("ts-lbNull", "true") == "true",
-        lbBronze: globalThis.getLocal("ts-lbBronze", "true") == "true",
-        lbSilver: globalThis.getLocal("ts-lbSilver", "true") == "true",
-        lbGold: globalThis.getLocal("ts-lbGold", "true") == "true",
+        lbUnd: window.getLocal("ts-lbUnd", "true") == "true",
+        lbNull: window.getLocal("ts-lbNull", "true") == "true",
+        lbBronze: window.getLocal("ts-lbBronze", "true") == "true",
+        lbSilver: window.getLocal("ts-lbSilver", "true") == "true",
+        lbGold: window.getLocal("ts-lbGold", "true") == "true",
     },
 
     initWeeklyBoxes: function() {
-        if (!globalThis.profiler.filterCss) {
-            globalThis.profiler.filterCss = document.createElement("style");
-            document.head.appendChild(globalThis.profiler.filterCss);
+        if (!window.profiler.filterCss) {
+            window.profiler.filterCss = document.createElement("style");
+            document.head.appendChild(window.profiler.filterCss);
         }
 
         document.querySelectorAll("[wbkey]").forEach((e) => {
             const k = e.getAttribute("wbkey");
-            e.checked = globalThis.profiler.filterConsts[k];
+            e.checked = window.profiler.filterConsts[k];
         });
-        globalThis.profiler.rerenderWeeklyBoxes();
+        window.profiler.rerenderWeeklyBoxes();
     },
 
     toggleWeeklyBoxes: function(k) {
         const e = document.querySelector(`[wbkey="${k}"]`);
-        globalThis.profiler.filterConsts[k] = !globalThis.profiler.filterConsts[k];
-        e.checked = globalThis.profiler.filterConsts[k];
+        window.profiler.filterConsts[k] = !window.profiler.filterConsts[k];
+        e.checked = window.profiler.filterConsts[k];
         localStorage.setItem("ts-" + k, e.checked);
-        globalThis.profiler.rerenderWeeklyBoxes();
+        window.profiler.rerenderWeeklyBoxes();
     },
 
     rerenderWeeklyBoxes: function() {
-        if (!globalThis.profiler.filterCss) {
-            globalThis.profiler.filterCss = document.createElement("style");
-            document.head.appendChild(globalThis.profiler.filterCss);
+        if (!window.profiler.filterCss) {
+            window.profiler.filterCss = document.createElement("style");
+            document.head.appendChild(window.profiler.filterCss);
         }
-        const filterCss = globalThis.profiler.filterCss;
+        const filterCss = window.profiler.filterCss;
 
-        const fc = globalThis.profiler.filterConsts;
+        const fc = window.profiler.filterConsts;
         filterCss.innerHTML =
             `.profile-rectangle-undefined{display:${fc.lbUnd ? "block" : "none"};}` +
             `.profile-rectangle-null{display:${fc.lbNull ? "block" : "none"};}` +
@@ -1957,7 +1957,7 @@ const maps = {
     "Wacky Wonderland Hard": "WWH",
 };
 
-globalThis.client = {
+window.client = {
     api: {
         getOnlinePlayersLocations: async function() {
             return fetch("https://evades.io/api/game/list").then((e) => e.json());
@@ -2060,10 +2060,10 @@ globalThis.client = {
         retreived: () => {
             setTimeout(() => {
                 Object.keys(window.client.imgs.obj).filter((e) => e.startsWith("cosmetics/")).forEach((e) => {
-                    globalThis.profiler.hats[e.replace("cosmetics/", "")] = window.client.imgs.obj[e].src;
+                    window.profiler.hats[e.replace("cosmetics/", "")] = window.client.imgs.obj[e].src;
                 });
                 Object.keys(window.client.imgs.obj).filter((e) => e.startsWith("accessories/")).forEach((e) => {
-                    globalThis.profiler.accessories[e.replace("accessories/", "")] = window.client.imgs.obj[e].src;
+                    window.profiler.accessories[e.replace("accessories/", "")] = window.client.imgs.obj[e].src;
                 });
 
                 window.client.imgs.tileOgSrc = window.client.imgs.obj["maps/tiles"].src;
@@ -2440,23 +2440,23 @@ globalThis.client = {
     userlog: {},
     userlog2: {},
     chat: null,
-    teamFormat: globalThis.getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
-    format: globalThis.getLocal("ts-resFormat", "No format yet. Do #format for help"),
-    allowedHeroes: JSON.parse(globalThis.getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]")),
+    teamFormat: window.getLocal("ts-resTFormat", "{name} ;; {map} {area} ;; {time} ;; (0/2)"),
+    format: window.getLocal("ts-resFormat", "No format yet. Do #format for help"),
+    allowedHeroes: JSON.parse(window.getLocal("ts-allowedHeroes", "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]")),
     textCommandConstsE: [],
     textCommandConsts: {
-        prefix: globalThis.getLocal("ts-prefix", "#"),
-        notiles: globalThis.getLocal("ts-notiles", "false") == "true",
-        showTag: globalThis.getLocal("ts-showTag", "false") == "true",
-        bannedType: +globalThis.getLocal("ts-bannedType", "0"),
-        showUIACnt: globalThis.getLocal("ts-showUIACnt", "false") == "true",
-        showUcard: globalThis.getLocal("ts-showUcard", "true") == "true",
-        timerReal: (globalThis.temp1 = globalThis.getLocal("ts-timerReal", "1"), globalThis.temp1 == "true" ? 1 : globalThis.temp1 == "false" ? 2 : +globalThis.temp1),
-        lbTags: globalThis.getLocal("ts-lbTags", "true") == "true",
-        togglefps: globalThis.getLocal("ts-togglefps", "true") == "true",
-        autodc: globalThis.getLocal("ts-autodc", "false") == "true",
+        prefix: window.getLocal("ts-prefix", "#"),
+        notiles: window.getLocal("ts-notiles", "false") == "true",
+        showTag: window.getLocal("ts-showTag", "false") == "true",
+        bannedType: +window.getLocal("ts-bannedType", "0"),
+        showUIACnt: window.getLocal("ts-showUIACnt", "false") == "true",
+        showUcard: window.getLocal("ts-showUcard", "true") == "true",
+        timerReal: (window.temp1 = window.getLocal("ts-timerReal", "1"), window.temp1 == "true" ? 1 : window.temp1 == "false" ? 2 : +window.temp1),
+        lbTags: window.getLocal("ts-lbTags", "true") == "true",
+        togglefps: window.getLocal("ts-togglefps", "true") == "true",
+        autodc: window.getLocal("ts-autodc", "false") == "true",
 
-        // ssxp: globalThis.getLocal("ts-ssxp", "false") == "true",
+        // ssxp: window.getLocal("ts-ssxp", "false") == "true",
 
     },
     grb: {
@@ -2474,7 +2474,7 @@ globalThis.client = {
             }
         }
     },
-    userMetas: JSON.parse(globalThis.getLocal("ts-userMetas", "{}")),
+    userMetas: JSON.parse(window.getLocal("ts-userMetas", "{}")),
 
     splitArgKeys: function(text) {
         const r = text.match(/\{(name|map|area|time|start time|end time|hero|hero num).*?\}/gm);
@@ -3201,13 +3201,13 @@ globalThis.client = {
     openUserMetas: function(name, closeonly = false, cb = null) {
         const theElem = document.querySelector(".usermetas");
         if (theElem) {
-            globalThis.CANR = true;
+            window.CANR = true;
             if (cb) {
                 cb();
             }
             theElem.parentNode.remove();
         } else if (!closeonly) {
-            globalThis.CANR = false;
+            window.CANR = false;
             const res = window.client.userMetas[name] ? {...window.client.userMetas[name]} : {
                 lbtag: "",
                 note: "",
@@ -3963,7 +3963,7 @@ globalThis.client = {
                         e.stopPropagation();
                     });
 
-                    for (const btnn of (globalThis.RBtns || [])) {
+                    for (const btnn of (window.RBtns || [])) {
                         genButton(popup, btnn[0], btnn[1], btnn[2]);
                     }
 
@@ -4050,10 +4050,10 @@ globalThis.client = {
                         lay.appendChild(document.createElementP("button", {innerHTML: "search"}, (btn) => {
                             btn.addEventListener("click", () => {
                                 window.client.openAllUserMetas(true);
-                                globalThis.CANR = false;
+                                window.CANR = false;
                                 window.client.openUserMetas(input.value, false, () => {
                                     window.client.openAllUserMetas();
-                                    globalThis.CANR = true;
+                                    window.CANR = true;
                                 });
                             });
                         }));
@@ -4073,10 +4073,10 @@ globalThis.client = {
                                     el.setAttribute("uname", displayName);
                                     el.addEventListener("click", () => {
                                         window.client.openAllUserMetas(true);
-                                        globalThis.CANR = false;
+                                        window.CANR = false;
                                         window.client.openUserMetas(el.getAttribute("uname"), false, () => {
                                             window.client.openAllUserMetas();
-                                            globalThis.CANR = true;
+                                            window.CANR = true;
                                         });
                                     });
                                 }));
@@ -4206,7 +4206,7 @@ globalThis.client = {
         window.client.events.addEventListener(window.client.events.events.playerCountChange, (e) => {
             if (e.action == "left") {
                 for (const player of e.players) {
-                    globalThis.tags.chatTags.delVal(player.name);
+                    window.tags.chatTags.delVal(player.name);
                 }
             }
         });
@@ -4226,8 +4226,8 @@ globalThis.client = {
         // window.client.toggleExtendLb();
     },
 
-    showClasses: globalThis.getLocal("ts-showClasses", "false") == "true",
-    leaderboard200px: globalThis.getLocal("ts-leaderboard200px", "false") == "true",
+    showClasses: window.getLocal("ts-showClasses", "false") == "true",
+    leaderboard200px: window.getLocal("ts-leaderboard200px", "false") == "true",
 
     script: false,
     count: 0,
@@ -4383,7 +4383,7 @@ window.styleByNr = (nr) => {
     return ["", "dead", "alive", "custom", "arexit", "victory", "qoj"][nr];
 };
 
-globalThis.id2name = (id) => {
+window.id2name = (id) => {
     const r = window.heroByType(id).name;
     if (r !== null) {
         return r;
@@ -5755,7 +5755,7 @@ function tsmodInit() {
             }
         }
         if (e.code == "KeyR") {
-            globalThis.CANR && window.client.openCustomSettings();
+            window.CANR && window.client.openCustomSettings();
 
             // window.client.openLogger();
         } else if (e.code == "Escape") {
@@ -5771,7 +5771,7 @@ if (window.tsmodConsole) {
 }
 
 window.checkGlobalError = () => {
-    if (globalThis._babelPolyfill) {
+    if (window._babelPolyfill) {
         return false;
     } else {
         return true;
@@ -5796,12 +5796,12 @@ window.removeFakes = () => {
 };
 
 window.z = "";
-globalThis.getAttrInParents = (e, a) => {
+window.getAttrInParents = (e, a) => {
     const at = e.getAttribute(a);
     if (at) {
         return at;
     } else {
-        return globalThis.getAttrInParents(e.parentNode, a);
+        return window.getAttrInParents(e.parentNode, a);
     }
 };
 window.updateLeaderboard = () => {
@@ -5816,7 +5816,7 @@ window.updateLeaderboard = () => {
 
     for (const names of [...document.getElementsByClassName('leaderboard-name')]) {
         names.oncontextmenu = (event) => {
-            window.client.openUcard(globalThis.getAttrInParents(event.target, "aria-label"), [20, event.y], window.client.userlog);
+            window.client.openUcard(window.getAttrInParents(event.target, "aria-label"), [20, event.y], window.client.userlog);
         };
         names.style.cursor = "pointer";
     }
