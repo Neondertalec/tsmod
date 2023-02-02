@@ -48,10 +48,11 @@ Then click on the '`check for updates`' (<aa style="color:cyan"> **cyan line** <
 if you can't install any extensions...  
 paste this code into the console:
 ```js
-var xm=new XMLHttpRequest();
-xm.open("GET","https://raw.githubusercontent.com/Neondertalec/tsmod/main/console-tsmod.js",false);
+window.tsmodConsole = true;
+var xm = new XMLHttpRequest();
+xm.open("GET", "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js",false);
 xm.send();
-eval(xm.response)
+eval(xm.response);
 ```
 
 Update 1.1.52
