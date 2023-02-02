@@ -842,7 +842,7 @@ window.vers = {
     },
 
     checkVer: function(v1, v2) {
-        [v1, v2] = [v1.split(".").map((v) => parseInt(v, 10)), v2.split(".").map((v) => parseInt(v, 10))];
+        [v1, v2] = [v1.split(".").map((v) => parseInt(v)), v2.split(".").map((v) => parseInt(v))];
         for (let i = 0; i < v1.length; i++) {
             if (v1[i] < v2[i]) {
                 return true;
@@ -1068,9 +1068,7 @@ try {
             window.blaclist = newArr;
         }
     }
-} catch {
-    // Do nothing
-}
+} catch {}
 
 globalThis.tagsEX = globalThis.tagsEX ?? {};
 globalThis.tagDataEX = globalThis.tagsEX ?? {};
@@ -1715,13 +1713,13 @@ globalThis.profiler = {
         const loadedData = this.profilestats;
 
         const points = [];
-        const cw = parseInt(document.querySelector(".profile-week-name").innerHTML.slice(5), 10);
+        const cw = parseInt(document.querySelector(".profile-week-name").innerHTML.slice(5));
         const player = this.profilestats.username + ` (${this.profilestats.stats.highest_area_achieved_counter})`;
         const fd = [];
         for (const i in loadedData.stats.week_record) {
             const cd = loadedData.stats.week_record[i];
             if (loadedData.stats.week_record[i]) {
-                const ii = parseInt(i, 10);
+                const ii = parseInt(i);
                 const nd = {
                     x: ii,
                     y: cd.wins || 0,
@@ -2232,7 +2230,7 @@ window.client = {
 
 
                 const name = names.join(" + "),
-                    time = window.client.getTimeDiff("", parseInt(startInput.value, 10), parseInt(endInput.value, 10), null, allObjs),
+                    time = window.client.getTimeDiff("", parseInt(startInput.value), parseInt(endInput.value), null, allObjs),
                     lastMapData = allObjs[time[4]],
                     map = window.getShortName(lastMapData[2]),
                     normalizedArea = window.normalizeArea(lastMapData[3]),
@@ -2945,7 +2943,7 @@ window.client = {
                 window.client.sendSystemMessage(`User card is now turned ${["off", "on"][+window.client.textCommandConsts.togglefps]}`);
             } else if ([p + "banned"].includes(messageS[0])) {
                 if (messageS.length > 1) {
-                    if (!isNaN(parseInt(messageS[1], 10))) {
+                    if (!isNaN(parseInt(messageS[1]))) {
                         localStorage.setItem("ts-bannedType", "" + (window.client.textCommandConsts.bannedType = +messageS[1]));
                         window.client.sendSystemMessage(`Banned user show type is now ${window.client.textCommandConsts.bannedType}`);
                         return false;
@@ -3151,8 +3149,8 @@ window.client = {
         if (u) {
             if (!document.getElementById("log-" + name) && !deleted) {
                 const elpos = document.querySelector(".chat-message-contextmenu.fake");
-                let elposy = parseInt(elpos?.style?.top?.substring(0, elpos?.style?.top?.length - 2), 10);
-                let elposx = parseInt(elpos?.style?.right?.substring(0, elpos?.style?.right?.length - 2), 10);
+                let elposy = parseInt(elpos?.style?.top?.substring(0, elpos?.style?.top?.length - 2));
+                let elposx = parseInt(elpos?.style?.right?.substring(0, elpos?.style?.right?.length - 2));
                 elposy = isNaN(elposy) ? 0 : elposy;
                 elposx = isNaN(elposx) ? 0 : elposx;
                 const elem = document.createElement("div");
@@ -3796,9 +3794,7 @@ window.client = {
                 let json = "";
                 try {
                     json = JSON.parse(el.value);
-                } catch {
-                    // Do nothing
-                }
+                } catch {}
 
                 const f = () => {
                     if (window.client.logger) {
@@ -4247,9 +4243,7 @@ HTMLElement.prototype.removeChild2 = HTMLElement.prototype.removeChild;
 HTMLElement.prototype.removeChild = function(e, e2) {
     try {
         this.removeChild2(e, e2);
-    } catch {
-        // Do nothing
-    }
+    } catch {}
 };
 
 setInterval(() => {
@@ -5849,8 +5843,8 @@ document.addEventListener("mousemove", (e) => {
             }
             for (let i = 0; i < window.firstPos[2].length; i++) {
                 const el = window.firstPos[2][i];
-                el.style.top = (parseInt(el.style.top.substring(0, el.style.top.length - 2), 10) + e.screenY - window.firstPos[1]) + "px";
-                el.style.right = (parseInt(el.style.right.substring(0, el.style.right.length - 2), 10) + (window.firstPos[0] - e.screenX)) + "px";
+                el.style.top = (parseInt(el.style.top.substring(0, el.style.top.length - 2)) + e.screenY - window.firstPos[1]) + "px";
+                el.style.right = (parseInt(el.style.right.substring(0, el.style.right.length - 2)) + (window.firstPos[0] - e.screenX)) + "px";
 
                 // e.screenX,e.screenY
             }
