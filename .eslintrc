@@ -7,6 +7,7 @@
     "es6": true
   },
   "globals": {
+    "CanvasJS": true,
     "global": false,
     "globalThis": true
   },
@@ -24,9 +25,7 @@
     "constructor-super": 2,
     "curly": [2, "all"],
     "default-case": 2,
-    "eqeqeq": 2,
     "generator-star-spacing": 2,
-    "guard-for-in": 2,
     "indent": [2, 4, {"SwitchCase": 1, "ignoreComments":  true }],
     "jsx-quotes": 2,
     "key-spacing": 2,
@@ -48,6 +47,7 @@
     "no-div-regex": 2,
     "no-dupe-class-members": 2,
     "no-eval": 2,
+    "no-empty": [2, {"allowEmptyCatch": true}],
     "no-extend-native": 2,
     "no-extra-bind": 2,
     "no-floating-decimal": 2,
@@ -88,7 +88,7 @@
     "no-with": 2,
     "object-curly-spacing": 2,
     "prefer-const": 2,
-    "radix": 2,
+    "radix": [2, "as-needed"],
     "require-yield": 2,
     "semi": 2,
     "semi-spacing": 2,
