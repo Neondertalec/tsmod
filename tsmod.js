@@ -1957,7 +1957,7 @@ const maps = {
     "Wacky Wonderland Hard": "WWH",
 };
 
-window.client = {
+globalThis.client = {
     api: {
         getOnlinePlayersLocations: async function() {
             return fetch("https://evades.io/api/game/list").then((e) => e.json());
