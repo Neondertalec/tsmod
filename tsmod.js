@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.107
+// @version     1.1.108
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -2451,7 +2451,6 @@ window.client = {
         bannedType: +window.getLocal("ts-bannedType", "0"),
         showUIACnt: window.getLocal("ts-showUIACnt", "false") == "true",
         showUcard: window.getLocal("ts-showUcard", "true") == "true",
-        timerReal: (window.temp1 = window.getLocal("ts-timerReal", "1"), window.temp1 == "true" ? 1 : window.temp1 == "false" ? 2 : +window.temp1),
         lbTags: window.getLocal("ts-lbTags", "true") == "true",
         togglefps: window.getLocal("ts-togglefps", "true") == "true",
         autodc: window.getLocal("ts-autodc", "false") == "true",
@@ -2881,7 +2880,6 @@ window.client = {
                     `${window.client.editChatInput(false, `{prefix}togglelbtags`)} - changes the format of the generated run results.<br>` +
                     `${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>` +
                     `${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>` +
-                    `${window.client.editChatInput(false, `{prefix}toggletimer`)} - changes the timer (if on - timer shows real time. if off - timer shows the time that will be shown on the death screen.).<br>` +
                     `${window.client.editChatInput(false, `{prefix}togglefps`)} - toggles fps and ping.<br>` +
                     `${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>` +
                     `${window.getTag(window.client.main.name) != "" ? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>` : ""}` +
@@ -2924,13 +2922,7 @@ window.client = {
                 localStorage.setItem("ts-lbTags", window.client.textCommandConsts.lbTags = !window.client.textCommandConsts.lbTags);
                 window.client.toggleLbTags(window.client.textCommandConsts.lbTags);
                 window.client.sendSystemMessage(`Leaderboard tags are now turned ${["off", "on"][+window.client.textCommandConsts.lbTags]}`);
-            } else
-
-                /* if([p+"toggletimer"].includes(messageS[0])){//nd
-                    localStorage.setItem("ts-timerReal", window.client.textCommandConsts.timerReal = !window.client.textCommandConsts.timerReal);
-                    window.client.sendSystemMessage(`timer now shows ${["end screen time","real time"][+window.client.textCommandConsts.timerReal]}`);
-                }else*/
-            if ([p + "toggleusers"].includes(messageS[0])) {
+            } else if ([p + "toggleusers"].includes(messageS[0])) {
                 localStorage.setItem("ts-showUIACnt", window.client.textCommandConsts.showUIACnt = !window.client.textCommandConsts.showUIACnt);
                 window.client.areaData.updateLb();
                 window.client.sendSystemMessage(`User count is now turned ${["off", "on"][+window.client.textCommandConsts.showUIACnt]}`);
@@ -4130,12 +4122,6 @@ window.client = {
                         }],
                         ["bool", "Show fps and ping", "togglefps", "ts-togglefps", () => {
                         }],
-                        ["option", "Timer:", [
-                            ["Real time", "1"],
-                            ["Ingame time", "2"],
-                            ["None", "3"]
-                        ], "timerReal", "ts-timerReal", () => {
-                        }],
                         ["bool", "Automatic disconnect", "autodc", "ts-autodc", () => {
                         }],
 
@@ -4257,13 +4243,6 @@ setInterval(() => {
 
 window.replaces = {
     id2: function(e, t) {
-        /* if (window.client.textCommandConsts.timerReal != 3) {
-            t.font = 'bold ' + e.default.font(30);
-            let secs = secondsFormat(window.client.textCommandConsts.timerReal == 1 ? window.getTime() : window.client.main.survivalTime);
-            t.strokeText(secs, l, 80);
-            t.fillText(secs, l, 80);
-        }*/
-
         const olw = t.lineWidth, fis = t.strokeStyle, strs = t.fillStyle;
 
         if (window.client.textCommandConsts.togglefps && window.client.state) {
