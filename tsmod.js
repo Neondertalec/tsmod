@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.108
+// @version     1.1.109
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -4180,7 +4180,6 @@ window.client = {
                                 // }));
                             }
                         }));
-                        i++;
                     }
                 }));
             });
