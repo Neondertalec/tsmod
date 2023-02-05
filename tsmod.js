@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.109
+// @version     1.1.110
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
 // @match       https://*.evades.online/*
 // @match       https://*evades.io/*
 // @match       https://*evades.online/*
+// @match       https://*localhost/*
 // @run-at      document-start
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
@@ -37,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.99",
+    v: "1.1.100",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -58,6 +59,13 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.100`,
+                news: [
+                    `Some fixes.`,
+                    `Tags are now returned.`,
+                ],
+            },
             {
                 version: `1.1.99`,
                 news: [
@@ -1509,33 +1517,37 @@ window.tags = {
         this.calcOldTags();
     },
 
-    getChatTag: function(c, e, l, i, name) {
+    getChatTag: function(name, tags = []) {
         if (this.chatTags.hasVal(name)) {
             return this.chatTags.getVal(name);
         } else {
-            let code = `e.default.createElement("span",null`;
-            if (name.startsWith("Guest")) {
+
+            if(name.startsWith("Guest")){
                 const tagData = window.tags.tagsData["[Guest]"];
-                code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow ? "rainbowText" : ""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`;
-            } else {
-                if (l) {
-                    code += `,e.default.createElement("span",{className:i},l," ")`;
-                }
-
-                let customs = [], lock = false;
-
-                for (const tagdata of window.customTags) {
-                    for (const tname of tagdata.names) {
+                tags.push({
+                    className: tagData.chat.rainbow ? "rainbowText" : "",
+                    style: {color: tagData.chat.color},
+                    text: tagData.chat.text + " ",
+                });
+            }else{
+                let lock = false;
+                for (const tagData of window.customTags) {
+                    for (const tname of tagData.names) {
                         if (tname == name) {
-                            customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow ? ("rainbowText" + (tagdata.rglow ? " rainbowTextGlow" : "")) : ""}", style:{color: "${tagdata.color}"}},"${tagdata.text}",${tagdata.join ? `""` : `" "`})`]);
-                            if (tagdata.lock) {
+                            tags.push({
+                                prior: tagData.prior,
+                                className: tagData.rainbow ? ("rainbowText" + (tagData.rglow ? " rainbowTextGlow" : "")) : "",
+                                style: {color: tagData.color},
+                                text: tagData.text + (tagData.join ? "" : " "),
+                            });
+                            if (tagData.lock) {
                                 lock = true;
                             }
                             break;
                         }
                     }
                 }
-                customs = customs.sort((v1, v2) => v1[0].prior - v2[0].prior);
+                tags.sort((v1, v2) => v1.prior - v2.prior).map(e=>delete e.prior);
 
                 if (!lock) {
                     for (const tag in window.tags.tagsData) {
@@ -1544,7 +1556,11 @@ window.tags = {
                         if (tagData.chat) {
                             for (const index in window.tags.oldTags[tag]) {
                                 if (window.tags.oldTags[tag][index] == name) {
-                                    code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow ? "rainbowText" : ""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`;
+                                    tags.push({
+                                        className: tagData.chat.rainbow ? ("rainbowText" + (tagData.chat.rglow ? " rainbowTextGlow" : "")) : "",
+                                        style: {color: tagData.chat.color},
+                                        text: tagData.chat.text + " ",
+                                    })
                                     found = true;
                                     break;
                                 }
@@ -1555,12 +1571,9 @@ window.tags = {
                         }
                     }
                 }
-                for (const str of customs) {
-                    code += str[1];
-                }
             }
-            code += `,c)`;
-            return this.chatTags.setVal(name, code);
+
+            return this.chatTags.setVal(name, tags);
         }
     }
 };
@@ -1777,7 +1790,7 @@ window.profiler = {
         const gem = this.profilestats.accessories.gem_selection;
         const hats = this.profilestats.accessories.collection;
 
-        for (const i in hats) {
+        if(false)for (const i in hats) {
             if (hats[i]) {
                 /* el.appendChild(document.createElementP("div", {className:`hat-accessory ${i==hat?"hat-accessory-selected":""}`},
                     (e)=>{
