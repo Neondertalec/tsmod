@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod-addons Hats
-// @version     1.0.2
+// @version     1.0.3
 // @description	Evades.io TS script addon.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556).
 // @match       https://*.evades.io/*
@@ -78,8 +78,10 @@ window.setCloneHats = (url)=>{
 		return;
 	}
 	if(!client.main.hatImage){
-		console.log("%cYou need to have a hat equipped", "color: red; font-size: 20px");
-		return;
+		client.main.hatImage = new Image();
+		client.main.hatName = "custom";
+		//console.log("%cYou need to have a hat equipped", "color: red; font-size: 20px");
+		//return;
 	}
 	
 	client.main.hatImage.src = url;
@@ -96,8 +98,10 @@ window.setCloneBodies = (url)=>{
 		return;
 	}
 	if(!client.main.bodyImage){
-		console.log("%cYou need to have a body equipped", "color: red; font-size: 20px");
-		return;
+		client.main.bodyImage = new Image();
+		client.main.bodyName = "custom";
+		//console.log("%cYou need to have a body equipped", "color: red; font-size: 20px");
+		//return;
 	}
 	client.main.bodyImage.src = url;
 
