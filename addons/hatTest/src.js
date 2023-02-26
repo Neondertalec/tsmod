@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod-addons Hats
-// @version     1.0.1
+// @version     1.0.2
 // @description	Evades.io TS script addon.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556).
 // @match       https://*.evades.io/*
@@ -88,5 +88,21 @@ window.setCloneHats = (url)=>{
 		client.main.hatImage.src = "https://cdn.discordapp.com/emojis/835207478567895130.webp";
 		console.log("%cInvalid link", "color: red;");
 	}
-	
+}
+
+window.setCloneBodies = (url)=>{
+	if(!client.main){
+		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
+		return;
+	}
+	if(!client.main.bodyImage){
+		console.log("%cYou need to have a body equipped", "color: red; font-size: 20px");
+		return;
+	}
+	client.main.bodyImage.src = url;
+
+	client.main.bodyImage.onerror = ()=>{
+		client.main.bodyImage.src = "https://cdn.discordapp.com/emojis/835207478567895130.webp";
+		console.log("%cInvalid link", "color: red;");
+	}
 }

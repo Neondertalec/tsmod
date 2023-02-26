@@ -12,7 +12,9 @@ console functions:
 
 * `fillHeroes()` - fill default hero group
 
-* `setCloneHats("link")` - set the hat url
+* `setCloneHats("link")` - set the hat url  
+
+* `setCloneBodies("link")` - set the body url
 
 # example to test your image:
 
