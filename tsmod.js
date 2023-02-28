@@ -1519,7 +1519,7 @@ window.tags = {
 
     getChatTag: function(name, tags = []) {
         if (this.chatTags.hasVal(name)) {
-            return this.chatTags.getVal(name);
+            return [...this.chatTags.getVal(name)];
         } else {
 
             if(name.startsWith("Guest")){
@@ -2070,8 +2070,14 @@ window.client = {
 
     imgs: {
         obj: {},
+        defaults:{},
+        loaded: false,
         retreived: () => {
             setTimeout(() => {
+                for(let i in window.client.imgs.obj){
+                    window.client.imgs.defaults[i] = window.client.imgs.obj[i].src;
+                }
+
                 Object.keys(window.client.imgs.obj).filter((e) => e.startsWith("cosmetics/")).forEach((e) => {
                     window.profiler.hats[e.replace("cosmetics/", "")] = window.client.imgs.obj[e].src;
                 });
@@ -2079,16 +2085,40 @@ window.client = {
                     window.profiler.accessories[e.replace("accessories/", "")] = window.client.imgs.obj[e].src;
                 });
 
-                window.client.imgs.tileOgSrc = window.client.imgs.obj["maps/tiles"].src;
                 window.client.imgs.changeTile();
+                window.client.imgs.loaded = true;
+                if(window.client.imgs.packTemp){
+                    window.client.imgs.loadPack(window.client.imgs.packTemp);
+                }
             }, 0);
         },
 
-        tileOgSrc: "",
         changeTile: () => {
             window.client.imgs.obj["maps/tiles"].src = window.client.textCommandConsts.notiles ?
                 "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" :
-                window.client.imgs.tileOgSrc;
+                window.client.imgs.defaults["maps/tiles"];
+        },
+
+        packTemp: null,
+        loadPack: (data) =>{
+            console.log("data:", data);
+            if(window.client.imgs.loaded){
+                window.client.imgs.packTemp = null;
+                for(let i in data){
+                    let txid = i;
+                    if(!window.client.imgs.obj[txid]){
+                        console.warn(`"${txid}" texture does not exist.`);
+                        continue;
+                    }
+                    console.log("data:", data);
+                    window.client.imgs.obj[txid].src = data[txid];
+                    window.client.imgs.obj[txid].onerror = ()=>{
+                        window.client.imgs.obj[txid].src = window.client.imgs.defaults[txid];
+                    }
+                }
+            }else{
+                window.client.imgs.packTemp = data;
+            }
         }
     },
 
