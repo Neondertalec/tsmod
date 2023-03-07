@@ -1519,22 +1519,27 @@ window.tags = {
 
     getChatTag: function(name, tags = []) {
         if (this.chatTags.hasVal(name)) {
-            return [...this.chatTags.getVal(name)];
-        } else {
+            const storedTags = this.chatTags.getVal(name);
+            for(let i in storedTags){
+                tags.push({...storedTags[i]})
+            }
 
+            return tags;
+        } else {
+            const newTags = [];
             if(name.startsWith("Guest")){
                 const tagData = window.tags.tagsData["[Guest]"];
-                tags.push({
+                newTags.push({
                     className: tagData.chat.rainbow ? "rainbowText" : "",
                     style: {color: tagData.chat.color},
                     text: tagData.chat.text + " ",
                 });
             }else{
-                let lock = false;
+                let lock = false
                 for (const tagData of window.customTags) {
                     for (const tname of tagData.names) {
                         if (tname == name) {
-                            tags.push({
+                            newTags.push({
                                 prior: tagData.prior,
                                 className: tagData.rainbow ? ("rainbowText" + (tagData.rglow ? " rainbowTextGlow" : "")) : "",
                                 style: {color: tagData.color},
@@ -1547,7 +1552,7 @@ window.tags = {
                         }
                     }
                 }
-                tags.sort((v1, v2) => v1.prior - v2.prior).map(e=>delete e.prior);
+                newTags.sort((v1, v2) => v1.prior - v2.prior).map(e=>delete e.prior);
 
                 if (!lock) {
                     for (const tag in window.tags.tagsData) {
@@ -1556,7 +1561,7 @@ window.tags = {
                         if (tagData.chat) {
                             for (const index in window.tags.oldTags[tag]) {
                                 if (window.tags.oldTags[tag][index] == name) {
-                                    tags.push({
+                                    newTags.push({
                                         className: tagData.chat.rainbow ? ("rainbowText" + (tagData.chat.rglow ? " rainbowTextGlow" : "")) : "",
                                         style: {color: tagData.chat.color},
                                         text: tagData.chat.text + " ",
@@ -1573,7 +1578,8 @@ window.tags = {
                 }
             }
 
-            return this.chatTags.setVal(name, tags);
+            this.chatTags.setVal(name, newTags);
+            return window.tags.getChatTag(name, tags);
         }
     }
 };
