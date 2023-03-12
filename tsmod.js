@@ -2035,7 +2035,6 @@ window.client = {
         },
 
         emit: function(key, data) {
-            console.log("emit", key, data);
             if (this.listners[key]) {
                 this.listners[key].forEach((f) => {
                     f(data);
@@ -2107,7 +2106,6 @@ window.client = {
 
         packTemp: null,
         loadPack: (data) =>{
-            console.log("data:", data);
             if(window.client.imgs.loaded){
                 window.client.imgs.packTemp = null;
                 for(let i in data){
@@ -2116,7 +2114,6 @@ window.client = {
                         console.warn(`"${txid}" texture does not exist.`);
                         continue;
                     }
-                    console.log("data:", data);
                     window.client.imgs.obj[txid].src = data[txid];
                     window.client.imgs.obj[txid].onerror = ()=>{
                         window.client.imgs.obj[txid].src = window.client.imgs.defaults[txid];
@@ -4246,7 +4243,6 @@ window.client = {
         });
 
         window.client.events.addEventListener(window.client.events.events.chatMessage, (e) => {
-            console.log(e);
             if (e.name == window.client.main.name) {
                 if (window.client.pingNfps.sendTime != 0) {
                     window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
@@ -5889,14 +5885,12 @@ window.updateName = (id, name) => {
 
     for (const i in window.client.state.globalEntities) {
         const element = window.client.state.globalEntities[i];
-        console.log(id, element);
         if (element.id !== id) {
             continue;
         }
 
         const Hero = window.id2name(element.heroType);
         const DeathTime = window.secondsFormat(Math.floor(element.deathTimer / 1000), false);
-        console.log(`${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})`);
         return typeof name === 'string' ? `${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})` : name;
     }
 };
