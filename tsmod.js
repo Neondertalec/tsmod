@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.109
+// @version     1.1.110
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
 // @match       https://*.evades.online/*
 // @match       https://*evades.io/*
 // @match       https://*evades.online/*
+// @match       https://*localhost/*
 // @run-at      document-start
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/tsmod.js
@@ -37,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.99",
+    v: "1.1.100",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -58,6 +59,13 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.100`,
+                news: [
+                    `Some fixes.`,
+                    `Tags are now returned.`,
+                ],
+            },
             {
                 version: `1.1.99`,
                 news: [
@@ -1509,33 +1517,42 @@ window.tags = {
         this.calcOldTags();
     },
 
-    getChatTag: function(c, e, l, i, name) {
+    getChatTag: function(name, tags = []) {
         if (this.chatTags.hasVal(name)) {
-            return this.chatTags.getVal(name);
+            const storedTags = this.chatTags.getVal(name);
+            for(let i in storedTags){
+                tags.push({...storedTags[i]})
+            }
+
+            return tags;
         } else {
-            let code = `e.default.createElement("span",null`;
-            if (name.startsWith("Guest")) {
+            const newTags = [];
+            if(name.startsWith("Guest")){
                 const tagData = window.tags.tagsData["[Guest]"];
-                code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow ? "rainbowText" : ""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`;
-            } else {
-                if (l) {
-                    code += `,e.default.createElement("span",{className:i},l," ")`;
-                }
-
-                let customs = [], lock = false;
-
-                for (const tagdata of window.customTags) {
-                    for (const tname of tagdata.names) {
+                newTags.push({
+                    className: tagData.chat.rainbow ? "rainbowText" : "",
+                    style: {color: tagData.chat.color},
+                    text: tagData.chat.text + " ",
+                });
+            }else{
+                let lock = false
+                for (const tagData of window.customTags) {
+                    for (const tname of tagData.names) {
                         if (tname == name) {
-                            customs.push([tagdata, `,e.default.createElement("span",{className:"${tagdata.rainbow ? ("rainbowText" + (tagdata.rglow ? " rainbowTextGlow" : "")) : ""}", style:{color: "${tagdata.color}"}},"${tagdata.text}",${tagdata.join ? `""` : `" "`})`]);
-                            if (tagdata.lock) {
+                            newTags.push({
+                                prior: tagData.prior,
+                                className: tagData.rainbow ? ("rainbowText" + (tagData.rglow ? " rainbowTextGlow" : "")) : "",
+                                style: {color: tagData.color},
+                                text: tagData.text + (tagData.join ? "" : " "),
+                            });
+                            if (tagData.lock) {
                                 lock = true;
                             }
                             break;
                         }
                     }
                 }
-                customs = customs.sort((v1, v2) => v1[0].prior - v2[0].prior);
+                newTags.sort((v1, v2) => v1.prior - v2.prior).map(e=>delete e.prior);
 
                 if (!lock) {
                     for (const tag in window.tags.tagsData) {
@@ -1544,7 +1561,11 @@ window.tags = {
                         if (tagData.chat) {
                             for (const index in window.tags.oldTags[tag]) {
                                 if (window.tags.oldTags[tag][index] == name) {
-                                    code += `,e.default.createElement("span",{className:"${tagData.chat.rainbow ? "rainbowText" : ""}", style:{color: "${tagData.chat.color}"}},"${tagData.chat.text}"," ")`;
+                                    newTags.push({
+                                        className: tagData.chat.rainbow ? ("rainbowText" + (tagData.chat.rglow ? " rainbowTextGlow" : "")) : "",
+                                        style: {color: tagData.chat.color},
+                                        text: tagData.chat.text + " ",
+                                    })
                                     found = true;
                                     break;
                                 }
@@ -1555,12 +1576,10 @@ window.tags = {
                         }
                     }
                 }
-                for (const str of customs) {
-                    code += str[1];
-                }
             }
-            code += `,c)`;
-            return this.chatTags.setVal(name, code);
+
+            this.chatTags.setVal(name, newTags);
+            return window.tags.getChatTag(name, tags);
         }
     }
 };
@@ -1777,7 +1796,7 @@ window.profiler = {
         const gem = this.profilestats.accessories.gem_selection;
         const hats = this.profilestats.accessories.collection;
 
-        for (const i in hats) {
+        if(false)for (const i in hats) {
             if (hats[i]) {
                 /* el.appendChild(document.createElementP("div", {className:`hat-accessory ${i==hat?"hat-accessory-selected":""}`},
                     (e)=>{
@@ -2016,7 +2035,6 @@ window.client = {
         },
 
         emit: function(key, data) {
-            console.log("emit", key, data);
             if (this.listners[key]) {
                 this.listners[key].forEach((f) => {
                     f(data);
@@ -2057,8 +2075,14 @@ window.client = {
 
     imgs: {
         obj: {},
+        defaults:{},
+        loaded: false,
         retreived: () => {
             setTimeout(() => {
+                for(let i in window.client.imgs.obj){
+                    window.client.imgs.defaults[i] = window.client.imgs.obj[i].src;
+                }
+
                 Object.keys(window.client.imgs.obj).filter((e) => e.startsWith("cosmetics/")).forEach((e) => {
                     window.profiler.hats[e.replace("cosmetics/", "")] = window.client.imgs.obj[e].src;
                 });
@@ -2066,16 +2090,38 @@ window.client = {
                     window.profiler.accessories[e.replace("accessories/", "")] = window.client.imgs.obj[e].src;
                 });
 
-                window.client.imgs.tileOgSrc = window.client.imgs.obj["maps/tiles"].src;
                 window.client.imgs.changeTile();
+                window.client.imgs.loaded = true;
+                if(window.client.imgs.packTemp){
+                    window.client.imgs.loadPack(window.client.imgs.packTemp);
+                }
             }, 0);
         },
 
-        tileOgSrc: "",
         changeTile: () => {
             window.client.imgs.obj["maps/tiles"].src = window.client.textCommandConsts.notiles ?
                 "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" :
-                window.client.imgs.tileOgSrc;
+                window.client.imgs.defaults["maps/tiles"];
+        },
+
+        packTemp: null,
+        loadPack: (data) =>{
+            if(window.client.imgs.loaded){
+                window.client.imgs.packTemp = null;
+                for(let i in data){
+                    let txid = i;
+                    if(!window.client.imgs.obj[txid]){
+                        console.warn(`"${txid}" texture does not exist.`);
+                        continue;
+                    }
+                    window.client.imgs.obj[txid].src = data[txid];
+                    window.client.imgs.obj[txid].onerror = ()=>{
+                        window.client.imgs.obj[txid].src = window.client.imgs.defaults[txid];
+                    }
+                }
+            }else{
+                window.client.imgs.packTemp = data;
+            }
         }
     },
 
@@ -4197,7 +4243,6 @@ window.client = {
         });
 
         window.client.events.addEventListener(window.client.events.events.chatMessage, (e) => {
-            console.log(e);
             if (e.name == window.client.main.name) {
                 if (window.client.pingNfps.sendTime != 0) {
                     window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
@@ -5840,14 +5885,12 @@ window.updateName = (id, name) => {
 
     for (const i in window.client.state.globalEntities) {
         const element = window.client.state.globalEntities[i];
-        console.log(id, element);
         if (element.id !== id) {
             continue;
         }
 
         const Hero = window.id2name(element.heroType);
         const DeathTime = window.secondsFormat(Math.floor(element.deathTimer / 1000), false);
-        console.log(`${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})`);
         return typeof name === 'string' ? `${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})` : name;
     }
 };
