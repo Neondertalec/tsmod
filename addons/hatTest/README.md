@@ -14,7 +14,11 @@ Console functions:
 
 * `setCloneHats("link")` - set the hat url  
 
-* `setCloneBodies("link")` - set the body url
+* `setCloneBodies("link")` - set the body url  
+
+* `setCloneHatsAnimated({data})` - set an animated hat  
+
+* `setCloneBodiesAnimated({data})` - set an animated body
 
 # Example to test your image:
 
@@ -29,6 +33,22 @@ which has a `https://cdn.discordapp.com/attachments/446437803262476295/107836074
 `setCloneHats("https://cdn.discordapp.com/attachments/446437803262476295/1078360744418087032/pixil-frame-0_68.png")`  
 
 Edited the Image? Repeat **step 4**.
+
+Your image is animated?
+---------------
+instead of using `setCloneHats`, use `setCloneHatsAnimated`  
+example:
+```js
+setCloneHatsAnimated({
+	"startRandom":false, // optional
+	"frames":[
+		{"path": "https://cdn.discordapp.com/emojis/843148319966756895.webp", "duration": 10},
+		{"path": "", "duration": 10},
+	]
+})
+```
+* path: image url
+* duration: duration of the frame, usually 1 frame is `33.3 ms`
 
 # Example to create a clone:
 

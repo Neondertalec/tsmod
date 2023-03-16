@@ -876,6 +876,7 @@ window.vers = {
                         color: ntag.color || "#ff0000",
                         text: ntag.text || "[?]",
                         rainbow: !!ntag.rainbow,
+                        rglow: !!ntag.rglow,
                         join: !!ntag.join,
                         prior: ntag.prior || 0,
                         lock: !!ntag.lock,
@@ -2075,6 +2076,7 @@ window.client = {
 
     imgs: {
         obj: {},
+        constructos: {},
         defaults:{},
         loaded: false,
         retreived: () => {
@@ -5832,10 +5834,6 @@ window.updateLeaderboard = () => {
     document.body.onclick = () => {
         window.client.count = 0; // window.removeFakes();
     };
-    const llb = document.querySelector(".leaderboard-title");
-    if (llb && llb?.innerText == "Leaderboard") {
-        (llb.innerText = window.lbText) || (llb.innerText = window.lbText = "Leaderboard " + (window.socket.url.startsWith("wss://eu") ? "EU " : "NA ") + (1 + +window.socket.url.split("?")[1].split("&")[0].split("=")[1]));
-    }
 
     for (const names of [...document.getElementsByClassName('leaderboard-name')]) {
         names.oncontextmenu = (event) => {
