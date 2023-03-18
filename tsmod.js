@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.110
+// @version     1.1.111
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.100",
+    v: "1.1.101",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.101`,
+                news: [
+                    `Some fixes.`,
+                ],
+            },
             {
                 version: `1.1.100`,
                 news: [

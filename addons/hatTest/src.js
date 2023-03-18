@@ -154,13 +154,6 @@ function loadAsset(prefix, url){
 	}
 }
 
-/* Path: "image url" | duration: frame count
- {
-	frames:[
-		{path: "", duration: 0}
-	]
- }
-*/
 window.setCloneHatsAnimated = (data)=>{
 	if(!client.main){
 		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
@@ -182,14 +175,6 @@ window.setCloneHatsAnimated = (data)=>{
 	remap();
 }
 
-
-/* Path: "image url" | duration: frame count
- {
-	frames:[
-		{path: "", duration: 0}
-	]
- }
-*/
 window.setCloneBodiesAnimated = (data)=>{
 	if(!client.main){
 		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
