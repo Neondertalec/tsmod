@@ -55,6 +55,13 @@ xm.send();
 eval(xm.response);
 ```
 
+Update 1.1.99: New futurer of TS-Mod
+=============
+What will happen?
+--------------------
+Most of the Upcomming changes will be: porting TS-Mod in to the game itself leaving only some simple features, that will be counted as useles or not demanded.  
+
+
 Update 1.1.52
 =============
 

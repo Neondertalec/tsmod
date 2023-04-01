@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.111
+// @version     1.1.112
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.101",
+    v: "1.1.102",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.102`,
+                news: [
+                    `Some fixes.`,
+                ],
+            },
             {
                 version: `1.1.101`,
                 news: [
@@ -2098,18 +2104,11 @@ window.client = {
                     window.profiler.accessories[e.replace("accessories/", "")] = window.client.imgs.obj[e].src;
                 });
 
-                window.client.imgs.changeTile();
                 window.client.imgs.loaded = true;
                 if(window.client.imgs.packTemp){
                     window.client.imgs.loadPack(window.client.imgs.packTemp);
                 }
             }, 0);
-        },
-
-        changeTile: () => {
-            window.client.imgs.obj["maps/tiles"].src = window.client.textCommandConsts.notiles ?
-                "https://raw.githubusercontent.com/Neondertalec/tsmod/main/tiles5e12c370.jpg" :
-                window.client.imgs.defaults["maps/tiles"];
         },
 
         packTemp: null,
@@ -4160,9 +4159,6 @@ window.client = {
                     });
 
                     const cmdStruct = [
-                        ["bool", "Disable tiles", "notiles", "ts-notiles", () => {
-                            window.client.imgs.changeTile();
-                        }],
                         ["bool", "User tags", "showTag", "ts-showTag", () => {
                         }],
                         ["bool", "User LB tags", "lbTags", "ts-lbTags", (r) => {
@@ -4317,91 +4313,6 @@ window.replaces = {
         t.strokeStyle = fis;
         t.fillStyle = strs;
         t.font = 'bold ' + e.font(35);
-    },
-    id4: function() {
-        return this.createElement(
-            "label",
-            {htmlFor: "showClasses"},
-            this.createElement(
-                "div",
-                {className: "settings-setting"},
-                "Show Heroes",
-                this.createElement(
-                    "input",
-                    {
-                        type: "checkbox",
-                        className: "settings-checkbox",
-                        id: "showClasses",
-                        checked: window.client.showClasses,
-                        onChange: () => {
-                            window.client.showClasses = !window.client.showClasses;
-                            localStorage.setItem("ts-showClasses", window.client.showClasses);
-                            if (window.client.showClasses) {
-                                document.getElementById("leaderboard").setAttribute("aria-label", "fat");
-                            } else {
-                                document.getElementById("leaderboard").setAttribute("aria-label", "");
-                            }
-                            setTimeout(window.createNewLeaderboard, 1);
-                        }
-                    }
-                )
-            )
-        );
-    },
-    id4_2: function() {
-        return this.createElement(
-            "label",
-            {htmlFor: "leaderboard200px"},
-            this.createElement(
-                "div",
-                {className: "settings-setting"},
-                "Old leaderboard size",
-                this.createElement(
-                    "input",
-                    {
-                        type: "checkbox",
-                        className: "settings-checkbox",
-                        id: "leaderboard200px",
-                        checked: window.client.leaderboard200px,
-                        onChange: () => {
-                            window.client.leaderboard200px = !window.client.leaderboard200px;
-                            localStorage.setItem("ts-leaderboard200px", window.client.leaderboard200px);
-                            if (window.client.leaderboard200px) {
-                                document.getElementById("leaderboard").setAttribute("aria-label2", "old");
-                            } else {
-                                document.getElementById("leaderboard").setAttribute("aria-label2", "");
-                            }
-                            setTimeout(window.createNewLeaderboard, 1);
-                        }
-                    }
-                )
-            )
-        );
-    },
-    id5: function() {
-        return this.createElement(
-            "label",
-            {htmlFor: "disableTiles"},
-            this.createElement(
-                "div",
-                {className: "settings-setting"},
-                "Disable Tiles",
-                this.createElement(
-                    "input",
-                    {
-                        type: "checkbox",
-                        className: "settings-checkbox",
-                        id: "disableTiles",
-                        checked: window.client.textCommandConsts.notiles,
-                        onChange: () => {
-                            window.client.textCommandConsts.notiles = !window.client.textCommandConsts.notiles;
-                            localStorage.setItem("ts-notiles", window.client.textCommandConsts.notiles);
-                            window.client.imgs.changeTile();
-                        }
-                    }
-                )
-            )
-        );
     }
 };
 
@@ -4523,8 +4434,6 @@ function tsmodInit() {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 250px;
-        height: 500px;
         background-color: #000E;
         border-radius: 5px;
         color: #fff;
@@ -5881,23 +5790,6 @@ document.addEventListener("mouseup", () => {
 });
 const settings = document.createElement('label');
 settings.innerHTML = "showClasses";
-
-window.updateName = (id, name) => {
-    if (!(window.client.showClasses && window.client.state)) {
-        return name;
-    }
-
-    for (const i in window.client.state.globalEntities) {
-        const element = window.client.state.globalEntities[i];
-        if (element.id !== id) {
-            continue;
-        }
-
-        const Hero = window.id2name(element.heroType);
-        const DeathTime = window.secondsFormat(Math.floor(element.deathTimer / 1000), false);
-        return typeof name === 'string' ? `${element.deathTimer != -1 ? (DeathTime + " • ") : ""}${name} (${Hero})` : name;
-    }
-};
 
 window.loadGame = () => {
     window.createNewLeaderboard();
