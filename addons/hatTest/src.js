@@ -37,6 +37,7 @@ window.load = ()=>{
 	window.baseobj.renderIcedEffect = client.main.renderIcedEffect;
 	window.baseobj.renderSnowballedEffect = client.main.renderSnowballedEffect;
 	window.baseobj.renderPoisonedEffect = client.main.renderPoisonedEffect;
+        window.baseobj.animateConfetti = client.main.animateConfetti;
 	window.baseobj.renderCrumbledInvulnerabilityEffect = client.main.renderCrumbledInvulnerabilityEffect;
 	window.baseobj.renderShadowedInvulnerabilityEffect = client.main.renderShadowedInvulnerabilityEffect;
 	window.baseobj.renderAccessory  = client.main.renderAccessory;
