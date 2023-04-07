@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name        TS-Mod-addons Hats
-// @version     1.0.4
+// @version     1.0.5
 // @description	Evades.io TS script addon.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556).
 // @match       https://*.evades.io/*
 // @match       https://*.evades.online/*
 // @match       https://*evades.io/*
 // @match       https://*evades.online/*
-// @match       https://*localhost/*
 // @downloadURL https://raw.githubusercontent.com/Neondertalec/tsmod/main/addons/hatTest/src.js
 // @updateURL   https://raw.githubusercontent.com/Neondertalec/tsmod/main/addons/hatTest/src.js
 // @run-at      document-start
@@ -37,7 +36,8 @@ window.load = ()=>{
 	window.baseobj.renderIcedEffect = client.main.renderIcedEffect;
 	window.baseobj.renderSnowballedEffect = client.main.renderSnowballedEffect;
 	window.baseobj.renderPoisonedEffect = client.main.renderPoisonedEffect;
-        window.baseobj.animateConfetti = client.main.animateConfetti;
+    window.baseobj.animateConfetti = client.main.animateConfetti;
+    window.baseobj.drawConfetti = client.main.drawConfetti;
 	window.baseobj.renderCrumbledInvulnerabilityEffect = client.main.renderCrumbledInvulnerabilityEffect;
 	window.baseobj.renderShadowedInvulnerabilityEffect = client.main.renderShadowedInvulnerabilityEffect;
 	window.baseobj.renderAccessory  = client.main.renderAccessory;
@@ -112,9 +112,9 @@ window.setCloneHats = (url)=>{
 		window.load();
 		console.log("%cPlease recreate your clones if nothing changed", "color: red;");
 	}
-	
+
 	client.main.hatImage.src = url;
-	
+
 	client.main.hatImage.onerror = ()=>{
 		client.main.hatImage.src = "https://cdn.discordapp.com/emojis/835207478567895130.webp";
 		console.log("%cInvalid link", "color: red;");
