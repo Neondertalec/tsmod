@@ -1,4 +1,4 @@
-Warning: Any addon here requires the [main script](https://github.com/Neondertalec/tsmod) to be activated!
+~~Warning: Any addon here requires the [main script](https://github.com/Neondertalec/tsmod) to be activated!~~
 --
 #
 # What is this

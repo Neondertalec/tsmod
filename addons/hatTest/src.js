@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod-addons Hats
-// @version     1.0.5
+// @version     1.0.6
 // @description	Evades.io TS script addon.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556).
 // @match       https://*.evades.io/*
@@ -12,6 +12,20 @@
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
+
+if(!window.tsmod){
+	window.tsmod = true;
+	const f = ()=>{}, r = (e)=>e;
+	window.loadGame = ()=>{
+		window.client.load = true;
+	};
+	window.profiler = {setState:f};
+	window.client = {events:{emit:f},areaData:{check:f},load:!1,imgs:{obj:{},constructos:{},retreived:f,loadPack:f},
+	grb:{on:!1},state:null,main:null,drBefore:f,vers:{swi:f}}
+	window.client.checkMsgSend = window.client.checkMsg = r;
+	window.replaces = {id2:f}
+	window.tags = {getChatTag:f}
+}
 
 window.baseobj = null;
 
