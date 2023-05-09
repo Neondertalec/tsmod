@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod-addons Hats
-// @version     1.0.6
+// @version     1.0.7
 // @description	Evades.io TS script addon.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556).
 // @match       https://*.evades.io/*
@@ -54,7 +54,12 @@ window.load = ()=>{
     window.baseobj.drawConfetti = client.main.drawConfetti;
 	window.baseobj.renderCrumbledInvulnerabilityEffect = client.main.renderCrumbledInvulnerabilityEffect;
 	window.baseobj.renderShadowedInvulnerabilityEffect = client.main.renderShadowedInvulnerabilityEffect;
-	window.baseobj.renderAccessory  = client.main.renderAccessory;
+	window.baseobj.renderAccessory = client.main.renderAccessory;
+    window.baseobj.unionState = ()=>{};
+    window.baseobj.beforeStateUpdate = ()=>{};
+    window.baseobj.receivingStateUpdate = ()=>{};
+    window.baseobj.stateFields = ()=>{};
+    window.baseobj.afterStateUpdate = ()=>{};
 	return true;
 }
 
@@ -90,7 +95,7 @@ window.fillHeroes = ()=>{
 		if(!window.load()) return;
 	}
 	let i = 0, lineN = 0;
-	for(i = 0; i < window.heroConfig.length-1; i++){
+	for(i = 0; i < window.heroConfig.length; i++){
 		lineN = Math.floor(i/7);
 		window.createClone(i, i, 15, 2000 + 43*(i%7), 80 + 52*lineN);
 	}
@@ -209,4 +214,10 @@ window.setCloneBodiesAnimated = (data)=>{
 	client.main.bodyImage.loadFrom(data);
 	client.main.bodyImage = client.main.bodyImage.clone();
 	remap();
+}
+
+window.camTo = (id = "f15")=>{//default to mirage (middle)
+    const entity = client.state.entities[id];
+    if(!entity)return
+    client.state.self = {id: id, entity}
 }

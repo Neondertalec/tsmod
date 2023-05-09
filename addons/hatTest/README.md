@@ -20,6 +20,8 @@ Console functions:
 
 * `setCloneBodiesAnimated({data})` - set an animated body
 
+* `camTo(id)` - change camera to a speciffic id, defaults to mirage if no argument passed.
+
 # Example to test your image:
 
 Lets say your image is this and you want to test it:  
