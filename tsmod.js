@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.113
+// @version     1.1.114
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.102",
+    v: "1.1.103",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,13 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.103`,
+                news: [
+                    `Some fixes.`,
+                    `Styling:<br>Optional setting in ${`R -> Commands`.fontcolor(this.cl.cmd)} that allows you to enable/disable styles. Currently only <a href="https://discordapp.com/users/231518508129845248" target="_blank">TheTroll</a>'s style is available.<br><br><i>${`Have a suggestion/issue with the style? Write to the style's owner!`.fontcolor(this.cl.cmd)}</i>`,
+                ],
+            },
             {
                 version: `1.1.102`,
                 news: [
@@ -359,7 +366,7 @@ window.vers = {
                         `[BREAK POINT]`,
                         `<i>fAtKiD became a ${`[TO]`.fontcolor(this.cl.to)} too but no tag for him.. yet..</i>`
                     ],
-                    `New command ${`#autodc`.fontcolor(this.cl.cmd)}, also added in to the R -> Commands.<br>` +
+                    `New command ${`#autodc`.fontcolor(this.cl.cmd)}, also added in to the ${`R -> Commands`.fontcolor(this.cl.cmd)}.<br>` +
                     `The command allows you to automatically disconnect on F5 / Ctrl + R instead of being supposed to type /dc in to the chat.`
                 ],
             },
@@ -1987,6 +1994,10 @@ const maps = {
     "Vicious Valley Hard": "VVH",
     "Wacky Wonderland": "WW",
     "Wacky Wonderland Hard": "WWH",
+    "Shifting Sands": "SS₂",
+    "Shifting Sands Hard": "SS₂H",
+    "Infinite Inferno": "II",
+    "Infinite Inferno Hard": "IIH",
 };
 
 window.client = {
@@ -2128,6 +2139,28 @@ window.client = {
                 }
             }else{
                 window.client.imgs.packTemp = data;
+            }
+        }
+    },
+    classes:{
+        all:{
+            TheTroll: `https://raw.githubusercontent.com/Rav115/Evades-Styles/main/evades-styles.css`
+        },
+        element: null,
+        load(){
+            if(!this.element){
+                this.element = document.createElement("style");
+                document.head.appendChild(this.element);
+            }
+            const url = this.all[window.client.textCommandConsts.styleChosen] || "";
+
+            if(!url) this.element.innerHTML = "";
+            else{
+                const xm = new XMLHttpRequest();
+                xm.open("GET", url, false);
+                xm.send();
+                this.element.innerHTML = xm.response;
+
             }
         }
     },
@@ -2507,6 +2540,7 @@ window.client = {
         lbTags: window.getLocal("ts-lbTags", "true") == "true",
         togglefps: window.getLocal("ts-togglefps", "true") == "true",
         autodc: window.getLocal("ts-autodc", "false") == "true",
+        styleChosen: window.getLocal("ts-styleChosen", "none"),
 
         // ssxp: window.getLocal("ts-ssxp", "false") == "true",
 
@@ -4174,6 +4208,12 @@ window.client = {
                         }],
                         ["bool", "Automatic disconnect", "autodc", "ts-autodc", () => {
                         }],
+                        ["option", "Styles:", [
+                            ["None", "none"],
+                            ["TheTroll", "TheTroll"],
+                        ], "styleChosen", "ts-styleChosen", () => {
+                            window.client.classes.load();
+                        }],
 
                         // ["bool", "SS leaderboard shows xp", "ssxp", "ts-ssxp", ()=>{window.client.toggleExtendLb()}],
                     ];
@@ -4223,7 +4263,11 @@ window.client = {
                                     }
                                     el.value = window.client.textCommandConsts[cmd[3]];
                                     el.addEventListener("input", () => {
-                                        localStorage.setItem(cmd[4], window.client.textCommandConsts[cmd[3]] = el.value);
+                                        localStorage.setItem(cmd[4], window.client.textCommandConsts[cmd[3]] = el.value)
+                                        
+                                        if (cmd[5]) {
+                                            cmd[5](el.value);
+                                        }
                                     });
                                 }));
 
@@ -4256,6 +4300,8 @@ window.client = {
         });
 
         window.client.elem.logsstor = window.client.userlog;
+
+        window.client.classes.load();
 
         // window.client.toggleExtendLb();
     },
