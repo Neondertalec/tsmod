@@ -49,14 +49,6 @@
       "lock":false
     },
     {
-      "names": ["Gianni"],
-      "color": "#009b77",
-      "text": "[evader]",
-      "rainbow": false,
-      "prior":1,
-      "lock":false
-    },
-    {
       "names": ["Invi"],
       "color": "#51dddd",
       "text": "[Invi]",
@@ -168,14 +160,6 @@
       "names": ["Koraiii"],
       "color": "#fff",
       "text": "[Kyng]",
-      "rainbow": true,
-      "prior":1,
-      "lock":false
-    },
-    {
-      "names": ["trevr ###########################"],
-      "color": "#0a009f",
-      "text": "[President]",
       "rainbow": true,
       "prior":1,
       "lock":false
