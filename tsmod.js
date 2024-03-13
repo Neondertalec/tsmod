@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.115
+// @version     1.1.116
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.104",
+    v: "1.1.105",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.105`,
+                news: [
+                    `Friends list now displays online status, thanks to <a href="https://github.com/hh83917", target="_blank"><i>this mysterious person<i/></a>.`,
+                ],
+            },
             {
                 version: `1.1.104`,
                 news: [
@@ -1043,6 +1049,9 @@ document.createElementP = function(name, args = null, fnc = null) {
     }
     if (args != null) {
         Object.assign(element, args);
+        if(args.style && typeof args.style != "string"){
+            Object.assign(element.style, args.style);
+        }
     }
     if (fnc) {
         fnc(element);
@@ -2011,8 +2020,8 @@ window.client = {
         getOnlinePlayersLocations: async function() {
             return fetch("https://evades.io/api/game/list").then((e) => e.json());
         },
-        playerOnlineData: async function(name) {
-            const players = await window.client.api.getOnlinePlayersLocations();
+        playerOnlineData: async function(name, originPlayers = null) {
+            const players = originPlayers || await window.client.api.getOnlinePlayersLocations();
             for (const i in players.local) {
                 const s1 = players.local[i][0].online;
 
@@ -3312,14 +3321,13 @@ window.client = {
                 e.stopPropagation();
             });
 
-            const playerIsOnline = await window.client.api.isPlayerOnline(name);
             const playerServer = await window.client.api.playerOnlineData(name);
             const header = document.createElementP(
                 "div",
                 {
                     style: "white-space: wrap; line-height: 1.2;",
                     className: "header",
-                    innerHTML: `<div>${name}</div><div style="color: ${playerIsOnline ? 'lime' : 'gray'}; font-size: 14px;">(${playerIsOnline ? playerServer : 'OFFLINE'})</div>`
+                    innerHTML: `<div>${name}</div><div style="color: ${playerServer ? 'lime' : 'gray'}; font-size: 14px;">(${playerServer ? playerServer : 'OFFLINE'})</div>`
                 }
             );
             popup.appendChild(header);
@@ -4157,44 +4165,38 @@ window.client = {
                         (fill = async () => {
                             lay.innerHTML = "";
 
-                            const playersLocation = await window.client.api.getOnlinePlayersLocations();
-                            function getPlayerOnlineData (name) {
-                                for (const i in playersLocation.local) {
-                                    const s1 = playersLocation.local[i][0].online;
+                            let retrd = 0;
+                            let retrf = [];
+                            retrf.push2 = retrf.push;
+                            retrf.push = function(e){
+                                if(retrd != 2)return this.push2(e);
+                                e();
+                            }
+                            const onretr = ()=>{
+                                retrd++;
+                                if(retrd != 2) return;
+                                retrf.forEach(e=>e());
+                                retrf = [];
+                            }
+                            let playersLocation;
+                            window.client.api.getOnlinePlayersLocations().then(e=>{
+                                playersLocation = e;
+                                onretr();
+                            });
+                            let onlinePlayers;
+                            window.client.api.getOnlinePlayers().then(e=>{
+                                onlinePlayers = e;
+                                onretr();
+                            });
 
-                                    if (s1.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-                                        return "NA" + (+i + 1);
-                                    }
-                                }
-                                const EU = Object.keys(playersLocation.remotes)[0];
-                                for (const i in playersLocation.remotes[EU]) {
-                                    const s1 = playersLocation.remotes[EU][i][0].online;
-
-                                    if (s1.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-                                        return "EU" + (+i + 1);
-                                    }
-                                }
-                                return null;
-                             }
-
-                            const onlinePlayers = await window.client.api.getOnlinePlayers();
                             for (let i = 0, l = displayNames.length; i < l; i++) {
                                 const displayName = displayNames[i];
-
-                                const playersOnlineStatus = onlinePlayers.reduce((playersStatus, player) => {
-                                    if (player.toLocaleLowerCase() === displayName.toLocaleLowerCase()) {
-                                        playersStatus[player] = getPlayerOnlineData(displayName);
-                                    }
-                                    return playersStatus;
-                                },{});
-
                                 let bgcolor = prior(window.client.userMetas[displayName].lbtag);
                                 bgcolor = bgcolor == 0 ? "transparent" : bgcolor == 1 ? "red" : "green";
+
                                 lay.appendChild(document.createElementP("div", {
                                     innerHTML:
-                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>${displayName}
-                                        <span style="font-size: 12px;color: ${playersOnlineStatus[displayName] ? 'lime' : 'gray'};">
-                                        (${playersOnlineStatus[displayName] || 'OFFLINE'})</span>`
+                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>${displayName}`
                                 }, (el) => {
                                     el.setAttribute("uname", displayName);
                                     el.addEventListener("click", () => {
@@ -4204,6 +4206,23 @@ window.client = {
                                             window.client.openAllUserMetas();
                                             window.CANR = true;
                                         });
+                                    });
+                                    retrf.push(async ()=>{
+                                        for(let pl of onlinePlayers){
+                                            if(pl.toLocaleLowerCase() === displayName.toLocaleLowerCase()){
+                                                const playersOnlineStatus = await window.client.api.playerOnlineData(displayName, playersLocation);
+                                                console.log(playersOnlineStatus);
+                                                el.appendChild(document.createElementP("span",{
+                                                    style:{fontSize:"12px",color:playersOnlineStatus ? 'lime' : 'gray'},
+                                                    innerHTML: `(${playersOnlineStatus || 'OFFLINE'})`
+                                                }));
+                                                return;
+                                            }
+                                        }
+                                        el.appendChild(document.createElementP("span",{
+                                            style:{fontSize:"12px",color:'gray'},
+                                            innerHTML: "(OFFLINE)"
+                                        }));
                                     });
                                 }));
                             }
