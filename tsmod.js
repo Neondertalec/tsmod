@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.115
+// @version     1.1.116
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.104",
+    v: "1.1.105",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.105`,
+                news: [
+                    `Friends list now displays online status, thanks to <a href="https://github.com/hh83917", target="_blank"><i>this mysterious person<i/></a>.`,
+                ],
+            },
             {
                 version: `1.1.104`,
                 news: [
@@ -1043,6 +1049,9 @@ document.createElementP = function(name, args = null, fnc = null) {
     }
     if (args != null) {
         Object.assign(element, args);
+        if(args.style && typeof args.style != "string"){
+            Object.assign(element.style, args.style);
+        }
     }
     if (fnc) {
         fnc(element);
@@ -2011,8 +2020,8 @@ window.client = {
         getOnlinePlayersLocations: async function() {
             return fetch("https://evades.io/api/game/list").then((e) => e.json());
         },
-        playerOnlineData: async function(name) {
-            const players = await window.client.api.getOnlinePlayersLocations();
+        playerOnlineData: async function(name, originPlayers = null) {
+            const players = originPlayers || await window.client.api.getOnlinePlayersLocations();
             for (const i in players.local) {
                 const s1 = players.local[i][0].online;
 
@@ -3283,7 +3292,7 @@ window.client = {
         }
     },
 
-    openUserMetas: function(name, closeonly = false, cb = null) {
+    openUserMetas: async function(name, closeonly = false, cb = null) {
         const theElem = document.querySelector(".usermetas");
         if (theElem) {
             window.CANR = true;
@@ -3312,7 +3321,15 @@ window.client = {
                 e.stopPropagation();
             });
 
-            const header = document.createElementP("div", {className: "header", innerText: name});
+            const playerServer = await window.client.api.playerOnlineData(name);
+            const header = document.createElementP(
+                "div",
+                {
+                    style: "white-space: wrap; line-height: 1.2;",
+                    className: "header",
+                    innerHTML: `<div>${name}</div><div style="color: ${playerServer ? 'lime' : 'gray'}; font-size: 14px;">(${playerServer ? playerServer : 'OFFLINE'})</div>`
+                }
+            );
             popup.appendChild(header);
 
             const buttonsLay = document.createElement("div");
@@ -4145,15 +4162,41 @@ window.client = {
                     }));
 
                     popup.appendChild(document.createElementP("div", {className: "container"}, (lay) => {
-                        (fill = () => {
+                        (fill = async () => {
                             lay.innerHTML = "";
+
+                            let retrd = 0;
+                            let retrf = [];
+                            retrf.push2 = retrf.push;
+                            retrf.push = function(e){
+                                if(retrd != 2)return this.push2(e);
+                                e();
+                            }
+                            const onretr = ()=>{
+                                retrd++;
+                                if(retrd != 2) return;
+                                retrf.forEach(e=>e());
+                                retrf = [];
+                            }
+                            let playersLocation;
+                            window.client.api.getOnlinePlayersLocations().then(e=>{
+                                playersLocation = e;
+                                onretr();
+                            });
+                            let onlinePlayers;
+                            window.client.api.getOnlinePlayers().then(e=>{
+                                onlinePlayers = e;
+                                onretr();
+                            });
+
                             for (let i = 0, l = displayNames.length; i < l; i++) {
                                 const displayName = displayNames[i];
                                 let bgcolor = prior(window.client.userMetas[displayName].lbtag);
                                 bgcolor = bgcolor == 0 ? "transparent" : bgcolor == 1 ? "red" : "green";
+
                                 lay.appendChild(document.createElementP("div", {
                                     innerHTML:
-                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>` + displayName
+                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>${displayName}`
                                 }, (el) => {
                                     el.setAttribute("uname", displayName);
                                     el.addEventListener("click", () => {
@@ -4163,6 +4206,23 @@ window.client = {
                                             window.client.openAllUserMetas();
                                             window.CANR = true;
                                         });
+                                    });
+                                    retrf.push(async ()=>{
+                                        for(let pl of onlinePlayers){
+                                            if(pl.toLocaleLowerCase() === displayName.toLocaleLowerCase()){
+                                                const playersOnlineStatus = await window.client.api.playerOnlineData(displayName, playersLocation);
+                                                console.log(playersOnlineStatus);
+                                                el.appendChild(document.createElementP("span",{
+                                                    style:{fontSize:"12px",color:playersOnlineStatus ? 'lime' : 'gray'},
+                                                    innerHTML: `(${playersOnlineStatus || 'OFFLINE'})`
+                                                }));
+                                                return;
+                                            }
+                                        }
+                                        el.appendChild(document.createElementP("span",{
+                                            style:{fontSize:"12px",color:'gray'},
+                                            innerHTML: "(OFFLINE)"
+                                        }));
                                     });
                                 }));
                             }
@@ -4270,7 +4330,7 @@ window.client = {
                                     el.value = window.client.textCommandConsts[cmd[3]];
                                     el.addEventListener("input", () => {
                                         localStorage.setItem(cmd[4], window.client.textCommandConsts[cmd[3]] = el.value)
-                                        
+
                                         if (cmd[5]) {
                                             cmd[5](el.value);
                                         }
@@ -4450,7 +4510,7 @@ function tsmodInit() {
     .profile-stats{
         height: unset!important;
     }
-    
+
     #version-warning{
         position: absolute;
         top: 0;
@@ -4679,7 +4739,7 @@ function tsmodInit() {
     .log-popup > .ele.qoj{
         background-color: #7b478e;
     }
-    
+
     .areaPopup > .log_part > .scoll_elem > .ele > div,
     .log-popup > .ele > div{
         float:left;
@@ -4824,7 +4884,7 @@ function tsmodInit() {
     .custombox.qoj[type="checkbox"]:before{
         background: #7b478e;
     }
-    
+
 
     /*toggle show users-------------------------------------------------------------*/
 
@@ -4988,7 +5048,7 @@ function tsmodInit() {
         margin-right: 1px;
         margin-left: 1px;
 }
-    
+
     .areaPopup > div > .theader,
     .areaPopup > div > .theader{
         width: 100%;
@@ -5019,7 +5079,7 @@ function tsmodInit() {
         overflow-x: auto;
         overflow-y: hidden;
         padding-top: 5px;
-    
+
     }
     .areaPopup > .format_part > .cmds_elem > .cmd,
     .areaPopup > .users_part > .scoll_elem > .scoll_user{
@@ -5114,7 +5174,7 @@ function tsmodInit() {
     .logger-users > #holder::-webkit-scrollbar-thumb{
         background: rgb(183 183 183)!important;
     }
-    
+
     .rainbowText{
         animation-name: rainbowTextkf;
         animation-duration: 20s;
@@ -5181,7 +5241,7 @@ function tsmodInit() {
         width: 100%;
         left: 0px;
     }
-    
+
     @keyframes rainbowTextkf {
         0%   {color: hsl(0, 100%, 50%);}
         25%   {color: hsl(90, 100%, 50%);}
@@ -5212,7 +5272,7 @@ function tsmodInit() {
         75%   {color: hsl(270, 100%, 13%);}
         100%  {color: hsl(360, 100%, 13%);}
     }
-    
+
     .rainbowText {
         color: red;
         animation-name: rainbowTextkf;
@@ -5327,7 +5387,7 @@ function tsmodInit() {
     }
 
     .usermetas > .badgeslay > .badge{
-        position: relative;	
+        position: relative;
         font-size: 13px;
         font-weight: bold;
         width: 80px;
@@ -5430,7 +5490,7 @@ function tsmodInit() {
         height: 20px;
         width: 25px;
     }
-    
+
     .customCommands > .lay > label{
         float: left;
     }
@@ -5592,7 +5652,7 @@ function tsmodInit() {
         color: #aaa;
         margin-bottom: 10px;
     }
-    
+
     .areasw > .hero-select-highest-area-achieved-content{
         position: absolute;
         left: 50%;
