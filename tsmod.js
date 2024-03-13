@@ -3283,7 +3283,7 @@ window.client = {
         }
     },
 
-    openUserMetas: function(name, closeonly = false, cb = null) {
+    openUserMetas: async function(name, closeonly = false, cb = null) {
         const theElem = document.querySelector(".usermetas");
         if (theElem) {
             window.CANR = true;
@@ -3312,7 +3312,16 @@ window.client = {
                 e.stopPropagation();
             });
 
-            const header = document.createElementP("div", {className: "header", innerText: name});
+            const playerIsOnline = await window.client.api.isPlayerOnline(name);
+            const playerServer = await window.client.api.playerOnlineData(name);
+            const header = document.createElementP(
+                "div",
+                {
+                    style: "white-space: wrap; line-height: 1.2;",
+                    className: "header",
+                    innerHTML: `<div>${name}</div><div style="color: ${playerIsOnline ? 'lime' : 'gray'}; font-size: 14px;">(${playerIsOnline ? playerServer : 'OFFLINE'})</div>`
+                }
+            );
             popup.appendChild(header);
 
             const buttonsLay = document.createElement("div");
@@ -4145,15 +4154,47 @@ window.client = {
                     }));
 
                     popup.appendChild(document.createElementP("div", {className: "container"}, (lay) => {
-                        (fill = () => {
+                        (fill = async () => {
                             lay.innerHTML = "";
+
+                            const playersLocation = await window.client.api.getOnlinePlayersLocations();
+                            function getPlayerOnlineData (name) {
+                                for (const i in playersLocation.local) {
+                                    const s1 = playersLocation.local[i][0].online;
+
+                                    if (s1.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+                                        return "NA" + (+i + 1);
+                                    }
+                                }
+                                const EU = Object.keys(playersLocation.remotes)[0];
+                                for (const i in playersLocation.remotes[EU]) {
+                                    const s1 = playersLocation.remotes[EU][i][0].online;
+
+                                    if (s1.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+                                        return "EU" + (+i + 1);
+                                    }
+                                }
+                                return null;
+                             }
+
+                            const onlinePlayers = await window.client.api.getOnlinePlayers();
                             for (let i = 0, l = displayNames.length; i < l; i++) {
                                 const displayName = displayNames[i];
+
+                                const playersOnlineStatus = onlinePlayers.reduce((playersStatus, player) => {
+                                    if (player.toLocaleLowerCase() === displayName.toLocaleLowerCase()) {
+                                        playersStatus[player] = getPlayerOnlineData(displayName);
+                                    }
+                                    return playersStatus;
+                                },{});
+
                                 let bgcolor = prior(window.client.userMetas[displayName].lbtag);
                                 bgcolor = bgcolor == 0 ? "transparent" : bgcolor == 1 ? "red" : "green";
                                 lay.appendChild(document.createElementP("div", {
                                     innerHTML:
-                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>` + displayName
+                                        `<div class="trangleshape" style="border-left-color:${bgcolor}"></div>${displayName}
+                                        <span style="font-size: 12px;color: ${playersOnlineStatus[displayName] ? 'lime' : 'gray'};">
+                                        (${playersOnlineStatus[displayName] || 'OFFLINE'})</span>`
                                 }, (el) => {
                                     el.setAttribute("uname", displayName);
                                     el.addEventListener("click", () => {
@@ -4270,7 +4311,7 @@ window.client = {
                                     el.value = window.client.textCommandConsts[cmd[3]];
                                     el.addEventListener("input", () => {
                                         localStorage.setItem(cmd[4], window.client.textCommandConsts[cmd[3]] = el.value)
-                                        
+
                                         if (cmd[5]) {
                                             cmd[5](el.value);
                                         }
@@ -4450,7 +4491,7 @@ function tsmodInit() {
     .profile-stats{
         height: unset!important;
     }
-    
+
     #version-warning{
         position: absolute;
         top: 0;
@@ -4679,7 +4720,7 @@ function tsmodInit() {
     .log-popup > .ele.qoj{
         background-color: #7b478e;
     }
-    
+
     .areaPopup > .log_part > .scoll_elem > .ele > div,
     .log-popup > .ele > div{
         float:left;
@@ -4824,7 +4865,7 @@ function tsmodInit() {
     .custombox.qoj[type="checkbox"]:before{
         background: #7b478e;
     }
-    
+
 
     /*toggle show users-------------------------------------------------------------*/
 
@@ -4988,7 +5029,7 @@ function tsmodInit() {
         margin-right: 1px;
         margin-left: 1px;
 }
-    
+
     .areaPopup > div > .theader,
     .areaPopup > div > .theader{
         width: 100%;
@@ -5019,7 +5060,7 @@ function tsmodInit() {
         overflow-x: auto;
         overflow-y: hidden;
         padding-top: 5px;
-    
+
     }
     .areaPopup > .format_part > .cmds_elem > .cmd,
     .areaPopup > .users_part > .scoll_elem > .scoll_user{
@@ -5114,7 +5155,7 @@ function tsmodInit() {
     .logger-users > #holder::-webkit-scrollbar-thumb{
         background: rgb(183 183 183)!important;
     }
-    
+
     .rainbowText{
         animation-name: rainbowTextkf;
         animation-duration: 20s;
@@ -5181,7 +5222,7 @@ function tsmodInit() {
         width: 100%;
         left: 0px;
     }
-    
+
     @keyframes rainbowTextkf {
         0%   {color: hsl(0, 100%, 50%);}
         25%   {color: hsl(90, 100%, 50%);}
@@ -5212,7 +5253,7 @@ function tsmodInit() {
         75%   {color: hsl(270, 100%, 13%);}
         100%  {color: hsl(360, 100%, 13%);}
     }
-    
+
     .rainbowText {
         color: red;
         animation-name: rainbowTextkf;
@@ -5327,7 +5368,7 @@ function tsmodInit() {
     }
 
     .usermetas > .badgeslay > .badge{
-        position: relative;	
+        position: relative;
         font-size: 13px;
         font-weight: bold;
         width: 80px;
@@ -5430,7 +5471,7 @@ function tsmodInit() {
         height: 20px;
         width: 25px;
     }
-    
+
     .customCommands > .lay > label{
         float: left;
     }
@@ -5592,7 +5633,7 @@ function tsmodInit() {
         color: #aaa;
         margin-bottom: 10px;
     }
-    
+
     .areasw > .hero-select-highest-area-achieved-content{
         position: absolute;
         left: 50%;
