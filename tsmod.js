@@ -123,7 +123,7 @@ window.vers = {
                 version: `1.1.96`,
                 news: [
                     `Some fixes.`,
-                    [`${fontcolor(`[Jr. Mod]`, this.cl.jrm)} Kaluub is now managing all the tags`,
+                    [`${fontcolor(`[Jr. Mod]`, this.cl.jrm)} Kaluub is now managing community role tags`,
                         `TS tags are back.`,
                         `All tags should now be up to date.`,
                     ]
