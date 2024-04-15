@@ -849,30 +849,17 @@ window.vers = {
             xm.send();
             const data = JSON.parse(xm.response);
 
-            const olCache = {};
-            const loadOl = (ol) => {
-                if (olCache[ol]) {
-                    return olCache[ol];
-                }
-                xm.open("GET", data[ol], false);
-                xm.send();
-                olCache[ol] = xm.response;
-                return xm.response;
-            };
+            if (!data["remote"]) {
+                return data;
+            }
 
+            xm.open("GET", data["remote"], false);
+            xm.send();
+            const remoteData = JSON.parse(xm.response);
 
-            if (data["ol-tw"]) {
-                const olData = loadOl("ol-tw");
-                data.tw = JSON.parse(olData).tw;
-            }
-            if (data["ol-ctags"]) {
-                const olData = loadOl("ol-ctags");
-                data.ctags = {...(data.ctags || []), ...JSON.parse(olData).tags};
-            }
-            if (data["ol-tags"]) {
-                const olData = loadOl("ol-tags");
-                data.tags = [...(data.tags || []), ...JSON.parse(olData).tags];
-            }
+            data.tw = remoteData.tw || [];
+            data.ctags = {...(data.ctags || {}), ...(remoteData.tags || {})};
+            data.tags = [...(data.tags || []), ...(remoteData.tagdef || [])];
 
             return data;
         } catch (e) {
