@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.117
+// @version     1.1.118
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.106",
+    v: "1.1.107",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.107`,
+                news: [
+                    `Minor changes.`,
+                ],
+            },
             {
                 version: `1.1.105`,
                 news: [
@@ -849,30 +855,17 @@ window.vers = {
             xm.send();
             const data = JSON.parse(xm.response);
 
-            const olCache = {};
-            const loadOl = (ol) => {
-                if (olCache[ol]) {
-                    return olCache[ol];
-                }
-                xm.open("GET", data[ol], false);
-                xm.send();
-                olCache[ol] = xm.response;
-                return xm.response;
-            };
+            if (!data["remote"]) {
+                return data;
+            }
 
+            xm.open("GET", data["remote"], false);
+            xm.send();
+            const remoteData = JSON.parse(xm.response);
 
-            if (data["ol-tw"]) {
-                const olData = loadOl("ol-tw");
-                data.tw = JSON.parse(olData).tw;
-            }
-            if (data["ol-ctags"]) {
-                const olData = loadOl("ol-ctags");
-                data.ctags = {...(data.ctags || []), ...JSON.parse(olData).tags};
-            }
-            if (data["ol-tags"]) {
-                const olData = loadOl("ol-tags");
-                data.tags = [...(data.tags || []), ...JSON.parse(olData).tags];
-            }
+            data.tw = remoteData.tw || [];
+            data.ctags = {...(data.ctags || {}), ...(remoteData.tags || {})};
+            data.tags = [...(data.tags || []), ...(remoteData.tagdef || [])];
 
             return data;
         } catch (e) {
