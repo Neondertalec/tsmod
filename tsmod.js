@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.118
+// @version     1.1.119
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -1966,9 +1966,11 @@ const maps = {
     "Central Core": "CC",
     "Central Core Hard": "CCH",
     "Cyber Castle": "CC₂",
+    "Cyber Castle Hard": "CC₂H",
     "Catastrophic Core": "CC₃",
     "Dangerous District": "DD",
     "Dangerous District Hard": "DDH",
+    "Dusty Depths": "DD₂",
     "Elite Expanse": "EE",
     "Elite Expanse Hard": "EEH",
     "Endless Echo": "EE₂",
@@ -2015,19 +2017,14 @@ window.client = {
         },
         playerOnlineData: async function(name, originPlayers = null) {
             const players = originPlayers || await window.client.api.getOnlinePlayersLocations();
-            for (const i in players.local) {
-                const s1 = players.local[i][0].online;
-
-                if (s1.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-                    return "NA" + (+i + 1);
+            for (const [serverNum, serverInfo] of Object.entries(players.servers.NA)) {
+                if (serverInfo.online.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+                    return `NA ${Number(serverNum) + 1}`;
                 }
             }
-            const EU = Object.keys(players.remotes)[0];
-            for (const i in players.remotes[EU]) {
-                const s1 = players.remotes[EU][i][0].online;
-
-                if (s1.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-                    return "EU" + (+i + 1);
+            for (const [serverNum, serverInfo] of Object.entries(players.servers.EU)) {
+                if (serverInfo.online.some((e) => e.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+                    return `EU ${Number(serverNum) + 1}`;
                 }
             }
             return null;
@@ -4204,17 +4201,16 @@ window.client = {
                                         for(let pl of onlinePlayers){
                                             if(pl.toLocaleLowerCase() === displayName.toLocaleLowerCase()){
                                                 const playersOnlineStatus = await window.client.api.playerOnlineData(displayName, playersLocation);
-                                                console.log(playersOnlineStatus);
                                                 el.appendChild(document.createElementP("span",{
                                                     style:{fontSize:"12px",color:playersOnlineStatus ? 'lime' : 'gray'},
-                                                    innerHTML: `(${playersOnlineStatus || 'OFFLINE'})`
+                                                    innerHTML: ` (${playersOnlineStatus || 'OFFLINE'})`
                                                 }));
                                                 return;
                                             }
                                         }
                                         el.appendChild(document.createElementP("span",{
                                             style:{fontSize:"12px",color:'gray'},
-                                            innerHTML: "(OFFLINE)"
+                                            innerHTML: " (OFFLINE)"
                                         }));
                                     });
                                 }));
@@ -4439,7 +4435,6 @@ window.id2name = (id) => {
 };
 
 window.getShortName = (map) => {
-
     return maps[map] ? maps[map] : map;
 };
 
