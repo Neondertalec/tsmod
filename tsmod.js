@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.119
+// @version     1.1.120
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -3583,12 +3583,15 @@ window.client = {
 
         if (window.client.userlog[usr.name]) {
             const uo = window.client.userlog[usr.name];
-            const len = uo.travel.length;
+            const travelLen = uo.travel.length;
+            const previousTravelLog = uo.travel[travelLen - 1];
+            const deathLen = uo.deaths.length;
+            const previousDeathLog = uo.deaths[deathLen - 1]
+
             if (uo.q) {
                 return;
             }
-            if (uo.travel[len - 1][3] != usr.areaName
-                || uo.travel[len - 1][2] != usr.regionName) {
+            if (previousTravelLog[3] !== usr.areaName || previousTravelLog[2] !== usr.regionName) {
                 uo.travel.push([
                     time, ctime, usr.regionName, usr.areaName, usr.victoryArea ? 5 : 0, uo.logid++
                 ]);
@@ -3596,7 +3599,7 @@ window.client = {
                 window.client.customLog(usr.name, usr.victoryArea ? 5 : 0, "travel", true);
             }
 
-            if (usr.deathTimer != -1) {
+            if (usr.deathTimer !== -1) {
                 if (!uo.dead) {
                     uo.dead = true;
                     uo.deaths.push([time, ctime, usr.regionName, usr.regionName != "Stellar Square" ? usr.areaName : (usr.level + ""), 1, uo.logid++]);
@@ -3611,6 +3614,19 @@ window.client = {
 
                 window.client.customLog(usr.name, 2, "deaths", true);
             }
+
+            
+            if (usr.regionName === "Central Core" && window.isFirstArea(usr.regionName, usr.areaName)) {
+                if (!window.isFirstArea(previousTravelLog[2], previousTravelLog[3])) {
+                    window.client.resetAreaLog(usr.name)
+                }
+                else if (previousDeathLog) {
+                    if (previousDeathLog[4] === 1 && previousDeathLog[2] !== "Central Core") {
+                        window.client.resetAreaLog(usr.name)
+                    }
+                }   
+            }
+
             return false;
         } else {
             window.client.userlog[usr.name] = {
@@ -3813,7 +3829,6 @@ window.client = {
 
         if (window.client.elem.speed != null) {
             try {
-
                 if (!window.client.opos[1]) {
                     window.client.opos[1] = {...window.client.opos[0]};
                 }
@@ -3823,7 +3838,7 @@ window.client = {
                 const diff1 = Math.abs(dx);
                 const diff2 = Math.abs(dy);
 
-                const newh = `Speed X: ${diff1.toFixed(2)}\nSpeed Y: ${diff2.toFixed(2)}`;
+                const newh = `Speed X: ${diff1.toFixed(2) * 2}\nSpeed Y: ${diff2.toFixed(2) * 2}`;
                 if (newh != window.client.elem.speed.innerText) {
                     window.client.elem.speed.innerText = newh;
                 }
@@ -3832,8 +3847,6 @@ window.client = {
                 window.client.elem.speed = null;
             }
         }
-
-        // }
     },
 
     getShownLogs: function() {
@@ -4454,6 +4467,24 @@ window.normalizeArea = (area) => {
         .replace("Network Connector", "N.C.")
         .replace("Data Center", "D.C.");
 };
+
+window.isFirstArea = (region, area) => {
+    const firstAreaNames = {
+        "PP": "Tunnel 1",
+        "PPH": "Tunnel 1",
+        "BB": "Level 28",
+        "BBH": "Level 28",
+        "II": "Prayer's Passage",
+        "IIH": "Prayer's Passage",
+        "RRH": "Area 1",
+        "SS₂": "Pyramid Passage",
+        "SS₂H": "Pyramid Passage",
+        "CC₂": "Security Gate A",
+        "CC₂H": "Security Gate A",
+        "DD₂": "Entrance 1"
+    }
+    return (area === firstAreaNames[window.getShortName(region)] || area === "1")
+}
 
 window.getVpColor = (vp) => {
     if (typeof vp === "number") {
