@@ -3166,7 +3166,7 @@ window.client = {
             }
             return `${pref} ${theName} ${resTime}${end}`;
         }
-        window.client.pingNfps.sendTime = window.client.pingNfps.sendTime == 0 ? Date.now() : window.client.pingNfps.sendTime;
+        if(value[0] != '/') window.client.pingNfps.sendTime = window.client.pingNfps.sendTime == 0 ? Date.now() : window.client.pingNfps.sendTime;
         return value;
     },
 
