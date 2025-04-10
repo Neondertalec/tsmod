@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name        TS-Mod
 // @version     1.1.120
+// @version     1.1.121
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +39,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.107",
+    v: "1.1.108",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +60,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.108`,
+                news: [
+                    `Player tracker now uses in-game timer (counted from your survivalTimer) again.`,
+                ],
+            },
             {
                 version: `1.1.107`,
                 news: [
@@ -1954,7 +1961,7 @@ window.getTime = () => {
         document.head.appendChild(styles);
     }
 
-    return Math.floor((Date.now() - window.timeZero) / 1000);// client.state.self.entity.survivalTime;
+    return /*Math.floor((Date.now() - window.timeZero) / 1000);*/ client.state.self.entity.survivalTime;
 };
 
 
