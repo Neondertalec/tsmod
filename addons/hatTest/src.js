@@ -396,7 +396,7 @@ document.addEventListener("keydown", (e) => {
 let htstyle = document.createElement('style');
 htstyle.innerHTML = `
 	.ht-hiddlen{
-		display: none;
+		display: none!important;
 	}
 
 	.editMenu-hattest{
