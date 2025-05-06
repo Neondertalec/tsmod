@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod-addons Hats
-// @version     1.0.7
+// @version     1.1.1
 // @description	Evades.io TS script addon.
 // @author      Script by: MeOw:3 (🎀Depression🎀#5556).
 // @match       https://*.evades.io/*
@@ -26,6 +26,23 @@ if(!window.tsmod){
 	window.replaces = {id2:f}
 	window.tags = {getChatTag:f}
 }
+setTimeout(() => {
+	document.createElementP = function(name, args = null, fnc = null, parent = null) {
+		const element = document.createElement(name);
+		if (["input", "textarea"].includes(name)) {
+			element.setAttribute("c-lock", "");
+		}
+		if (args != null) {
+			Object.assign(element, args);
+			if(args.style && typeof args.style != "string"){
+				Object.assign(element.style, args.style);
+			}
+		}
+		if (fnc)fnc(element);
+		if(parent) parent.appendChild(element);
+		return element;
+	};
+}, 3000);
 
 window.baseobj = null;
 
@@ -39,22 +56,16 @@ window.load = ()=>{
 		return false;
 	}
 
-	window.baseobj = {};
+	window.baseobj = new (client.main.constructor)();
 	for(let i in client.main){
 		window.baseobj[i] = client.main[i];
 	}
-	window.baseobj.getEffectConfigs = client.main.getEffectConfigs;
-	window.baseobj.render = client.main.render;
-	window.baseobj.isDowned = client.main.isDowned;
-	window.baseobj.getColor = client.main.getColor;
-	window.baseobj.renderIcedEffect = client.main.renderIcedEffect;
-	window.baseobj.renderSnowballedEffect = client.main.renderSnowballedEffect;
-	window.baseobj.renderPoisonedEffect = client.main.renderPoisonedEffect;
-    window.baseobj.animateConfetti = client.main.animateConfetti;
-    window.baseobj.drawConfetti = client.main.drawConfetti;
-	window.baseobj.renderCrumbledInvulnerabilityEffect = client.main.renderCrumbledInvulnerabilityEffect;
-	window.baseobj.renderShadowedInvulnerabilityEffect = client.main.renderShadowedInvulnerabilityEffect;
-	window.baseobj.renderAccessory = client.main.renderAccessory;
+    for(let key of Object.getOwnPropertyNames(client.main.constructor.prototype.__proto__.constructor.prototype.__proto__)){
+       window.baseobj[key] = client.main[key];
+    }
+    for(let key of Object.getOwnPropertyNames(client.main.constructor.prototype.__proto__)){
+        window.baseobj[key] = client.main[key];
+    }
     window.baseobj.unionState = ()=>{};
     window.baseobj.beforeStateUpdate = ()=>{};
     window.baseobj.receivingStateUpdate = ()=>{};
@@ -112,27 +123,51 @@ window.fillHeroes = ()=>{
 	window.createClone(++i, 24, 19, 2000, 80 + 64*lineN);//mortuus max
 }
 
-function setImg(obj, key, classE){
-	if(!obj[key] || obj[key].constructor.name != (new classE()).constructor.name){
-		obj[key] = new classE();
+function setImg(obj, key, classE, ...constructData){
+	if(/*!obj[key] || obj[key].constructor.name != (new classE(constructData)).constructor.name*/true){
+		obj[key] = new classE(...constructData);
 		return true;
 	}
 	return false;
 }
 
-window.setCloneHats = (url)=>{
+
+window.camTo = (id = "f15")=>{//default to mirage (middle)
+    const entity = client.state.entities[id];
+    if(!entity)return
+    client.state.self = {id: id, entity}
+}
+
+async function fileimg(file){
+	return new Promise(async (res, rej)=>{
+		let fv = URL.createObjectURL(file);
+
+		const img = new Image();
+		img.src = fv;
+		img.onload = ()=>{
+			res(img);
+		};
+	})
+}
+
+/**
+ * 
+ * @param {{blank: bool?, texture: Image, frame:{x:number, y:number, w:number, h:number}}} url 
+ * @returns 
+ */
+function setCloneDecor (fillArgs, forTarget = "hatImage"){
 	if(!client.main){
 		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
 		return;
 	}
 
-	if(setImg(client.main, "hatImage", client.imgs.constructos.SimpleImage)){
-		client.main.hatName = "custom";
+	if(setImg(client.main, forTarget, client.imgs.constructos.SimpleImage, fillArgs)){
+		client.main[forTarget.split(/[A-Z]/)[0]+'Name'] = "custom";
 		window.load();
 		console.log("%cPlease recreate your clones if nothing changed", "color: red;");
 	}
 
-	client.main.hatImage.src = url;
+	// client.main.hatImage.src = url;
 
 	client.main.hatImage.onerror = ()=>{
 		client.main.hatImage.src = "https://cdn.discordapp.com/emojis/835207478567895130.webp";
@@ -141,83 +176,268 @@ window.setCloneHats = (url)=>{
 	remap();
 }
 
-window.setCloneBodies = (url)=>{
+function loadAssetNew(prefix, url, img){
+	client.imgs.obj[`${prefix}/${url}`] = new client.imgs.constructos.SimpleImage({
+		texture: img,
+		frame:{
+			x:0,
+			y:0,
+			w:img.width || 1,
+			h:img.height || 1,
+		}}
+	);
+}
+
+/**
+ * 
+ * @param {{frames: {duration: number, path: string, image: Image}[]}} fillArgs 
+ * @returns 
+ */
+function setCloneDecorMulti (fillArgs, forTarget = "hatImage"){
 	if(!client.main){
 		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
 		return;
 	}
 
-	if(setImg(client.main, "bodyImage", client.imgs.constructos.SimpleImage)){
-		client.main.bodyName = "custom";
+	for(let i in fillArgs.frames){
+		loadAssetNew("tsmod", fillArgs.frames[i].path, fillArgs.frames[i].image);
+	}
+
+	if(setImg(client.main, forTarget, client.imgs.constructos.AnimatedImage, "tsmod", fillArgs)){
+		client.main[forTarget.split(/[A-Z]/)[0]+'Name'] = "custom";
 		window.load();
 		console.log("%cPlease recreate your clones if nothing changed", "color: red;");
 	}
-
-	client.main.bodyImage.src = url;
-
-	client.main.bodyImage.onerror = ()=>{
-		client.main.bodyImage.src = "https://cdn.discordapp.com/emojis/835207478567895130.webp";
-		console.log("%cInvalid link", "color: red;");
-	}
+	/*client.main.hatImage.initData = {prefixPath: "tsmod", data: fillArgs};
+	client.main.hatImage.loadFrom(fillArgs);
+	client.main.hatImage = client.main.hatImage.clone();*/
 	remap();
 }
 
-function loadAsset(prefix, url){
-	if(client.imgs.obj){
-		const newImage = client.imgs.obj[`${prefix}/${url}`] = new client.imgs.constructos.SimpleImage();
-		newImage.src = url;
+window.createEditMenu = function createEditMenu(){
+	const cgui = document.createElementP;
+	const durations = {
+		hats: [],
+		body: []
+	};
+	return cgui('div', {className: 'editMenu-hattest ht-hiddlen'}, (container)=>{
+		cgui('h1', {className: 'title-hattest', innerText: 'Image tester'}, null, container);
+		cgui('h3', {className: 'title-hattest', innerText: 'Commands'}, null, container);
+		cgui('button', {className: 'btn-hattest', innerText: 'init'}, (btn)=>{
+			btn.addEventListener('click', async ()=>{
+				window.load();
+			});
+		}, container);
+		cgui('button', {className: 'btn-hattest', innerText: 'fill heroes'}, (btn)=>{
+			btn.addEventListener('click', async ()=>{
+				window.fillHeroes();
+			});
+		}, container);
 
-		newImage.onerror = ()=>{
-			newImage.src = "https://cdn.discordapp.com/emojis/835207478567895130.webp";
-			console.log("%cInvalid link: " + url, "color: red;");
-		}
-	}
+		cgui('h3', {className: 'title-hattest', innerText: 'Single Hat'}, null, container);
+
+		const hatImgSingleInput = cgui('input', {className: 'input-hattest', type:'file'}, null, container);
+		cgui('button', {className: 'btn-hattest', innerText: 'Test hat img'}, (btn)=>{
+			btn.addEventListener('click', async ()=>{
+				console.log(hatImgSingleInput);
+				const tex = hatImgSingleInput.files[0] ? await fileimg(hatImgSingleInput.files[0]) : new Image();
+				console.log(tex);
+				setCloneDecor({
+					texture: tex,
+					frame:{
+						x:0,
+						y:0,
+						w:tex.width || 1,
+						h:tex.height || 1,
+					}
+				}, 'hatImage');
+
+			});
+		}, container);
+
+		
+		cgui('h3', {className: 'title-hattest', innerText: 'Single Body'}, null, container);
+
+		const bodyImgSingleInput = cgui('input', {className: 'input-hattest', type:'file'}, null, container);
+		cgui('button', {className: 'btn-hattest', innerText: 'Test body img'}, (btn)=>{
+			btn.addEventListener('click', async ()=>{
+				console.log(bodyImgSingleInput, 'bimg');
+				console.log(bodyImgSingleInput.files[0]);
+				const tex = bodyImgSingleInput.files[0] ? await fileimg(bodyImgSingleInput.files[0]) : new Image();
+				console.log(tex);
+				setCloneDecor({
+					texture: tex,
+					frame:{
+						x:0,
+						y:0,
+						w:tex.width || 1,
+						h:tex.height || 1,
+					}
+				}, 'bodyImage');
+
+			});
+		}, container);
+
+		cgui('h3', {className: 'title-hattest', innerText: 'Animated Hat'}, null, container);
+
+		const hatImgAnimInput = cgui('input', {className: 'input-hattest', type:'file', multiple:true}, (input)=>{
+			input.addEventListener('change', ()=>{
+				for(let i = durations.hats.length; i < input.files.length; i++){
+					durations.hats.push(500);
+				}
+				timeContainerHat.innerHTML = '';
+				for(let i = 0; i < input.files.length; i++){
+					let ii = i;
+					cgui('input',{type:'number', className: 'input-hattest', 'value': durations.hats[i]},input=>{
+						input.addEventListener('input', ()=>{
+							durations.hats[ii] = +input.value || 0;
+						});
+					},timeContainerHat);
+				}
+				
+			});
+		}, container);
+		
+		const timeContainerHat = cgui('div', {className: 'input-container'}, null, container);
+
+		cgui('button', {className: 'btn-hattest', innerText: 'Test hat animation'}, (btn)=>{
+			btn.addEventListener('click', async ()=>{
+				if(hatImgAnimInput.files.length == 0) return;
+				console.log(hatImgAnimInput);
+				const texes = [];
+
+				for(let i = 0; i < hatImgAnimInput.files.length; i++){
+					texes.push(fileimg(hatImgAnimInput.files[i]));
+				}
+
+				const loadedTexes = await Promise.all(texes); 
+
+				console.log(texes);
+				
+				const parsedData = [];
+
+				for(let i in loadedTexes){
+					parsedData.push({duration: durations.hats[i], path: 'hatImage'+i, image: loadedTexes[i]});
+				}
+
+
+				setCloneDecorMulti({
+					frames:parsedData
+				}, 'hatImage');
+
+			});
+		}, container);
+
+		cgui('h3', {className: 'title-hattest', innerText: 'Animated Body'}, null, container);
+
+		const bodyImgAnimInput = cgui('input', {className: 'input-hattest', type:'file', multiple:true}, (input)=>{
+			input.addEventListener('change', ()=>{
+				for(let i = durations.body.length; i < input.files.length; i++){
+					durations.body.push(500);
+				}
+				timeContainerBody.innerHTML = '';
+				for(let i = 0; i < input.files.length; i++){
+					let ii = i;
+					cgui('input',{type:'number', className: 'input-hattest', 'value': durations.body[i]},input=>{
+						input.addEventListener('input', ()=>{
+							durations.body[ii] = +input.value || 0;
+						});
+					},timeContainerBody);
+				}
+				
+			});
+		}, container);
+		
+		const timeContainerBody = cgui('div', {className: 'input-container'}, null, container);
+
+		cgui('button', {className: 'btn-hattest', innerText: 'Test body animation'}, (btn)=>{
+			btn.addEventListener('click', async ()=>{
+				if(bodyImgAnimInput.files.length == 0) return;
+				const texes = [];
+
+				for(let i = 0; i < bodyImgAnimInput.files.length; i++){
+					texes.push(fileimg(bodyImgAnimInput.files[i]));
+				}
+
+				const loadedTexes = await Promise.all(texes); 
+
+				console.log(texes);
+				
+				const parsedData = [];
+
+				for(let i in loadedTexes){
+					parsedData.push({duration: durations.body[i], path: 'bodyImage'+i, image: loadedTexes[i]});
+				}
+
+
+				setCloneDecorMulti({
+					frames:parsedData
+				}, 'bodyImage');
+
+			});
+		}, container);
+	}, document.body);
 }
 
-window.setCloneHatsAnimated = (data)=>{
-	if(!client.main){
-		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
-		return;
-	}
-
-	for(let i in data.frames){
-		loadAsset("tsmod", data.frames[i].path)
-	}
-
-	if(setImg(client.main, "hatImage", client.imgs.constructos.AnimatedImage)){
-		client.main.hatName = "custom";
-		window.load();
-		console.log("%cPlease recreate your clones if nothing changed", "color: red;");
-	}
-	client.main.hatImage.initData = {prefixPath: "tsmod", data};
-	client.main.hatImage.loadFrom(data);
-	client.main.hatImage = client.main.hatImage.clone();
-	remap();
+function loadEditMenu(){
+	let el = document.querySelector('.editMenu-hattest');
+	// el&&el.remove();
+	if(!el) el = window.createEditMenu();
+	el.classList.toggle('ht-hiddlen');
+	console.log(el);
 }
 
-window.setCloneBodiesAnimated = (data)=>{
-	if(!client.main){
-		console.log("%cYou need to enter a server to do this", "color: red; font-size: 20px");
-		return;
+document.addEventListener("keydown", (e) => {
+	if (e.code == "KeyT") {
+		loadEditMenu();
+	}
+});
+
+let htstyle = document.createElement('style');
+htstyle.innerHTML = `
+	.ht-hiddlen{
+		display: none;
 	}
 
-	for(let i in data.frames){
-		loadAsset("tsmod", data.frames[i].path)
+	.editMenu-hattest{
+		background: #222;
+		border: solid 2px #111;
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		bottom: 5px;
+		min-width: 300px;
+		max-width: 40%;
+		z-index: 1001;
+
+		display: flex;
+		flex-direction: column;
+    	align-items: stretch;
+		gap: 5px;
+
+		color: wheat;
 	}
 
-	if(setImg(client.main, "bodyImage", client.imgs.constructos.AnimatedImage)){
-		client.main.bodyName = "custom";
-		window.load();
-		console.log("%cPlease recreate your clones if nothing changed", "color: red;");
+	.title-hattest{
+		text-align: center;
 	}
-	client.main.bodyImage.initData = {prefixPath: "tsmod", data};
-	client.main.bodyImage.loadFrom(data);
-	client.main.bodyImage = client.main.bodyImage.clone();
-	remap();
-}
 
-window.camTo = (id = "f15")=>{//default to mirage (middle)
-    const entity = client.state.entities[id];
-    if(!entity)return
-    client.state.self = {id: id, entity}
-}
+	.input-container{
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.input-hattest{
+	    background: #4f4f4f;
+		border: solid 1px #0a0a0a;
+		color: white;
+		padding: 3px 4px;
+	}
+	
+	.btn-hattest{
+		background: #c7c7c7;
+    	border: solid 2px #898989;
+	}
+`;
+document.head.appendChild(htstyle);

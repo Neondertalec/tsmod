@@ -1,7 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.120
-// @version     1.1.121
+// @version     1.1.122
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -1042,7 +1041,7 @@ window.vers = {
         return `<aa style="${color}">${text}</aa>`;
     }*/
 };
-document.createElementP = function(name, args = null, fnc = null) {
+document.createElementP = function(name, args = null, fnc = null, parent = null) {
     const element = document.createElement(name);
     if (["input", "textarea"].includes(name)) {
         element.setAttribute("c-lock", "");
@@ -1056,6 +1055,7 @@ document.createElementP = function(name, args = null, fnc = null) {
     if (fnc) {
         fnc(element);
     }
+    if(parent) parent.appendChild(element);
     return element;
 };
 
