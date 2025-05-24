@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.122
+// @version     1.1.123
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.108",
+    v: "1.1.109",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,12 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.109`,
+                news: [
+                    `Changelog positioning fix.`,
+                ],
+            },
             {
                 version: `1.1.108`,
                 news: [
@@ -5618,13 +5624,14 @@ function tsmodInit() {
     }
 
     /*CHANGELOGS*/
+    .information-container{
+        flex-wrap: wrap;
+    }
     #changelogs {
         float: left;
+        margin-top: 0;
         width: 300px;
         height: 275px;
-        position: relative;
-        left: 50%;
-        transform: translate(-500px);
         border: 1px solid #585858;
         border-radius: 5px;
         color: #fff;
