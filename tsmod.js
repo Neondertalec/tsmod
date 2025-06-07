@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TS-Mod
-// @version     1.1.123
+// @version     1.1.124
 // @description	Evades.io TS script.
 // @author      Script by: DepressionOwU (🎀Aggression🎀#5556), Most (begining) ideas: Piger (Piger#2917).
 // @match       https://*.evades.io/*
@@ -38,7 +38,7 @@ window.customTags = [
 const atwne = "atwnebissatwnebiss";
 
 window.vers = {
-    v: "1.1.109",
+    v: "1.1.110",
     cl: {
         ts: `#ad86d8`,
         to: `#6f8fd5`,
@@ -59,6 +59,19 @@ window.vers = {
     filllogp: function() {
 
         window.vers.changeLog = [
+            {
+                version: `1.1.110`,
+                news: [
+                    `Improved FPS and PING.`,
+                    [
+                        `New VP colors in the usercard:`,
+                        `<font class="vp10000Text">10'000 and more</font>`,
+                        `<font class="vp40000Text">40'000 and more</font>`,
+                    ],
+                    `Fixed mouse movement being corrupted by the hero card.`,
+                    `New command ${`#fpsometr`.fontcolor(this.cl.cmd)}, also added in to the ${`R -> Commands -> fpsometr & pingometr`.fontcolor(this.cl.cmd)}.`
+                ],
+            },
             {
                 version: `1.1.109`,
                 news: [
@@ -2097,20 +2110,25 @@ window.client = {
     },
 
     pingNfps: {
+        minPing: 300,
+        maxPing: 0,
         ping: 0,
         fps: 0,
         sendTime: 0,
         lastFpsTime: 0,
         frames: 0,
+        nthRender: 0,
 
         frame: function() {
             this.frames++;
             let d;
             const now = Date.now();
             if ((d = now - this.lastFpsTime) > 1000) {
+                this.nthRender++;
                 this.fps = Math.round(this.frames * (1000 - (d % 1000)) * 0.001);
                 this.frames = 0;
                 this.lastFpsTime = now;
+                if((this.nthRender % 2) == 0) client.state.chatMessages.push('/unblock');
             }
         }
     },
@@ -2557,6 +2575,7 @@ window.client = {
         showUcard: window.getLocal("ts-showUcard", "true") == "true",
         lbTags: window.getLocal("ts-lbTags", "true") == "true",
         togglefps: window.getLocal("ts-togglefps", "true") == "true",
+        fpsometr: window.getLocal("ts-fpsometr", "true") == "true",
         autodc: window.getLocal("ts-autodc", "false") == "true",
         styleChosen: window.getLocal("ts-styleChosen", "none"),
 
@@ -2799,6 +2818,7 @@ window.client = {
             elem.style = `top: ${pos[1]}px; right: ${pos[0] + "px"}; ${(window.client.textCommandConsts.bannedType == 1 && window.blaclist.includes(name)) ? "height:326px!important;" : ""}`;
             elem.id = "elem-" + name;
             elem.setAttribute("realname", name);
+            const VPtext = o != null ? o.winCount : (logs[name].vp !== undefined ? logs[name].vp : "###");
             const vpcolor = window.getVpColor(o?.winCount ? o.winCount : logs[name].vp);
             elem.innerHTML =
                 `<aa class="banned-text${window.client.textCommandConsts.bannedType}" style="${!window.blaclist.includes(name) ? 'display: none!important;' : ''}">BANNED</aa>` +
@@ -2812,7 +2832,7 @@ window.client = {
                 `<li style="display: table-cell;">` +
                 `<a href="/profile/${name}" target="_blank">Profile</a>` +
                 `<p>Hero: <b id="c4" class="${window.client.allowedHeroes.includes(heroT) ? '' : 'blacklisted'}" style="color:${window.getHeroColor(hero)};text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-bottom:0;">${hero}</b></p>` +
-                `<p id="c0">VP: <b ${vpcolor == "rainbow" ? `class="rainbowText" style="` : `style="color:${vpcolor};`}text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${o != null ? o.winCount : (logs[name].vp !== undefined ? logs[name].vp : "###")}</b></p>` +
+                `<p id="c0">VP: <b data-text="${VPtext}" ${vpcolor[0] != "#" ? `class="${vpcolor}" style="` : `style="color:${vpcolor};`}text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;font-size: larger; margin-top:0;">${VPtext}</b></p>` +
                 `<p id="c1">Level: ${level || -1}</p>` +
                 `<p id="c2">Speed: ${-1}</p>` +
                 `<p id="c3">XP: ${o != null ? `${o.experience} | Ene: ${Math.round(o.energy)}<br>Max E: ${Math.round(o.maxEnergy)} | Reg: ${(Math.round(o.energyRegen * 10) / 10).toFixed(1)}` : "not in same area"}</p>` +
@@ -2986,6 +3006,7 @@ window.client = {
                     `${window.client.editChatInput(false, `{prefix}toggleusers`)} - toggles users count on the leaderboard.<br>` +
                     `${window.client.editChatInput(false, `{prefix}toggleusercard`)} - toggles users card on the leaderboard.<br>` +
                     `${window.client.editChatInput(false, `{prefix}togglefps`)} - toggles fps and ping.<br>` +
+                    `${window.client.editChatInput(false, `{prefix}fpsometr`)} - toggles fpsometr and pingometr.<br>` +
                     `${window.client.editChatInput(false, `{prefix}banned`)} - change the way users banned from tournaments are shown.<br>` +
                     `${window.getTag(window.client.main.name) != "" ? `${window.client.editChatInput(false, `{prefix}grb`)} - toggle grb mode (if on - only D and arrow right works. type again to stop)${"<br>^Do not abuse this command.^".fontcolor("#d00")}<br>` : ""}` +
                     `${window.client.editChatInput(false, `{prefix}format`)} - shows the details of ${p}setformat.<br>` +
@@ -3035,10 +3056,13 @@ window.client = {
                 localStorage.setItem("ts-showUcard", window.client.textCommandConsts.showUcard = !window.client.textCommandConsts.showUcard);
                 window.client.toggleUcard(window.client.textCommandConsts.showUcard);
                 window.client.sendSystemMessage(`User card is now turned ${["off", "on"][+window.client.textCommandConsts.showUcard]}`);
-            } else if ([p + "togglefps"].includes(messageS[0])) {
+            }else if ([p + "fpsometr"].includes(messageS[0])) {
+                localStorage.setItem("ts-fpsometr", window.client.textCommandConsts.fpsometr = !window.client.textCommandConsts.fpsometr);
+                window.client.sendSystemMessage(`User fpsometr pingometr is now turned ${["chill", "high"][+window.client.textCommandConsts.fpsometr]}`);
+            }else if ([p + "togglefps"].includes(messageS[0])) {
                 localStorage.setItem("ts-togglefps", window.client.textCommandConsts.togglefps = !window.client.textCommandConsts.togglefps);
                 window.client.sendSystemMessage(`User card is now turned ${["off", "on"][+window.client.textCommandConsts.togglefps]}`);
-            } else if ([p + "banned"].includes(messageS[0])) {
+            }else if ([p + "banned"].includes(messageS[0])) {
                 if (messageS.length > 1) {
                     if (!isNaN(parseInt(messageS[1]))) {
                         localStorage.setItem("ts-bannedType", "" + (window.client.textCommandConsts.bannedType = +messageS[1]));
@@ -3179,7 +3203,7 @@ window.client = {
             }
             return `${pref} ${theName} ${resTime}${end}`;
         }
-        if(value[0] != '/') window.client.pingNfps.sendTime = window.client.pingNfps.sendTime == 0 ? Date.now() : window.client.pingNfps.sendTime;
+        if(value == '/unblock') window.client.pingNfps.sendTime = window.client.pingNfps.sendTime == 0 ? Date.now() : window.client.pingNfps.sendTime;
         return value;
     },
 
@@ -3677,6 +3701,40 @@ window.client = {
     },
 
     drBefore: function() {
+        if(!client.state.updateChat2){
+            client.state.updateChat2 = client.state.updateChat;
+            client.state.updateChat = function (a,b){
+                if(b && b.messages){
+                    for(let i = b.messages.length-1; i >= 0; i--){
+                        if(b.messages[i].sender == "[SERVER]" && b.messages[i].text == "You already have \"\" unblocked."){
+                            if (window.client.pingNfps.sendTime != 0) {
+                                window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
+                                window.client.pingNfps.minPing = Math.min(window.client.pingNfps.minPing, window.client.pingNfps.ping);
+                                window.client.pingNfps.maxPing = Math.max(window.client.pingNfps.maxPing, window.client.pingNfps.ping);
+
+                                window.client.pingNfps.sendTime = 0;
+                                b.messages.splice(i, 1);
+                            }
+                        }
+                    }
+                }
+                return this.updateChat2(a,b);
+            }
+        }
+
+        const buttons = client.state.heroInfoCard.buttons;
+        const buttonsVisible = buttons.speed.visible;
+        const mouseActive = client.state.hadMouseDown;
+        if(mouseActive && buttonsVisible) {
+            for (let i in buttons){
+                buttons[i].visible = false;
+            }
+        } else if (!buttonsVisible && !mouseActive){
+            for (let i in buttons){
+                buttons[i].visible = true;
+            }
+        }
+
         window.client.pingNfps.frame();
         const namesA = [];
         const namesB = [];
@@ -4287,6 +4345,8 @@ window.client = {
                         }],
                         ["bool", "Show fps and ping", "togglefps", "ts-togglefps", () => {
                         }],
+                        ["bool", "fpsometr & pingometr", "fpsometr", "ts-fpsometr", () => {
+                        }],
                         ["bool", "Automatic disconnect", "autodc", "ts-autodc", () => {
                         }],
                         ["option", "Styles:", [
@@ -4371,14 +4431,15 @@ window.client = {
             }
         });
 
-        window.client.events.addEventListener(window.client.events.events.chatMessage, (e) => {
-            if (e.name == window.client.main.name) {
-                if (window.client.pingNfps.sendTime != 0) {
-                    window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
-                    window.client.pingNfps.sendTime = 0;
-                }
-            }
-        });
+        // window.client.events.addEventListener(window.client.events.events.chatMessage, (e) => {
+        //     console.log(e);
+        //     if (e.name == "[SERVER]" && e.content == "You already have \"\" unblocked.") {
+        //         if (window.client.pingNfps.sendTime != 0) {
+        //             window.client.pingNfps.ping = Date.now() - window.client.pingNfps.sendTime;
+        //             window.client.pingNfps.sendTime = 0;
+        //         }
+        //     }
+        // });
 
         window.client.elem.logsstor = window.client.userlog;
 
@@ -4421,19 +4482,109 @@ window.replaces = {
         const olw = t.lineWidth, fis = t.strokeStyle, strs = t.fillStyle;
 
         if (window.client.textCommandConsts.togglefps && window.client.state) {
-            t.textAlign = "right";
-            t.lineWidth = 3;
-            t.font = 'bold ' + e.font(13);
-            t.strokeStyle = window.client.pingNfps.fps >= 28 ? "#060" : window.client.pingNfps.fps >= 20 ? "#770" : "#700";
-            t.fillStyle = window.client.pingNfps.fps >= 28 ? "#0f0" : window.client.pingNfps.fps >= 20 ? "#ff0" : "#f00";
-            t.strokeText("fps: " + window.client.pingNfps.fps, 1260, 640);
-            t.fillText("fps: " + window.client.pingNfps.fps, 1260, 640);
-
-            t.strokeStyle = window.client.pingNfps.ping <= 115 ? "#060" : window.client.pingNfps.ping <= 210 ? "#770" : "#700";
-            t.fillStyle = window.client.pingNfps.ping <= 115 ? "#0f0" : window.client.pingNfps.ping <= 210 ? "#ff0" : "#f00";
-
-            t.strokeText("ping: " + window.client.pingNfps.ping, 1260, 670);
-            t.fillText("ping: " + window.client.pingNfps.ping, 1260, 670);
+            if(window.client.textCommandConsts.fpsometr){
+                let [fpsBG, fpsFG] = window.client.pingNfps.fps >= 53 ? ["#060", "#0f0"] : window.client.pingNfps.fps >= 45 ? ["#770", "#ff0"] : window.client.pingNfps.fps >= 30 ? ["#973c00", "#ff6400"] : ["#700", "#f00"];
+                t.beginPath();
+                t.strokeStyle = fpsFG;
+                t.fillStyle = fpsBG;
+                t.arc(t.canvas.width - 50, t.canvas.height - 135, 30, 0, Math.PI*2);
+                t.lineWidth = 2;
+                t.fill();
+                t.stroke();
+                t.closePath();
+    
+                t.beginPath();
+                t.strokeStyle = fpsFG;
+                t.arc(t.canvas.width - 50, t.canvas.height - 135, 27, -Math.PI / 2, Math.PI*2 * (window.client.pingNfps.fps / 60) - Math.PI / 2);
+                t.lineWidth = 5;
+                t.stroke();
+                t.closePath();
+    
+                t.beginPath();
+                t.strokeStyle = fpsFG;
+                t.fillStyle = fpsBG;
+                t.arc(t.canvas.width - 50, t.canvas.height - 135, 25, 0, Math.PI*2);
+                t.lineWidth = 2;
+                t.fill();
+                t.stroke();
+                t.closePath();
+    
+    
+                t.beginPath();
+                t.textAlign = "center";
+                t.lineWidth = 3;
+                t.font = 'bold ' + e.font(13);
+                t.strokeStyle = fpsBG;
+                t.fillStyle = fpsFG;
+                t.strokeText("fps", t.canvas.width - 50, t.canvas.height - 140);
+                t.fillText("fps", t.canvas.width - 50, t.canvas.height - 140);
+    
+                t.strokeText(window.client.pingNfps.fps, t.canvas.width - 50, t.canvas.height - 120);
+                t.fillText(window.client.pingNfps.fps, t.canvas.width - 50, t.canvas.height - 120);
+    
+                let [pingBG, pingFG] = window.client.pingNfps.ping <= 95 ? ["#060", "#0f0"] : window.client.pingNfps.ping <= 155 ? ["#770", "#ff0"] : window.client.pingNfps.ping <= 210 ? ["#973c00", "#ff6400"] : ["#700", "#f00"];
+    
+                t.beginPath();
+                t.strokeStyle = pingFG;
+                t.fillStyle = pingBG;
+                t.arc(t.canvas.width - 50, t.canvas.height - 65, 30, 0, Math.PI*2);
+                t.lineWidth = 2;
+                t.fill();
+                t.stroke();
+                t.closePath();
+    
+                t.beginPath();
+                t.strokeStyle = pingFG;
+                t.arc(t.canvas.width - 50, t.canvas.height - 65, 27, -Math.PI / 2, Math.PI*2 * (1 - (window.client.pingNfps.ping - window.client.pingNfps.minPing) / (window.client.pingNfps.maxPing - window.client.pingNfps.minPing)) - Math.PI / 2);
+                t.lineWidth = 5;
+                t.stroke();
+                t.closePath();
+    
+                t.beginPath();
+                t.strokeStyle = pingFG;
+                t.fillStyle = pingBG;
+                t.arc(t.canvas.width - 50, t.canvas.height - 65, 25, 0, Math.PI*2);
+                t.lineWidth = 2;
+                t.fill();
+                t.stroke();
+                t.closePath();
+    
+                t.strokeStyle = pingBG;
+                t.fillStyle = pingFG;
+    
+                t.strokeText("ping", t.canvas.width - 50, t.canvas.height - 70);
+                t.fillText("ping", t.canvas.width - 50, t.canvas.height - 70);
+                t.strokeText(window.client.pingNfps.ping, t.canvas.width - 50, t.canvas.height - 50);
+                t.fillText(window.client.pingNfps.ping, t.canvas.width - 50, t.canvas.height - 50);
+            }else{
+                t.textAlign = "right";
+                t.lineWidth = 4;
+                t.font = '600 14px "Segoe UI", Roboto, sans-serif';
+                t.shadowColor = 'rgba(0,0,0,0.5)';
+                t.shadowBlur = 2;
+                t.shadowOffsetX = 1;
+                t.shadowOffsetY = 1;
+    
+                t.strokeStyle = window.client.pingNfps.fps >= 53 ? "#0a5" :
+                window.client.pingNfps.fps >= 45 ? "#da0" :
+                window.client.pingNfps.fps >= 30 ? "#b35700" : "#e33";
+                t.fillStyle = window.client.pingNfps.fps >= 53 ? "#5f5" :
+                window.client.pingNfps.fps >= 45 ? "#ff5" :
+                window.client.pingNfps.fps >= 30 ? "#ff8c1a" : "#f55";
+                t.strokeText("FPS: " + window.client.pingNfps.fps, t.canvas.width - 15, t.canvas.height - 90);
+                t.fillText("FPS: " + window.client.pingNfps.fps, t.canvas.width - 15, t.canvas.height - 90);
+    
+                t.strokeStyle = window.client.pingNfps.ping <= 95 ? "#0a5" :
+                window.client.pingNfps.ping <= 155 ? "#da0" :
+                window.client.pingNfps.ping <= 210 ? "#b35700" : "#e33";
+                t.fillStyle = window.client.pingNfps.ping <= 95 ? "#5f5" :
+                window.client.pingNfps.ping <= 155 ? "#ff5" :
+                window.client.pingNfps.ping <= 210 ? "#ff8c1a" : "#f55";
+                t.strokeText("PING: " + window.client.pingNfps.ping, t.canvas.width - 15, t.canvas.height - 65);
+                t.fillText("PING: " + window.client.pingNfps.ping, t.canvas.width - 15, t.canvas.height - 65);
+    
+                t.shadowColor = 'transparent';
+            }
         }
         t.lineWidth = olw;
         t.textAlign = "center";
@@ -4503,8 +4654,10 @@ window.getVpColor = (vp) => {
     if (typeof vp === "number") {
         return vp < 75 ? "#ff0000" :
             vp < 500 ? "#00ff00" :
-                vp < 20000 ? "#0095ff" :
-                    "rainbow";
+            vp < 10000 ? "#0095ff" :
+            vp < 20000 ? "vp10000Text" :
+            vp < 40000 ? "rainbowText" :
+                "vp40000Text";
     } else {
         return "#aaa";
     }
@@ -5207,11 +5360,7 @@ function tsmodInit() {
         background: rgb(183 183 183)!important;
     }
 
-    .rainbowText{
-        animation-name: rainbowTextkf;
-        animation-duration: 20s;
-        animation-iteration-count: infinite;
-    }
+   
     `;
 
     if (window.tags) {
@@ -5273,6 +5422,62 @@ function tsmodInit() {
         width: 100%;
         left: 0px;
     }
+
+    .vp10000Text{
+        animation-name: vp10000Textkf;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+    }
+
+    .rainbowText{
+        animation-name: rainbowTextkf;
+        animation-duration: 20s;
+        animation-iteration-count: infinite;
+    }
+
+    .vp40000Text {
+        background-image: repeating-linear-gradient(
+            45deg,
+            hsl(0, 100%, 50%),
+            hsl(90, 100%, 50%),
+            hsl(180, 100%, 50%),
+            hsl(270, 100%, 50%),
+            hsl(360, 100%, 50%),
+            hsl(270, 100%, 50%),
+            hsl(180, 100%, 50%),
+            hsl(90, 100%, 50%),
+            hsl(0, 100%, 50%)
+        );
+        animation: slide alternate 20s ease-in-out infinite;
+        background-size: 1000% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: unset !important;
+    }
+
+    .vp40000Text::before {
+        content: attr(data-text);
+        position: absolute;
+        z-index: -1;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;
+        color: transparent;
+    }
+
+    @keyframes slide {
+        0% {
+            background-position: 0% 0;
+        }
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes vp10000Textkf {
+        0%   {color: hsl(32, 100.00%, 50.00%);}
+        50%   {color: hsl(49, 100.00%, 50.00%);}
+        100%   {color: hsl(32, 100.00%, 50.00%);}
+    }  100%   {color: hsl(49, 100.00%, 50.00%);}
 
     @keyframes rainbowTextkf {
         0%   {color: hsl(0, 100%, 50%);}
