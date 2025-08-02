@@ -188,6 +188,22 @@
       "rglow":true,
       "prior":0,
       "lock":false
+    },
+    {
+      "names": ["Aderos", "JoKeR:D"],
+      "color": "#3498db",
+      "text": "[АбузА]",
+      "rainbow": false,
+      "prior":0,
+      "lock":false
+    },
+    {
+      "names": ["Wаlker"],
+      "color": "#f5e650",
+      "text": "[Л с Подвала]",
+      "rainbow": false,
+      "prior":0,
+      "lock":false
     }
   ]
 }
